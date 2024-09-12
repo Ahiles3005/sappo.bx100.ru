@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig authType="PASSWORD" host="sappo.bx100.ru" id="65f72b0d-bfb8-4660-8a9e-a81cce1a8448" port="2201" nameFormat="DESCRIPTIVE" username="free" useOpenSSHConfig="true" />
+    </configs>
+  </component>
+</project>
