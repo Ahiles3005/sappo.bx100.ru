@@ -548,43 +548,26 @@ if ($bHideSideSectionBlock) {
 		<?CMax::checkBreadcrumbsChain($arParams, $arSection);?>
 		<?$APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH.'/js/jquery.history.js');?>
 
-
+        <br>
         <?$APPLICATION->IncludeComponent(
-            "ahiles3005:brandlist",
-            ".default",
+            "ahiles3005:seo.meta.tags",
+            "",
             Array(
-                "IBLOCK_TYPE" => $arParams["IBLOCK_TYPE"],
+                "CACHE_GROUPS" => "Y",
+                "CACHE_TIME" => "36000000",
+                "CACHE_TYPE" => "A",
+                "CNT_TAGS" => "",
+                "GENERATING_TAGS" => "N",
                 "IBLOCK_ID" => $arParams["IBLOCK_ID"],
-                "AJAX_FILTER_FLAG" => ( isset($isAjaxFilter) ? $isAjaxFilter : '' ),
-                "SECTION_ID" => (isset($arSection["ID"]) ? $arSection["ID"] : ''),
-                "FILTER_NAME" => $arParams["FILTER_NAME"],
-                "PRICE_CODE" => ($arParams["USE_FILTER_PRICE"] == 'Y' ? $arParams["FILTER_PRICE_CODE"] : $arParams["PRICE_CODE"]),
-                "CACHE_TYPE" => $arParams["CACHE_TYPE"],
-                "CACHE_TIME" => $arParams["CACHE_TIME"],
-                "CACHE_NOTES" => "",
-                "CACHE_GROUPS" => $arParams["CACHE_GROUPS"],
-                "SAVE_IN_SESSION" => "N",
-                "XML_EXPORT" => "Y",
-                "SECTION_TITLE" => "NAME",
-                "SECTION_DESCRIPTION" => "DESCRIPTION",
-                "SHOW_HINTS" => $arParams["SHOW_HINTS"],
-                'CONVERT_CURRENCY' => $arParams['CONVERT_CURRENCY'],
-                'CURRENCY_ID' => $arParams['CURRENCY_ID'],
-                'DISPLAY_ELEMENT_COUNT' => $arParams['DISPLAY_ELEMENT_COUNT'],
-                "INSTANT_RELOAD" => "Y",
-                "VIEW_MODE" => strtolower($arTheme["FILTER_VIEW"]["VALUE"]),
-                "SEF_MODE" => (strlen($arResult["URL_TEMPLATES"]["smart_filter"]) ? "Y" : "N"),
-                "SEF_RULE" => $arResult["FOLDER"].$arResult["URL_TEMPLATES"]["smart_filter"],
-                "SMART_FILTER_PATH" => $arResult["VARIABLES"]["SMART_FILTER_PATH"],
-                "HIDE_NOT_AVAILABLE" => $arParams["HIDE_NOT_AVAILABLE"],
-                "SEF_RULE_FILTER" => $arResult["URL_TEMPLATES"]["smart_filter"],
-                "SORT_BUTTONS" => $arParams["SORT_BUTTONS"],
-                "SORT_PRICES" => $arParams["SORT_PRICES"],
-
-                "SHOW_SORT" => ($arParams['SHOW_SORT_IN_FILTER'] != 'N'),
-            ),
-            $component
+                "IBLOCK_TYPE" =>  $arParams["IBLOCK_TYPE"],
+                "INCLUDE_SUBSECTIONS" => "N",
+                "PRODUCT_COUNT" => "N",
+                "SECTION_ID" => $arSection["ID"],
+                "SORT" => "NAME",
+                "SORT_ORDER" => "asc"
+            )
         );?>
+
 
 
 	</div>
