@@ -548,28 +548,9 @@ if ($bHideSideSectionBlock) {
 		<?CMax::checkBreadcrumbsChain($arParams, $arSection);?>
 		<?$APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH.'/js/jquery.history.js');?>
 
+
         <br>
-        <?$APPLICATION->IncludeComponent(
-            "ahiles3005:seo.meta.tags",
-            "",
-            Array(
-                "CACHE_GROUPS" => "Y",
-                "CACHE_TIME" => "36000000",
-                "CACHE_TYPE" => "A",
-                "CNT_TAGS" => "",
-                "GENERATING_TAGS" => "N",
-                "IBLOCK_ID" => $arParams["IBLOCK_ID"],
-                "IBLOCK_TYPE" =>  $arParams["IBLOCK_TYPE"],
-                "INCLUDE_SUBSECTIONS" => "N",
-                "PRODUCT_COUNT" => "N",
-                "SECTION_ID" => $arSection["ID"],
-                "SORT" => "NAME",
-                "SORT_ORDER" => "asc"
-            )
-        );?>
-
-
-
+        <?$APPLICATION->ShowViewContent('seo_meta_tags');?>
 	</div>
 	<?if($bShowLeftBlock):?>
 		<?CMax::ShowPageType('left_block');?>
@@ -604,3 +585,27 @@ CMax::setCatalogSectionDescription(
 		'SEO_ITEM' => $arSeoItem,
 	)
 );
+
+
+$this->SetViewTarget('seo_meta_tags');
+
+$APPLICATION->IncludeComponent(
+    "ahiles3005:seo.meta.tags",
+    "",
+    Array(
+        "CACHE_GROUPS" => "Y",
+        "CACHE_TIME" => "36000000",
+        "CACHE_TYPE" => "A",
+        "CNT_TAGS" => "",
+        "GENERATING_TAGS" => "N",
+        "IBLOCK_ID" => $arParams["IBLOCK_ID"],
+        "IBLOCK_TYPE" =>  $arParams["IBLOCK_TYPE"],
+        "INCLUDE_SUBSECTIONS" => "N",
+        "PRODUCT_COUNT" => "N",
+        "SECTION_ID" => $arSection["ID"],
+        "SORT" => "NAME",
+        "SORT_ORDER" => "asc"
+    )
+);
+
+$this->EndViewTarget();
