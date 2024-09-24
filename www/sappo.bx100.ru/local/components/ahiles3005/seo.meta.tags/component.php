@@ -115,7 +115,9 @@ if ($cache->initCache($cacheTime, $cache_id, $cacheDir)) {
                 $filteredTags = [];
                 foreach ($arrTags as &$arrTag) {
 
-                    if (!in_array($arrTag['section_id'], $item['SECTIONS'])) {
+//                    var_dump($item['SECTIONS']);
+//                    var_dump('SECTION_ID',$arParams["SECTION_ID"]);
+                    if (!in_array($arrTag['section_id'], $item['SECTIONS']) || $arrTag['section_id'] != $arParams["SECTION_ID"]) {
                         continue;
                     }
                     \CSeoMetaTagsProperty::$params = unserialize($arrTag['PROPERTIES']);
