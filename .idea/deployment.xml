@@ -2,10 +2,10 @@
 <project version="4">
   <component name="PublishConfigData" serverName="sappo.bx100.ru" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
-      <paths name="mynovi.bx100.ru">
+      <paths name="dev.sappo">
         <serverdata>
           <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/" local="$PROJECT_DIR$/www/sappo.bx100.ru" web="/" />
           </mappings>
         </serverdata>
       </paths>
