@@ -133,7 +133,7 @@ $APPLICATION->SetTitle("Бренды");
 		"T_GALLERY" => "Галерея",
 		"SHOW_GALLERY" => "Y",
 		"GALLERY_PRODUCTS_PROPERTY" => "PHOTOS",
-		"SECTION_ELEMENTS_TYPE_VIEW" => "FROM_MODULE",
+		"SECTION_ELEMENTS_TYPE_VIEW" => "brands_list_elements",
 		"ELEMENT_TYPE_VIEW" => "element_1",
 		"T_GOODS_SECTION" => "",
 		"LIST_VIEW" => "slider",

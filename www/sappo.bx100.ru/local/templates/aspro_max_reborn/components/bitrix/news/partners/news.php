@@ -57,14 +57,9 @@ $itemsCnt = CMaxCache::CIblockElement_GetList(array("CACHE" => array("TAG" => CM
 	<?// section elements?>
 	<?$sViewElementsTemplate = ($arParams["SECTION_ELEMENTS_TYPE_VIEW"] == "FROM_MODULE" ? $arTheme["PARTNERS_PAGE"]["VALUE"] : $arParams["SECTION_ELEMENTS_TYPE_VIEW"]);?>
 
-    <?php?>
 
-    <form class="brands-search" action="/brands/" method="GET">
-        <input id="tq_brand_search" type="text" placeholder="Поиск по бренду" class="search-field" name="brand" value="">
-        <button type="submit" class="submit-btn">
-            <img src="<?=SITE_TEMPLATE_PATH?>/images/svg/search-btn.svg" alt="Поиск по производителям">
-        </button>
-    </form>
+
+
 
     <?@include_once('page_blocks/'.$sViewElementsTemplate.'.php');?>
 

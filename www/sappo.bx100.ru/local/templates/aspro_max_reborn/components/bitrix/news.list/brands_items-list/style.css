@@ -1,5 +1,4 @@
 .items-list1.item-views.table  .items.flexbox .item-wrap {
-    /*margin-bottom: -1px;*/
     margin: 0px -1px -1px 0px;
 }
 
@@ -14,9 +13,7 @@
     justify-content: center;
 }
 
-body .items-list1.item-views.table.only-img .item .image a {
-    /*margin: auto;*/
-}
+
 
 .items-list1.item-views.table .item .image img{
     opacity: 1;
@@ -24,10 +21,7 @@ body .items-list1.item-views.table.only-img .item .image a {
     display: block;
 }
 
-.items-list1.item-views.table.only-img .item  div {
-    /*height: 100%;*/
-    /*min-height: 100%;*/
-}
+
 
 .items-list1.item-views.table .item .image{
     height: 120px;
@@ -208,30 +202,7 @@ body .items-list1.item-views.table.only-img .item .image a {
 
 .items-list1.item-views.table.documents-mode .text .title{position: relative;z-index: 5;}
 
-/*.download_wrap a .download {
-    display: block;
-    width: 40px;
-    height: 40px;
-    border-radius: 3px;
-    overflow: hidden;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin: -20px 0px 0px -20px;
-    transition: all ease 0.3s;
-}
 
-.download_wrap .download:before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    background: url(images/svg/sprite_arrows.svg) -10px -18px no-repeat;
-    width: 14px;
-    height: 16px;
-    margin: -7px 0px 0px -7px;
-}*/
-/*end*/
 
 @media(max-width:600px){
     .list-type-block.item-views.items-list1.list.licenses-mode .item > .image{float:none;}
@@ -287,12 +258,10 @@ body .items-list1.item-views.table.only-img .item .image a {
     width: 38px;
     height: 38px;
 }
-.table-type-block.item-views.items-list1.list.licenses-mode .item-wrap .item .image .zoom_wrap {
-    /*display: none;*/
-}
+
 
 .table-type-block.item-views.items-list1.table.licenses-mode .item-wrap:hover .item .image .zoom_wrap {
-    /*display: inline-block;*/
+
     opacity: 1;
 }
 .table-type-block.item-views.items-list1.table.licenses-mode .item-wrap .item .image .zoom_wrap .svg.svg-inline-zoom-arrow {
@@ -300,6 +269,6 @@ body .items-list1.item-views.table.only-img .item .image a {
     top: 10px;
     left: 10px;
 }
-/**/
+
 
 .item-views.items-list1 .tabs .tab-content{padding-top:47px}
