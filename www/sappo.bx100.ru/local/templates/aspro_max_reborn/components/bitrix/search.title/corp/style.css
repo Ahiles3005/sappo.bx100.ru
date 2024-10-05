@@ -44,3 +44,11 @@
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
+
+.search-title {
+    padding-left: 10px;
+    padding-top: 10px;
+    font-size: 14px;
+    color: #788192;
+    margin: 0 0 8px;
+}

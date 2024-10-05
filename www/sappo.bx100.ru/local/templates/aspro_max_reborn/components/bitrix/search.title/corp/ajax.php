@@ -2,6 +2,10 @@
 <?if (empty($arResult["CATEGORIES"])) return;?>
 <div class="bx_searche scrollbar">
 	<?foreach($arResult["CATEGORIES"] as $category_id => $arCategory):?>
+
+        <div class="search-title">
+            <?=$arCategory["TITLE"]?>
+        </div>
 		<?foreach($arCategory["ITEMS"] as $i => $arItem):?>
 			<?//=$arCategory["TITLE"]?>
 			<?if(isset($arResult["ELEMENTS"][$arItem["ITEM_ID"]]) && $category_id !== "all"):
