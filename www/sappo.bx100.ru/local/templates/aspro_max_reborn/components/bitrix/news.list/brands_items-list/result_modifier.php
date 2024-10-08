@@ -45,9 +45,9 @@ $arResult['newSort'] = [];
 
 foreach ($arResult['SECTIONS'] as $SID => $arSection) {
     foreach ($arSection['ITEMS'] as $i => $arItem) {
-        $firstChar = strtolower(substr($arItem['NAME'],0,1));
+        $firstChar = mb_strtolower(mb_substr($arItem['NAME'],0,1));
         if(is_numeric($firstChar)){
-            $arResult['newSort'][0][] = $arItem;
+            $arResult['newSort']['0-9'][] = $arItem;
         }else{
             $arResult['newSort'][$firstChar][] = $arItem;
         }
