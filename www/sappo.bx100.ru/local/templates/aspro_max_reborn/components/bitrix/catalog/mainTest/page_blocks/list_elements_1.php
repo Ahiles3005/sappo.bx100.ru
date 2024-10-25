@@ -315,7 +315,14 @@ if(isset($isAjaxFilter) && $isAjaxFilter == "Y")
                 <?
                 $html = ob_get_clean();
                 $APPLICATION->AddViewContent('top_desc', $html);
-                $APPLICATION->AddViewContent('top_content', $html);
+
+                //small hack
+                [$uri_one] = explode('?', $GLOBALS['uri']->getUri());
+                [$uri_two] = explode('?', $_SERVER['REQUEST_URI']);
+
+                if (strstr($uri_two, 'filter') === false && strstr($uri_two, 'apply') === false && $uri_one == $uri_two) {
+                    $APPLICATION->AddViewContent('top_content', $html);
+                }
                 ?>
             <?endif;?>
         <?endif;?>
