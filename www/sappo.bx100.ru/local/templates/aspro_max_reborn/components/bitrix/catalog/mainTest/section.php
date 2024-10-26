@@ -18,7 +18,14 @@ $APPLICATION->SetPageProperty("HIDE_LEFT_BLOCK", (($arTheme["LEFT_BLOCK_CATALOG_
 <?if(CMax::checkAjaxRequest2()):?>
 	<div>
 <?endif;?>
-<div class="top-content-block"><?$APPLICATION->ShowViewContent('top_content');?><?$APPLICATION->ShowViewContent('top_content2');?></div>
+<div class="top-content-block">
+
+
+    <?$APPLICATION->ShowViewContent('top_content');?>
+    <?$APPLICATION->ShowViewContent('top_content2');?>
+    <?$APPLICATION->ShowViewContent('seo_meta_tags');?>
+
+</div>
 <?if(CMax::checkAjaxRequest2()):?>
 	</div>
 <?endif;?>
@@ -550,7 +557,7 @@ if ($bHideSideSectionBlock) {
 
 
         <br>
-        <?$APPLICATION->ShowViewContent('seo_meta_tags');?>
+        <?//$APPLICATION->ShowViewContent('seo_meta_tags');?>
 	</div>
 	<?if($bShowLeftBlock):?>
 		<?CMax::ShowPageType('left_block');?>
@@ -591,7 +598,7 @@ $this->SetViewTarget('seo_meta_tags');
 
 $APPLICATION->IncludeComponent(
     "ahiles3005:seo.meta.tags",
-    "",
+    "toggle",
     Array(
         "CACHE_GROUPS" => "Y",
         "CACHE_TIME" => "36000000",
