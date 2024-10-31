@@ -598,7 +598,7 @@ $this->SetViewTarget('seo_meta_tags');
 
 $APPLICATION->IncludeComponent(
     "ahiles3005:seo.meta.tags",
-    "toggle",
+    "",
     Array(
         "CACHE_GROUPS" => "Y",
         "CACHE_TIME" => "36000000",

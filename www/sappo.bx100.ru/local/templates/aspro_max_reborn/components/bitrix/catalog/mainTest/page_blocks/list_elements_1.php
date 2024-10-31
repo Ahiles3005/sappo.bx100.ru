@@ -293,21 +293,21 @@ if(isset($isAjaxFilter) && $isAjaxFilter == "Y")
                 <?ob_start();?>
                 <?if($posSectionDescr=="BOTH"):?>
                     <?if ($arSection[$section_pos_top]):?>
-                        <div class="group_description_block top muted777" datatype="BOTH_section_pos_top">
+                        <div class="group_description_block top muted777">
                             <div><?=$arSection[$section_pos_top]?></div>
                         </div>
                     <?endif;?>
                 <?elseif($posSectionDescr=="TOP"):?>
                     <?if ($arSection[$arParams["SECTION_PREVIEW_PROPERTY"]]):?>
-                        <div class="group_description_block top muted777" datatype="TOP_SECTION_PREVIEW_PROPERTY">
+                        <div class="group_description_block top muted777">
                             <div><?=$arSection[$arParams["SECTION_PREVIEW_PROPERTY"]]?></div>
                         </div>
                     <?elseif ($arSection["DESCRIPTION"]):?>
-                        <div class="group_description_block top muted777" datatype="TOP_DESCRIPTION">
+                        <div class="group_description_block top muted777">
                             <div><?=$arSection["DESCRIPTION"]?></div>
                         </div>
                     <?elseif($arSection["UF_SECTION_DESCR"]):?>
-                        <div class="group_description_block top muted777" datatype="TOP_UF_SECTION_DESCR">
+                        <div class="group_description_block top muted777">
                             <div><?=$arSection["UF_SECTION_DESCR"]?></div>
                         </div>
                     <?endif;?>

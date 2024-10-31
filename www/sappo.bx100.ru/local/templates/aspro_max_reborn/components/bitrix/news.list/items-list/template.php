@@ -4,13 +4,6 @@
 $licensesMode = isset($arParams['LICENSES_MODE']) && $arParams['LICENSES_MODE'] == 'Y';
 $documentsMode = isset($arParams['DOCUMENTS_MODE']) && $arParams['DOCUMENTS_MODE'] == 'Y';
 ?>
-
-
-
-
-
-
-
 <?if($arResult['SECTIONS']):?>
 	<?if($arParams['SHOW_TITLE'] == 'Y'):?>
 		<div class="title-tab-heading visible-xs"><?=$arParams["T_TITLE"];?></div>

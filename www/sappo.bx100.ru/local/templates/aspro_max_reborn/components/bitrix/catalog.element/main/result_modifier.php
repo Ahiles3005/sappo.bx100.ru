@@ -1272,9 +1272,6 @@ if ($arParams["LINKED_BLOG"]) {
 	$arResult["BLOG"] = array_merge((array)$arResult["BLOG"], (array)$arParams["LINKED_BLOG"]);
 }
 
-//var_dump(debug_backtrace(0));
-//var_dump($arParams['LINKED_FILTER_BY_PROP']['ASSOCIATED']);
-
 /*associated*/
 if($arParams['LINKED_FILTER_BY_PROP']['ASSOCIATED'] || $arParams['LINKED_FILTER_BY_FILTER']['ASSOCIATED'])
 {
