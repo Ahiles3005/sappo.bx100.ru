@@ -6,7 +6,7 @@ if (!$arResult['ITEMS']) {
 
 ?>
 
-<div class="viewed_product_block <?= ($arTheme["SHOW_BG_BLOCK"]["VALUE"] == "Y" ? "fill" : "no_fill"); ?>">
+<div class="viewed_product_block <?= ($arTheme["SHOW_BG_BLOCK"]["VALUE"] == "Y" ? "fill" : "no_fill"); ?>" style="padding-bottom: 10px">
     <div class="wrapper_inner">
         <div class="viewed-wrapper swipeignore main_horizontal">
             <!--            <h2 class="font_lg">Популярные производители</h2>-->
@@ -20,15 +20,20 @@ if (!$arResult['ITEMS']) {
                     ?>
                 </div>
 
-                <button class="toggle-button">
-                    <svg viewBox="0 0 24 24" width="24" height="24" class="vverh">
-                        <path d="M12 4l-8 8h16l-8-8z" fill="#42afe1" class="arrow-icon"/>
-                    </svg>
+<!--                <button class="toggle-button">-->
+<!--                    <svg viewBox="0 0 24 24" width="24" height="24" class="vverh">-->
+<!--                        <path d="M12 4l-8 8h16l-8-8z" fill="#42afe1" class="arrow-icon"/>-->
+<!--                    </svg>-->
+<!---->
+<!--                    <svg viewBox="0 0 24 24" width="24" height="24" class="vniz" style="display: none">-->
+<!--                        <path d="M12 20l8-8H4l8 8z" fill="#42afe1" class="arrow-icon"></path>-->
+<!--                    </svg>-->
+<!--                </button>-->
 
-                    <svg viewBox="0 0 24 24" width="24" height="24" class="vniz" style="display: none">
-                        <path d="M12 20l8-8H4l8 8z" fill="#42afe1" class="arrow-icon"></path>
-                    </svg>
-                </button>
+
+            </div>
+            <div class="toggle-arrow-container">
+                <div class="toggle-arrow arrow-down down" style="display: block;"></div>
             </div>
         </div>
     </div>
@@ -93,17 +98,15 @@ if (!$arResult['ITEMS']) {
 
 
 <script>
-    $('.toggle-button').click(function(){
+    $('.toggle-arrow').click(function(){
         let container = $('.brand-links-container');
 
         if (container.css('max-height') === '50px') {
             container.css('max-height', '1000px'); // Полная высота, чтобы показать все элементы
-            $(this).find('.vverh').hide();
-            $(this).find('.vniz').show();
+            $(this).removeClass('down').addClass('up');
         } else {
             container.css('max-height', '50px'); // Возвращаем на высоту одной линии
-            $(this).find('.vverh').show();
-            $(this).find('.vniz').hide();
+            $(this).removeClass('up').addClass('down');
         }
     });
 
