@@ -9,7 +9,7 @@ if(!$arResult['ITEMS']) {
 <div class="viewed_product_block <?= ($arTheme["SHOW_BG_BLOCK"]["VALUE"] == "Y" ? "fill" : "no_fill"); ?>">
     <div class="wrapper_inner">
         <div class="viewed-wrapper swipeignore main_horizontal">
-            <h2 class="font_lg">Популярные товары</h2>
+            <h2 class="font_lg">Популярные производители</h2>
             <div class="brand-links" >
                 <?php
                 foreach ($arResult['ITEMS'] as $Item) {

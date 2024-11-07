@@ -23,7 +23,7 @@ $APPLICATION->SetPageProperty("HIDE_LEFT_BLOCK", (($arTheme["LEFT_BLOCK_CATALOG_
 
     <?$APPLICATION->ShowViewContent('top_content');?>
     <?$APPLICATION->ShowViewContent('top_content2');?>
-    <?$APPLICATION->ShowViewContent('seo_meta_tags');?>
+    <?$APPLICATION->ShowViewContent('seo_meta_tags_top');?>
 
 </div>
 <?if(CMax::checkAjaxRequest2()):?>
@@ -557,7 +557,7 @@ if ($bHideSideSectionBlock) {
 
 
         <br>
-        <?//$APPLICATION->ShowViewContent('seo_meta_tags');?>
+        <?$APPLICATION->ShowViewContent('seo_meta_tags_bottom');?>
 	</div>
 	<?if($bShowLeftBlock):?>
 		<?CMax::ShowPageType('left_block');?>
@@ -594,11 +594,35 @@ CMax::setCatalogSectionDescription(
 );
 
 
-$this->SetViewTarget('seo_meta_tags');
+$this->SetViewTarget('seo_meta_tags_top');
 
 $APPLICATION->IncludeComponent(
     "ahiles3005:seo.meta.tags",
     "toggle",
+    Array(
+        "CACHE_GROUPS" => "Y",
+        "CACHE_TIME" => "36000000",
+        "CACHE_TYPE" => "A",
+        "CNT_TAGS" => "",
+        "GENERATING_TAGS" => "N",
+        "IBLOCK_ID" => $arParams["IBLOCK_ID"],
+        "IBLOCK_TYPE" =>  $arParams["IBLOCK_TYPE"],
+        "INCLUDE_SUBSECTIONS" => "N",
+        "PRODUCT_COUNT" => "N",
+        "SECTION_ID" => $arSection["ID"],
+        "SORT" => "NAME",
+        "SORT_ORDER" => "asc"
+    )
+);
+
+$this->EndViewTarget();
+
+
+$this->SetViewTarget('seo_meta_tags_bottom');
+
+$APPLICATION->IncludeComponent(
+    "ahiles3005:seo.meta.tags",
+    "tags",
     Array(
         "CACHE_GROUPS" => "Y",
         "CACHE_TIME" => "36000000",

@@ -4,7 +4,7 @@
 $newsItems = [];
 
 foreach ($arResult['ITEMS'] as $Item) {
-    if(strstr($Item['REAL_URL'],'brand-is-') !== false){
+    if(strstr($Item['REAL_URL'],'brand-is-') === false){
         $newsItems[] = $Item;
     }
 }
