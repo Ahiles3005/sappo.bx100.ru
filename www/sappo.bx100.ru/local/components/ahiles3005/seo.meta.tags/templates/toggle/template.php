@@ -4,13 +4,15 @@ if (!$arResult['ITEMS']) {
     return '';
 }
 
+/*<div class="viewed_product_block <?= ($arTheme["SHOW_BG_BLOCK"]["VALUE"] == "Y" ? "fill" : "no_fill"); ?>"*/
+//     style="padding-bottom: 10px">
+//    <div class="wrapper_inner">
 ?>
 
-<div class="viewed_product_block <?= ($arTheme["SHOW_BG_BLOCK"]["VALUE"] == "Y" ? "fill" : "no_fill"); ?>"
+<div class=""
      style="padding-bottom: 10px">
-    <div class="wrapper_inner">
+    <div class="">
         <div class="viewed-wrapper swipeignore main_horizontal">
-            <!--            <h2 class="font_lg">Популярные производители</h2>-->
             <div class="brand-links-container">
                 <div class="brand-links">
                     <?php
@@ -20,18 +22,6 @@ if (!$arResult['ITEMS']) {
                     }
                     ?>
                 </div>
-
-                <!--                <button class="toggle-button">-->
-                <!--                    <svg viewBox="0 0 24 24" width="24" height="24" class="vverh">-->
-                <!--                        <path d="M12 4l-8 8h16l-8-8z" fill="#42afe1" class="arrow-icon"/>-->
-                <!--                    </svg>-->
-                <!---->
-                <!--                    <svg viewBox="0 0 24 24" width="24" height="24" class="vniz" style="display: none">-->
-                <!--                        <path d="M12 20l8-8H4l8 8z" fill="#42afe1" class="arrow-icon"></path>-->
-                <!--                    </svg>-->
-                <!--                </button>-->
-
-
             </div>
             <div class="toggle-arrow-container">
                 <div class="brand-toggle-arrow toggle-arrow arrow-down down" style="display: none;"></div>
