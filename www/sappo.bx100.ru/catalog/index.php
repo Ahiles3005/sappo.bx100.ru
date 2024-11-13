@@ -675,11 +675,11 @@ $APPLICATION->IncludeComponent(
 		"TITLE_SLIDER_IN_SEARCH" => "Рекомендуем",
 		"RECOMEND_IN_SEARCH_COUNT" => "10",
 		"SEF_URL_TEMPLATES" => array(
-			"sections" => "",
-			"section" => $sectionURL,
+            "sections" => "catalog/",
+            "section" => $sectionURL,
             "element" => $elementURL,
-			"compare" => "compare.php?action=#ACTION_CODE#",
-			"smart_filter" => "#SECTION_CODE_PATH#/filter/#SMART_FILTER_PATH#/apply/",
+            "compare" => "catalog/compare.php?action=#ACTION_CODE#",
+            "smart_filter" => "catalog/#SECTION_CODE_PATH#/filter/#SMART_FILTER_PATH#/apply/",
 		),
 		"VARIABLE_ALIASES" => array(
 			"compare" => array(
