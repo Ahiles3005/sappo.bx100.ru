@@ -679,7 +679,7 @@ $APPLICATION->IncludeComponent(
             "section" => $sectionURL,
             "element" => $elementURL,
             "compare" => "catalog/compare.php?action=#ACTION_CODE#",
-            "smart_filter" => "catalog/#SECTION_CODE_PATH#/filter/#SMART_FILTER_PATH#/apply/",
+            "smart_filter" => "#SECTION_CODE_PATH#/filter/#SMART_FILTER_PATH#/apply/",
 		),
 		"VARIABLE_ALIASES" => array(
 			"compare" => array(

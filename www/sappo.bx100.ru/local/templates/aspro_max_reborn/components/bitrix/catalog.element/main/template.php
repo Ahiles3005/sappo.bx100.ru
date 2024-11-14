@@ -1494,13 +1494,67 @@ $iCountProps = count($arResult['DISPLAY_PROPERTIES']);?>
 
 <?if($arParams["SHOW_PAYMENT"] == "Y"):?>
     <?$this->SetViewTarget('PRODUCT_PAYMENT_INFO');?>
+    <?php ob_start();?>
     <?$APPLICATION->IncludeFile(SITE_DIR."include/tab_catalog_detail_payment.php", array(), array("MODE" => "html", "NAME" => GetMessage('TITLE_PAYMENT')));?>
+
+    <?php
+
+    $payment = ob_get_contents();
+    ob_end_clean();
+    ?>
+    <script>
+        const paymentDiv = document.querySelector('.tab-content .tab-pane.payment#payment');
+
+        if (paymentDiv) {
+            const observerPaymentDiv = new MutationObserver((mutationsList, observer) => {
+                for (let mutation of mutationsList) {
+                    if (mutation.type === 'attributes' && paymentDiv.classList.contains('active')) {
+                        console.log("Класс active добавлен к paymentDiv");
+                        paymentDiv.innerHTML = `<?=$payment?>`;
+                        observerPaymentDiv.disconnect();
+                        break;
+                    }
+                }
+            });
+            observerPaymentDiv.observe(paymentDiv, { attributes: true });
+        } else {
+            console.log("Элемент paymentDiv не найден");
+        }
+
+    </script>
+
     <?$this->EndViewTarget();?>
 <?endif;?>
 
 <?if($arParams["SHOW_DELIVERY"] == "Y"):?>
     <?$this->SetViewTarget('PRODUCT_DELIVERY_INFO');?>
+<?php ob_start();?>
     <?$APPLICATION->IncludeFile(SITE_DIR."include/tab_catalog_detail_delivery.php", array(), array("MODE" => "html", "NAME" => GetMessage('TITLE_DELIVERY')));?>
+
+<?php
+
+    $delivery = ob_get_contents();
+    ob_end_clean();
+    ?>
+
+    <script>
+        const deliveryDiv = document.querySelector('.tab-content .tab-pane.delivery#delivery');
+        if (deliveryDiv) {
+            const observerDeliveryDiv = new MutationObserver((mutationsList, observer) => {
+                for (let mutation of mutationsList) {
+                    if (mutation.type === 'attributes' && deliveryDiv.classList.contains('active')) {
+                        console.log("Класс active добавлен");
+                        deliveryDiv.innerHTML = `<?=$delivery?>`;
+                        observerDeliveryDiv.disconnect();
+                        break;
+                    }
+                }
+            });
+            observerDeliveryDiv.observe(deliveryDiv, { attributes: true });
+        } else {
+            console.log("Элемент deliveryDiv не найден");
+        }
+    </script>
     <?$this->EndViewTarget();?>
 <?endif;?>
 
