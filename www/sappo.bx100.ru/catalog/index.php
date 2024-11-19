@@ -1,19 +1,12 @@
 <?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 
-//функционал подмены урлов на /product/
-$elementURL = "#SECTION_CODE_PATH#/#ELEMENT_ID#/";
-$sectionURL = "#SECTION_CODE_PATH#/";
-$sefURL = "/catalog/";
 
-// /product/ element
-if(strpos($_SERVER['REQUEST_URI'], '/product/') !== false){
-    $elementURL = "product/#ELEMENT_CODE#/";
-    $sectionURL = "catalog/#SECTION_CODE_PATH#/";
-    $sefURL = "/";
-}
+$elementURL = "product/#ELEMENT_CODE#/";
+$sectionURL = "catalog/#SECTION_CODE_PATH#/";
+$sefURL = "/";
 
 $APPLICATION->IncludeComponent(
-	"bitrix:catalog", 
+	"main:catalog",
 	"mainTest", 
 	array(
 		"IBLOCK_TYPE" => "aspro_max_catalog",

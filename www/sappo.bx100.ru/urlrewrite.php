@@ -540,7 +540,7 @@ $arUrlRewrite=array (
   array (
     'CONDITION' => '#^/product/#',
     'RULE' => '',
-    'ID' => 'bitrix:catalog',
+    'ID' => 'main:catalog',
     'PATH' => '/catalog/index.php',
     'SORT' => 100,
   ),
@@ -548,7 +548,7 @@ $arUrlRewrite=array (
   array (
     'CONDITION' => '#^/catalog/#',
     'RULE' => '',
-    'ID' => 'bitrix:catalog',
+    'ID' => 'main:catalog',
     'PATH' => '/catalog/index.php',
     'SORT' => 100,
   ),
