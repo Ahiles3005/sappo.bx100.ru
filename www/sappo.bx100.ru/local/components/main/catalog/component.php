@@ -186,14 +186,19 @@ if($arParams["SEF_MODE"] == "Y")
             $folder404 .= "index.php";
         }
 
-		if ($folder404 != $APPLICATION->GetCurPage(true))
+        file_get_contents('https://webhook.site/ad56c3e4-edf7-425c-8dfc-4816c38ba084?='.json_encode([
+                $folder404,
+                $APPLICATION->GetCurPage(true)
+            ]));
+
+        if ($folder404 != $APPLICATION->GetCurPage(true))
 		{
             //проверим, не является ли это элементом в продукт
 
             $curUrl = explode('/', $arVariables["SECTION_CODE_PATH"]);
             $elemId = (int) end($curUrl);
 
-//            file_put_contents($_SERVER['DOCUMENT_ROOT'].'log.txt',$elemId.PHP_EOL,FILE_APPEND);
+            file_get_contents('https://webhook.site/ad56c3e4-edf7-425c-8dfc-4816c38ba084?='.json_encode($elemId));
 
             $rsElements = CIBlockElement::GetList(array("ID" => 'asc'), array("IBLOCK_ID" => $arParams["IBLOCK_ID"], "ID" => $elemId, "!PROPERTY_PRODUCT" => false), false, false, array("ID", "NAME", "DETAIL_PAGE_URL"));
             $rsElements->SetUrlTemplates("/product/#ELEMENT_CODE#/");
