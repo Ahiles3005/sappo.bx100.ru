@@ -282,14 +282,14 @@ function ChangeUrlProduct(&$content)
         $arNewURL = $arResult["NEW_URL"];
     } else if ($cache->startDataCache()) {
         //current URLs
-        $rsElements = CIBlockElement::GetList(array("ID" => 'asc'), array("IBLOCK_ID" => $IBLOCK_ID, "!PROPERTY_PRODUCT" => false), false, false, array("ID", "NAME", "DETAIL_PAGE_URL"));
+        $rsElements = CIBlockElement::GetList(array("ID" => 'asc'), array("IBLOCK_ID" => $IBLOCK_ID), false, false, array("ID", "NAME", "DETAIL_PAGE_URL"));
 
         while ($arElement = $rsElements->GetNext()) {
             $arCurURL[] = $arElement["DETAIL_PAGE_URL"];
         }
 
         //new URLs
-        $rsElements = CIBlockElement::GetList(array("ID" => 'asc'), array("IBLOCK_ID" => $IBLOCK_ID, "!PROPERTY_PRODUCT" => false), false, false, array("ID", "NAME", "DETAIL_PAGE_URL"));
+        $rsElements = CIBlockElement::GetList(array("ID" => 'asc'), array("IBLOCK_ID" => $IBLOCK_ID), false, false, array("ID", "NAME", "DETAIL_PAGE_URL"));
         $rsElements->SetUrlTemplates("/product/#ELEMENT_CODE#/");
 
         while ($arElement = $rsElements->GetNext()) {

@@ -38,33 +38,14 @@ $arElement = CMaxCache::CIBLockElement_GetList(array('CACHE' => array("MULTI" =>
       "DETAIL_PAGE_URL"));
 
 // /product/ element
-if (strpos($_SERVER['REQUEST_URI'], '/product/') === false && !empty($arElement["PROPERTY_PRODUCT_VALUE"])) {
+if (strpos($_SERVER['REQUEST_URI'], '/product/') === false) {
     $rsElements = CIBlockElement::GetList(array("ID" => 'asc'), array("IBLOCK_ID" => $arElement["IBLOCK_ID"], "ID" => $arElement["ID"]), false, false, array("ID", "NAME", "DETAIL_PAGE_URL"));
     $rsElements->SetUrlTemplates("/product/#ELEMENT_CODE#/");
                              
     if ($arElementRes = $rsElements->GetNext()) {
         LocalRedirect($arElementRes["DETAIL_PAGE_URL"], false, '301 Moved permanently');
     }
-} elseif (strpos($_SERVER['REQUEST_URI'], '/product/') === false && empty($arElement["PROPERTY_PRODUCT_VALUE"]) && $arElement['ACTIVE'] == 'Y') {
-    $cur_dir = $APPLICATION->GetCurDir();
-    $el_dir = urldecode(str_replace('https://5drops.ru', '', $arElement['DETAIL_PAGE_URL']));
-    //global $USER;
-    //if($USER->IsAdmin()){
-    //    echo "<pre>";print_r($arElement);echo "</pre>";
-    //    echo "<pre>";print_r($cur_dir);echo "</pre>";
-    //    echo "<pre>";print_r($el_dir);echo "</pre>";
-    //}    
-
-    $redirects = new Redirects;
-    $itemHL = $redirects->getItem($el_dir);
-    if (!empty($itemHL && $itemHL['newUrl'] != ''))
-        $el_dir = $itemHL['newUrl'];
-
-    if ($cur_dir != $el_dir) {
-        LocalRedirect($el_dir, false, '301 Moved permanently');
-    }
-} 
-elseif (empty($arElement) && $arResult['VARIABLES']['SECTION_CODE_PATH'] != '') {
+} elseif (empty($arElement) && $arResult['VARIABLES']['SECTION_CODE_PATH'] != '') {
     LocalRedirect('/catalog/' . $arResult['VARIABLES']['SECTION_CODE_PATH'] . '/', false, '301 Moved permanently');
 } elseif (strpos($_SERVER['REQUEST_URI'], '/product/') !== false) {
 
