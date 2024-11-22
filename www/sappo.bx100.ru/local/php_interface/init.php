@@ -266,7 +266,7 @@ function OnSaleComponentOrderResultPrepared(&$order, &$arUserResult, $request, &
 }
 
 // /product/ element
-AddEventHandler("main", "OnEndBufferContent", "ChangeUrlProduct");
+//AddEventHandler("main", "OnEndBufferContent", "ChangeUrlProduct");
 
 function ChangeUrlProduct(&$content)
 {
@@ -305,6 +305,57 @@ function ChangeUrlProduct(&$content)
         $content = str_replace($arCurURL, $arNewURL, $content);
     }
 }
+
+
+AddEventHandler("main", "OnEndBufferContent", "redirectToNewUri");
+
+function redirectToNewUri(&$content)
+{
+    $IBLOCK_ID = 42;
+
+    [$requestUri, $get] = explode('?', $_SERVER['REQUEST_URI']);
+    $segments = explode('/', trim($requestUri,'/'));
+    $lastSegment = end($segments);
+
+    if (strpos($requestUri, '/catalog/') === false || !is_numeric($lastSegment)) {
+        return;
+    }
+
+    $productId = (int)$lastSegment;
+
+    $cacheId = 'productUrlTemplates_' . $productId;
+    $cache = Bitrix\Main\Data\Cache::createInstance();
+
+    if ($cache->initCache(7200, $cacheId, '/')) {
+        $newUrl = $cache->getVars();
+    } else if ($cache->startDataCache()) {
+        $rsElement = CIBlockElement::GetList(
+            [],
+            ["IBLOCK_ID" => $IBLOCK_ID, "ID" => $productId],
+            false,
+            false,
+            ["ID", "NAME", "DETAIL_PAGE_URL"]
+        );
+        $rsElement->SetUrlTemplates("/product/#ELEMENT_CODE#/");
+
+        if ($arElement = $rsElement->GetNext()) {
+            $newUrl = $arElement["DETAIL_PAGE_URL"];
+            $cache->endDataCache($newUrl);
+        } else {
+            $cache->abortDataCache();
+            return;
+        }
+    }
+    if ($get) {
+        $newUrl .= '?' . $get;
+    }
+
+    if (!empty($newUrl)) {
+        header("Location: $newUrl", true, 301);
+        exit;
+    }
+}
+
 
 AddEventHandler("main", "OnPageStart", "saveUtmToSession");
 

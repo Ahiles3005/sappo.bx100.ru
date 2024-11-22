@@ -1,16 +1,17 @@
 <?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 
 //функционал подмены урлов на /product/
-$elementURL = "#SECTION_CODE_PATH#/#ELEMENT_ID#/";
-$sectionURL = "#SECTION_CODE_PATH#/";
-$sefURL = "/catalog/";
+//$elementURL = "#SECTION_CODE_PATH#/#ELEMENT_ID#/";
+//$sectionURL = "#SECTION_CODE_PATH#/";
+//$sefURL = "/catalog/";
 
 // /product/ element
-if(strpos($_SERVER['REQUEST_URI'], '/product/') !== false){
+//if(strpos($_SERVER['REQUEST_URI'], '/product/') !== false){
     $elementURL = "product/#ELEMENT_CODE#/";
     $sectionURL = "catalog/#SECTION_CODE_PATH#/";
+    $filterUrl = "catalog/#SECTION_CODE_PATH#/filter/#SMART_FILTER_PATH#/apply/";
     $sefURL = "/";
-}
+//}
 
 $APPLICATION->IncludeComponent(
 	"bitrix:catalog", 
@@ -679,7 +680,7 @@ $APPLICATION->IncludeComponent(
             "section" => $sectionURL,
             "element" => $elementURL,
             "compare" => "catalog/compare.php?action=#ACTION_CODE#",
-            "smart_filter" => "#SECTION_CODE_PATH#/filter/#SMART_FILTER_PATH#/apply/",
+            "smart_filter" => $filterUrl,
 		),
 		"VARIABLE_ALIASES" => array(
 			"compare" => array(
