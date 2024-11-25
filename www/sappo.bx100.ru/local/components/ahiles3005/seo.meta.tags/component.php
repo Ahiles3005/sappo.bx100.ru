@@ -114,9 +114,9 @@ if ($cache->initCache($cacheTime, $cache_id, $cacheDir)) {
                 $arrTags = SeometaUrlTable::getAllByCondition($item['ID']);
                 $filteredTags = [];
                 foreach ($arrTags as &$arrTag) {
-
-//                    var_dump($item['SECTIONS']);
-//                    var_dump('SECTION_ID',$arParams["SECTION_ID"]);
+                    if ($arrTag['ACTIVE'] !== 'Y') {
+                        continue;
+                    }
                     if (!in_array($arrTag['section_id'], $item['SECTIONS']) || $arrTag['section_id'] != $arParams["SECTION_ID"]) {
                         continue;
                     }
