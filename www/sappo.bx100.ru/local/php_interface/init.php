@@ -351,7 +351,7 @@ function redirectToNewUri(&$content)
     }
 
     if (!empty($newUrl)) {
-        header("Location: $newUrl", true, 301);
+        LocalRedirect($newUrl,true,'301 Moved Permanently');
         exit;
     }
 }

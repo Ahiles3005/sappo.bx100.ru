@@ -677,6 +677,7 @@ $APPLICATION->IncludeComponent(
 		"RECOMEND_IN_SEARCH_COUNT" => "10",
 		"SEF_URL_TEMPLATES" => array(
             "sections" => "catalog/",
+            "search" => "catalog/search/",
             "section" => $sectionURL,
             "element" => $elementURL,
             "compare" => "catalog/compare.php?action=#ACTION_CODE#",
