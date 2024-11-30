@@ -10,7 +10,12 @@ $bIncludedModule = (\Bitrix\Main\Loader::includeModule("aspro.max"));?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?=LANGUAGE_ID?>" lang="<?=LANGUAGE_ID?>" <?=($htmlClass ? 'class="'.$htmlClass.'"' : '')?> <?=($bIncludedModule ? CMax::getCurrentHtmlClass() : '')?>>
 <head>
-
+    <?
+    if ($APPLICATION->GetPageProperty('canonical') == '') {
+        $canon_url = 'https' . $s . '://' . SITE_SERVER_NAME . $APPLICATION->GetCurPage();
+        $APPLICATION->SetPageProperty('canonical', $canon_url);
+    }
+    ?>
 	<title><?$APPLICATION->ShowTitle()?></title>
 	<?$APPLICATION->ShowMeta("viewport");?>
 	<?$APPLICATION->ShowMeta("HandheldFriendly");?>

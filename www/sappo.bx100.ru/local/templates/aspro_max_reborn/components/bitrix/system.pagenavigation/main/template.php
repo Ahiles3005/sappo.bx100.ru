@@ -79,7 +79,7 @@
 						</a>
 					</li>
 					<link rel="prev" href="<?=$arResult["sUrlPath"].$url?>" />
-					<link rel="canonical" href="<?=$arResult["sUrlPath"]?>" />
+
 				<?endif;?>
 				<?if(!$bNextDisabled):?>
 					<?$APPLICATION->AddHeadString('<link rel="next" href="'.$arResult["sUrlPath"].'?'.$strNavQueryString.'PAGEN_'.$arResult["NavNum"].'='.($arResult["NavPageNomer"]+1).'"  />', true);?>
