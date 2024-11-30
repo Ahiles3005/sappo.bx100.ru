@@ -91,7 +91,8 @@
 				<?endif;?>
 			</ul>
 			<?if($arResult["nStartPage"] > 1):?>
-				<a href="<?=$arResult["sUrlPath"]?>?<?=$strNavQueryString?>PAGEN_<?=$arResult["NavNum"]?>=1&<?=$sort_str?>" class="dark_link">1</a>
+				<a href="<?=$arResult["sUrlPath"]?>" class="dark_link">1</a>
+				 <?/* <a href="<?=$arResult["sUrlPath"]?>?<?=$strNavQueryString?>PAGEN_<?=$arResult["NavNum"]?>=1&<?=$sort_str?>" class="dark_link">1</a> */?>
 				<?if(($arResult["nStartPage"] - $count_item_dotted) > 1):?>
 					<span class='point_sep'>...</span>
 				<?elseif(($firstPage = $arResult["nStartPage"]-1) > 1 && $arResult["nStartPage"] !=2):?>
