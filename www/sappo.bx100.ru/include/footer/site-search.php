@@ -11,7 +11,7 @@
 		"INPUT_ID" => "title-search-input",
 		"NUM_CATEGORIES" => "1",
 		"ORDER" => "date",
-		"PAGE" => CMax::GetFrontParametrValue("CATALOG_PAGE_URL"),
+        "PAGE" => '#SITE_DIR#catalog/search/',
 		"PREVIEW_HEIGHT" => "38",
 		"PREVIEW_TRUNCATE_LEN" => "50",
 		"PREVIEW_WIDTH" => "38",
