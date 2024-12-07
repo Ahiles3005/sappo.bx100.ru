@@ -17,7 +17,7 @@ $arFilter = array("IBLOCK_ID" => 68, "ACTIVE" => "Y");
 $resAction = CIBlockElement::GetList(array("ID"=>"DESC"), $arFilter, false, false, $arSelect);
 if ($obAction = $resAction->Fetch()) {
     $APPLICATION->SetTitle($obAction['NAME']);
-    $APPLICATION->AddChainItem($obAction['NAME'], '/catalog/sale/');
+   // $APPLICATION->AddChainItem($obAction['NAME'], '/catalog/sale/');
     $GLOBALS['bannerFilter'] = ['ID' => $obAction['PROPERTY_BANNER_VALUE']];
 }
 

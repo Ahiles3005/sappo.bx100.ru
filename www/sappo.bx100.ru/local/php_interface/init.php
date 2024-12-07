@@ -373,17 +373,4 @@ function saveUtmToSession() {
 	}
 }
 
-
-AddEventHandler("main", "OnEndBufferContent", "ReplaceBreadcrumbLink");
-function ReplaceBreadcrumbLink(&$content)
-{
-    global $APPLICATION;
-
-    if (!defined("ADMIN_SECTION") || ADMIN_SECTION !== true) {
-        $search = '<a class="breadcrumbs__link" href="/catalog/sale/" title="Распродажа" itemprop="item">';
-        $replace = '<a class="breadcrumbs__link" href="/sale-new/" title="Распродажа" itemprop="item">';
-        $content = str_replace($search, $replace, $content);
-    }
-}
-
 ?>

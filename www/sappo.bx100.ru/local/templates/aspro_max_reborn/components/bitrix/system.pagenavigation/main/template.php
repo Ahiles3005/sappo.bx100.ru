@@ -28,8 +28,12 @@
 	$arResult["nStartPage"] = $arResult["nStartPage"] <= 0 ? 1 : $arResult["nStartPage"];
 	$arResult["nEndPage"] = $arResult["NavPageNomer"] + $count_item_between_cur_page;
 	$arResult["nEndPage"] = $arResult["nEndPage"] > $arResult["NavPageCount"] ? $arResult["NavPageCount"] : $arResult["nEndPage"];
-	$strNavQueryString = ($arResult["NavQueryString"] != "" ? $arResult["NavQueryString"]."&amp;" : "");
-	$strNavQueryStringFull = ($arResult["NavQueryString"] != "" ? "?".$arResult["NavQueryString"] : "");
+  //$strNavQueryString = ($arResult["NavQueryString"] != "" ? $arResult["NavQueryString"]."&amp;" : "");
+  //$strNavQueryStringFull = ($arResult["NavQueryString"] != "" ? "?".$arResult["NavQueryString"] : "");
+    $strNavQueryString = '';
+	$strNavQueryStringFull = '';
+
+
 	if($arResult["NavPageNomer"] == 1){
 		$bPrevDisabled = true;
 	}
