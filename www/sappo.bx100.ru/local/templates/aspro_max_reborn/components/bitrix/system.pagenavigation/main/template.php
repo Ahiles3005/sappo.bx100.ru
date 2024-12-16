@@ -106,8 +106,13 @@
 			<?while($arResult["nStartPage"] <= $arResult["nEndPage"]):?>
 				<?if($arResult["nStartPage"] == $arResult["NavPageNomer"]):?>
 					<span class="cur"><?=$arResult["nStartPage"]?></span>
-				<?elseif($arResult["nStartPage"] == 1 && $arResult["bSavePage"] == false):?>
-					<a href="<?=$arResult["sUrlPath"]?><?=$strNavQueryStringFull?>?<?=$sort_str?>" class="dark_link"><?=$arResult["nStartPage"]?></a>
+				<?elseif($arResult["nStartPage"] == 1 && $arResult["bSavePage"] == false):
+                    $_link = $arResult["sUrlPath"].$strNavQueryStringFull;
+                    if($sort_str){
+                        $_link = $arResult["sUrlPath"].$strNavQueryStringFull.'?'.$sort_str;
+                    }
+                    ?>
+					<a href="<?=$_link?>" class="dark_link"><?=$arResult["nStartPage"]?></a>
 				<?else:?>
 					<a href="<?=$arResult["sUrlPath"]?>?<?=$strNavQueryString?>PAGEN_<?=$arResult["NavNum"]?>=<?=$arResult["nStartPage"]?>&<?=$sort_str?>" class="dark_link"><?=$arResult["nStartPage"]?></a>
 				<?endif;?>
