@@ -5,6 +5,7 @@ use Bitrix\Main\Diag\Debug;
 use Bitrix\Sale\Location\LocationTable;
 use Bitrix\Sale\Order;
 use Bitrix\Sale;
+use Yandex\Market;
 
 CModule::IncludeModule("iblock");
 
@@ -15,34 +16,34 @@ EventManager::getInstance()->addEventHandler("main", "OnProlog", function (){
 }, 100);
 
 //   AddEventHandler( "iblock", "OnAfterIBlockElementAdd", array( "aspro_import", "FillTheBrands" ) );
-// 	 AddEventHandler( "iblock", "OnAfterIBlockElementUpdate", array( "aspro_import", "FillTheBrands" ) );
-// 	 class aspro_import {
-// 	 	function FillTheBrands( $arFields ){
-// 	 		$arCatalogID=array(42);
-// 	 		if( in_array($arFields['IBLOCK_ID'], $arCatalogID) ){
-// 	 			$arItem = CIBlockElement::GetList( false, array( 'IBLOCK_ID' => $arFields['IBLOCK_ID'], 'ID' => $arFields['ID'] ), false, false, array( 'ID', 'PROPERTY_BREND' ) )->fetch();
-// 	 			if( $arItem['PROPERTY_BREND_VALUE'] ){
-// 	 				$arBrand = CIBlockElement::GetList( false, array( 'IBLOCK_ID' => 46, 'NAME' => $arItem['PROPERTY_BREND_VALUE'] ) )->fetch();
-// 	 				if( $arBrand ){
-// 	 					CIBlockElement::SetPropertyValuesEx( $arFields['ID'], false, array( 'BRAND' => $arBrand['ID'] ) );
-// 	 				}else{
-// 	 					$el = new CIBlockElement;
-// 	 					$arParams = array( "replace_space" => "-", "replace_other" => "-" );
-// 	 					$id = $el->Add( array(
-// 	 						'ACTIVE' => 'Y',
-// 	 						'NAME' => $arItem['PROPERTY_BREND_VALUE'],
-// 	 						'IBLOCK_ID' => 46,
-// 	 						'CODE' => Cutil::translit( $arItem['PROPERTY_BREND_VALUE'], "ru", $arParams )
-// 	 					) ); 			    
-// 	 					if( $id ){
-// 	 						CIBlockElement::SetPropertyValuesEx( $arFields['ID'], false, array( 'BRAND' => $id ) );
-// 	 					}else{
-// 	 						echo $el->LAST_ERROR;
-// 	 					}
-// 	 				}
-// 	 			}
-// 	 		}
-// 	 	}
+//      AddEventHandler( "iblock", "OnAfterIBlockElementUpdate", array( "aspro_import", "FillTheBrands" ) );
+//      class aspro_import {
+//          function FillTheBrands( $arFields ){
+//              $arCatalogID=array(42);
+//              if( in_array($arFields['IBLOCK_ID'], $arCatalogID) ){
+//                  $arItem = CIBlockElement::GetList( false, array( 'IBLOCK_ID' => $arFields['IBLOCK_ID'], 'ID' => $arFields['ID'] ), false, false, array( 'ID', 'PROPERTY_BREND' ) )->fetch();
+//                  if( $arItem['PROPERTY_BREND_VALUE'] ){
+//                      $arBrand = CIBlockElement::GetList( false, array( 'IBLOCK_ID' => 46, 'NAME' => $arItem['PROPERTY_BREND_VALUE'] ) )->fetch();
+//                      if( $arBrand ){
+//                          CIBlockElement::SetPropertyValuesEx( $arFields['ID'], false, array( 'BRAND' => $arBrand['ID'] ) );
+//                      }else{
+//                          $el = new CIBlockElement;
+//                          $arParams = array( "replace_space" => "-", "replace_other" => "-" );
+//                          $id = $el->Add( array(
+//                              'ACTIVE' => 'Y',
+//                              'NAME' => $arItem['PROPERTY_BREND_VALUE'],
+//                              'IBLOCK_ID' => 46,
+//                              'CODE' => Cutil::translit( $arItem['PROPERTY_BREND_VALUE'], "ru", $arParams )
+//                          ) );                 
+//                          if( $id ){
+//                              CIBlockElement::SetPropertyValuesEx( $arFields['ID'], false, array( 'BRAND' => $id ) );
+//                          }else{
+//                              echo $el->LAST_ERROR;
+//                          }
+//                      }
+//                  }
+//              }
+//          }
 // }
 ?>
 <?
@@ -121,22 +122,22 @@ class aspro_import
  * /_logs/log_import_from_1C/    - каталог для отладки скриптов мипорта
  ***********************************************************************************/
 /*if(!function_exists("cl_print_w")){
-	function cl_print_w ($var, $filename="", $path = "/_logs/log_import_from_1C/")
-	{
-//	$pr = date("Y-m-d H:i:s");
-		$pr = date("H:i:s");
+    function cl_print_w ($var, $filename="", $path = "/_logs/log_import_from_1C/")
+    {
+//    $pr = date("Y-m-d H:i:s");
+        $pr = date("H:i:s");
 
-		if ($filename=="" or empty($filename)){
-			\Bitrix\Main\Diag\Debug::writeToFile($pr.$var,
-				"",
-				$path.date("Y-m-d H_00")." cadmarket.log");
-		}
-		else {
-			\Bitrix\Main\Diag\Debug::writeToFile($pr.$var,
-				"",
-				$path.date("Y-m-d H_00")." cadmarket ".$filename.".log");
-		}
-	}
+        if ($filename=="" or empty($filename)){
+            \Bitrix\Main\Diag\Debug::writeToFile($pr.$var,
+                "",
+                $path.date("Y-m-d H_00")." cadmarket.log");
+        }
+        else {
+            \Bitrix\Main\Diag\Debug::writeToFile($pr.$var,
+                "",
+                $path.date("Y-m-d H_00")." cadmarket ".$filename.".log");
+        }
+    }
 }*/
 if (!function_exists("CAEDucemUpdateAfterExchange")) {
 
@@ -360,17 +361,66 @@ function redirectToNewUri(&$content)
 AddEventHandler("main", "OnPageStart", "saveUtmToSession");
 
 function saveUtmToSession() {
-	$utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
-	foreach ($utmParams as $param) {
-		if (isset($_GET[$param])) {
-			$_SESSION[$param] = $_GET[$param];
-			/*echo '<script>
+    $utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+    foreach ($utmParams as $param) {
+        if (isset($_GET[$param])) {
+            $_SESSION[$param] = $_GET[$param];
+            /*echo '<script>
                 sessionStorage.setItem("' . $param . '", "' . $_GET[$param] . '");
                 console.log(sessionStorage.getItem("' . $param . '"));
                 console.log(sessionStorage);
-			</script>';*/
-		}
-	}
+            </script>';*/
+        }
+    }
 }
 
+
+AddEventHandler("main", "OnEndBufferContent", "ReplaceBreadcrumbLink");
+function ReplaceBreadcrumbLink(&$content)
+{
+    global $APPLICATION;
+
+    if (!defined("ADMIN_SECTION") || ADMIN_SECTION !== true) {
+        $search = '<a class="breadcrumbs__link" href="/catalog/sale/" title="Распродажа" itemprop="item">';
+        $replace = '<a class="breadcrumbs__link" href="/sale-new/" title="Распродажа" itemprop="item">';
+        $content = str_replace($search, $replace, $content);
+    }
+}
+
+// Change url for yandex market
+$eventManager->addEventHandler("yandex.market", "onExportOfferWriteData", function (Main\Event $event) {
+    $tagResultList = $event->getParameter("TAG_RESULT_LIST");
+    $context = $event->getParameter('CONTEXT');
+    
+    foreach ($tagResultList as $elementId => $tagResult) {
+        if ($tagResult->isSuccess()) {
+            $tagNode = $tagResult->getXmlElement();
+            $children = $tagNode->children();              
+            
+                foreach ($children as $child_name => $child_val) {
+                    if($child_name == 'url'){
+                        if($context["SETUP_ID"] == 3) {
+                            $child_val[0] = $child_val[0].'?city=msk';    
+                        }      
+                        if($context["SETUP_ID"] == 4) {
+                            $child_val[0] = $child_val[0].'?city=spb';    
+                        }                                          
+                    }
+                }       
+
+            $tagResult->invalidateXmlContents();
+        }
+    }
+});
+
+if(isset($_GET['city'])) {
+    global $_COOKIE;
+    
+    if ( $_GET['city'] == 'msk' ) {
+        $_COOKIE['current_region'] = 2243;    
+    }   
+    elseif ( $_GET['city'] == 'spb' ) {
+        $_COOKIE['current_region'] = 2242;    
+    } 
+}
 ?>
