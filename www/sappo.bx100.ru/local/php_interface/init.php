@@ -423,4 +423,38 @@ if(isset($_GET['city'])) {
         $_COOKIE['current_region'] = 2242;    
     } 
 }
+
+
+AddEventHandler("main", "OnEndBufferContent", "SetHostForTurbo");
+
+function SetHostForTurbo(&$content)
+{
+    $newHost = 'https://sappo.ru';
+
+    $type = $_GET['type'] ?? '';
+    $id = $_GET['id'] ?? '';
+
+    if($type == 'aspro_max_content' && $id==33){
+
+        $patterns = [
+            '/<(img[^>]+)\b(src)="(\/[^"]+|\bhttps?:\/\/[^"]+)/i',
+        ];
+
+        foreach ($patterns as $pattern) {
+            $content = preg_replace_callback($pattern, function($matches) use ($newHost) {
+                $url = $matches[3];
+
+                if (str_starts_with($url, '/')) {
+                    return '<' . $matches[1] . ' ' . $matches[2] . '="' . $newHost . $url . '';
+                }
+
+                return $matches[0];
+            }, $content);
+        }
+    }
+
+
+}
+
+
 ?>
