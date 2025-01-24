@@ -15,35 +15,35 @@ EventManager::getInstance()->addEventHandler("main", "OnProlog", function (){
     $GLOBALS["VUE_ROUTER"] = new App\router();
 }, 100);
 
-//   AddEventHandler( "iblock", "OnAfterIBlockElementAdd", array( "aspro_import", "FillTheBrands" ) );
-//      AddEventHandler( "iblock", "OnAfterIBlockElementUpdate", array( "aspro_import", "FillTheBrands" ) );
-//      class aspro_import {
-//          function FillTheBrands( $arFields ){
-//              $arCatalogID=array(42);
-//              if( in_array($arFields['IBLOCK_ID'], $arCatalogID) ){
-//                  $arItem = CIBlockElement::GetList( false, array( 'IBLOCK_ID' => $arFields['IBLOCK_ID'], 'ID' => $arFields['ID'] ), false, false, array( 'ID', 'PROPERTY_BREND' ) )->fetch();
-//                  if( $arItem['PROPERTY_BREND_VALUE'] ){
-//                      $arBrand = CIBlockElement::GetList( false, array( 'IBLOCK_ID' => 46, 'NAME' => $arItem['PROPERTY_BREND_VALUE'] ) )->fetch();
-//                      if( $arBrand ){
-//                          CIBlockElement::SetPropertyValuesEx( $arFields['ID'], false, array( 'BRAND' => $arBrand['ID'] ) );
-//                      }else{
-//                          $el = new CIBlockElement;
-//                          $arParams = array( "replace_space" => "-", "replace_other" => "-" );
-//                          $id = $el->Add( array(
-//                              'ACTIVE' => 'Y',
-//                              'NAME' => $arItem['PROPERTY_BREND_VALUE'],
-//                              'IBLOCK_ID' => 46,
-//                              'CODE' => Cutil::translit( $arItem['PROPERTY_BREND_VALUE'], "ru", $arParams )
-//                          ) );                 
-//                          if( $id ){
-//                              CIBlockElement::SetPropertyValuesEx( $arFields['ID'], false, array( 'BRAND' => $id ) );
-//                          }else{
-//                              echo $el->LAST_ERROR;
-//                          }
-//                      }
-//                  }
-//              }
-//          }
+// AddEventHandler( "iblock", "OnAfterIBlockElementAdd", array( "aspro_import", "FillTheBrands" ) );
+// AddEventHandler( "iblock", "OnAfterIBlockElementUpdate", array( "aspro_import", "FillTheBrands" ) );
+// class aspro_import {
+//     function FillTheBrands( $arFields ){
+//         $arCatalogID=array(42);
+//         if( in_array($arFields['IBLOCK_ID'], $arCatalogID) ){
+//             $arItem = CIBlockElement::GetList( false, array( 'IBLOCK_ID' => $arFields['IBLOCK_ID'], 'ID' => $arFields['ID'] ), false, false, array( 'ID', 'PROPERTY_BREND' ) )->fetch();
+//             if( $arItem['PROPERTY_BREND_VALUE'] ){
+//                 $arBrand = CIBlockElement::GetList( false, array( 'IBLOCK_ID' => 46, 'NAME' => $arItem['PROPERTY_BREND_VALUE'] ) )->fetch();
+//                 if( $arBrand ){
+//                     CIBlockElement::SetPropertyValuesEx( $arFields['ID'], false, array( 'BRAND' => $arBrand['ID'] ) );
+//                 }else{
+//                     $el = new CIBlockElement;
+//                     $arParams = array( "replace_space" => "-", "replace_other" => "-" );
+//                     $id = $el->Add( array(
+//                         'ACTIVE' => 'Y',
+//                         'NAME' => $arItem['PROPERTY_BREND_VALUE'],
+//                         'IBLOCK_ID' => 46,
+//                         'CODE' => Cutil::translit( $arItem['PROPERTY_BREND_VALUE'], "ru", $arParams )
+//                     ) );                 
+//                     if( $id ){
+//                         CIBlockElement::SetPropertyValuesEx( $arFields['ID'], false, array( 'BRAND' => $id ) );
+//                     }else{
+//                         echo $el->LAST_ERROR;
+//                     }
+//                 }
+//             }
+//         }
+//     }
 // }
 ?>
 <?
@@ -124,7 +124,7 @@ class aspro_import
 /*if(!function_exists("cl_print_w")){
     function cl_print_w ($var, $filename="", $path = "/_logs/log_import_from_1C/")
     {
-//    $pr = date("Y-m-d H:i:s");
+//  $pr = date("Y-m-d H:i:s");
         $pr = date("H:i:s");
 
         if ($filename=="" or empty($filename)){
@@ -149,7 +149,7 @@ if (!function_exists("CAEDucemUpdateAfterExchange")) {
         $IBLOCK_ID = 42;
         $idPropListValue = 7405;
         $listProduct = [];
-        $arSelect = array("ID", "IBLOCK_ID", "NAME", "CATALOG_PRICE_2", "CATALOG_PRICE_6", "PROPERTY_*");
+        $arSelect = array("ID", "IBLOCK_ID", "NAME", "CATALOG_PRICE_2", "CATALOG_PRICE_14", "PROPERTY_*");
         $arFilter = array("IBLOCK_ID" => $IBLOCK_ID, "ACTIVE" => "Y");
         $res = CIBlockElement::GetList(array(), $arFilter, false, false, $arSelect);
         while ($ob = $res->GetNextElement()) {
@@ -158,7 +158,7 @@ if (!function_exists("CAEDucemUpdateAfterExchange")) {
             $listProduct[] = [
                 "ID" => $arFields["ID"],
                 "CATALOG_PRICE_2" => $arFields["CATALOG_PRICE_2"],
-                "CATALOG_PRICE_6" => $arFields["CATALOG_PRICE_6"],
+                "CATALOG_PRICE_14" => $arFields["CATALOG_PRICE_14"],
                 "VALUE_ENUM_ID" => $arFields["PROPERTY"]["HIT"]["VALUE_ENUM_ID"]
             ];
         }
@@ -166,12 +166,12 @@ if (!function_exists("CAEDucemUpdateAfterExchange")) {
         file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/log_sync.txt', $log . PHP_EOL, FILE_APPEND);
         foreach ($listProduct as $product) {
             $PROP = [];
-            if (round($product["CATALOG_PRICE_2"]) < round($product["CATALOG_PRICE_6"])) {
+            if (round($product["CATALOG_PRICE_2"]) < round($product["CATALOG_PRICE_14"])) {
                 if (is_array($product["VALUE_ENUM_ID"])) $PROP["HIT"] = array_merge($product["VALUE_ENUM_ID"], [0 => $idPropListValue]);
                 else $PROP["HIT"] = [0 => $idPropListValue];
             } else {
                 if (is_array($product["VALUE_ENUM_ID"])) {
-                    if (in_array($idPropListValue, $product["VALUE_ENUM_ID"]) && (round($product["CATALOG_PRICE_2"]) == round($product["CATALOG_PRICE_6"]))) {
+                    if (in_array($idPropListValue, $product["VALUE_ENUM_ID"]) && (round($product["CATALOG_PRICE_2"]) == round($product["CATALOG_PRICE_14"]))) {
                         $PROP["HIT"] = array_diff($product["VALUE_ENUM_ID"], [0 => $idPropListValue]);
                         if (count($PROP["HIT"]) == 0) $PROP["HIT"] = [0 => ''];
                     }
@@ -217,7 +217,7 @@ function OnSaleComponentOrderResultPrepared(&$order, &$arUserResult, $request, &
     $isBonusActive = false;
     if($payment && isset($payment[0]) && $payment[0]){
         $paySystemId = $payment[0]->getPaymentSystemId();
-        $isBonusActive = $paySystemId == 9;
+        $isBonusActive =  in_array($paySystemId, [9, 10]);
     }
 
 
@@ -425,7 +425,8 @@ if(isset($_GET['city'])) {
 }
 
 
-AddEventHandler("main", "OnEndBufferContent", "SetHostForTurbo");
+
+addEventHandler("main", "OnEndBufferContent", "SetHostForTurbo");
 
 function SetHostForTurbo(&$content)
 {
@@ -453,8 +454,119 @@ function SetHostForTurbo(&$content)
         }
     }
 
-
 }
+
+$eventManager->addEventHandler(
+    'sale',
+    'onSalePaySystemRestrictionsClassNamesBuildList', function (Main\Event $event) {
+        return new \Bitrix\Main\EventResult(
+            \Bitrix\Main\EventResult::SUCCESS,
+            array(
+                '\MyPayRestriction' => '/local/php_interface/include/mypayrestriction.php',
+            )
+        );
+    }
+);
+
+
+function updateNewsProducts()
+{
+
+    if (!\Bitrix\Main\Loader::includeModule('iblock')) {
+        return false;
+    }
+
+    $iblockId = 42;
+    $propValueId = 7404; //new
+
+    $oldProducts = CIBlockElement::GetList(
+        [],
+        [
+            'IBLOCK_ID' => $iblockId,
+            'PROPERTY_HIT' => $propValueId
+        ],
+        false,
+        false,
+        ['ID']
+    );
+
+    while ($product = $oldProducts->Fetch()) {
+        CIBlockElement::SetPropertyValuesEx($product['ID'], $iblockId, ['HIT' => false]);
+    }
+
+
+    $dateThreshold = new \Bitrix\Main\Type\DateTime();
+    $dateThreshold->add("-30 days");
+
+    $newProducts = CIBlockElement::GetList(
+        [],
+        [
+            'IBLOCK_ID' => $iblockId,
+            '>DATE_CREATE' => $dateThreshold
+        ],
+        false,
+        false,
+        ['ID']
+    );
+
+    while ($product = $newProducts->Fetch()) {
+        CIBlockElement::SetPropertyValuesEx($product['ID'], $iblockId, ['HIT' => $propValueId]);
+    }
+
+    return "updateNewsProducts();";
+}
+
+
+
+function updateHitProducts()
+{
+
+    if (!\Bitrix\Main\Loader::includeModule('iblock')) {
+        return false;
+    }
+
+    $iblockId = 42;
+    $propValueId = 7402; //hit
+
+    $oldProducts = CIBlockElement::GetList(
+        [],
+        [
+            'IBLOCK_ID' => $iblockId,
+            'PROPERTY_HIT' => $propValueId
+        ],
+        false,
+        false,
+        ['ID']
+    );
+
+    while ($product = $oldProducts->Fetch()) {
+        CIBlockElement::SetPropertyValuesEx($product['ID'], $iblockId, ['HIT' => false]);
+    }
+
+    $query = \Bitrix\Main\Application::getConnection()->query("
+    SELECT
+        B.PRODUCT_ID,
+        SUM(B.QUANTITY) as TOTAL_SOLD
+    FROM
+        b_sale_basket B
+    INNER JOIN
+        b_iblock_element E ON E.ID = B.PRODUCT_ID
+    WHERE
+        E.IBLOCK_ID = {$iblockId} AND B.ORDER_ID > 0
+    GROUP BY
+        B.PRODUCT_ID
+    ORDER BY
+        TOTAL_SOLD DESC
+    LIMIT 100
+");
+
+    while ($row = $query->fetch()) {
+        CIBlockElement::SetPropertyValuesEx($row['PRODUCT_ID'], $iblockId, ['HIT' => $propValueId]);
+    }
+
+    return "updateHitProducts();";
+}
+
 
 
 ?>
