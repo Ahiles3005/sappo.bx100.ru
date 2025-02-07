@@ -11,7 +11,11 @@
 /** @var string $componentPath */
 /** @var CBitrixComponent $component */
 $this->setFrameMode(false);
+
+
+
 ?>
+
 <?='<?xml version="1.0" encoding="'.SITE_CHARSET.'"?>'?>
 <rss xmlns:yandex="http://news.yandex.ru" xmlns:media="http://search.yahoo.com/mrss/" xmlns:turbo="http://turbo.yandex.ru" version="2.0">
 <channel>
@@ -38,6 +42,13 @@ $this->setFrameMode(false);
 				</menu>
 				<?endif?>
 		   </header>
+        <?
+        $image = $arItem['ELEMENT']['DETAIL_PICTURE'] ?? $arItem['ELEMENT']['PREVIEW_PICTURE'];
+        if ($image ):?>
+            <figure>
+                <img alt="header_image" src="<?= $image?>" title="Главная фотография">
+            </figure>
+        <? endif; ?>
 			<?=$arItem['full-text']?>
 			<p>&nbsp;</p>
 			<?
