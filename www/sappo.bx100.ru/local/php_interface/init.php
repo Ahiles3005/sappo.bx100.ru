@@ -487,11 +487,20 @@ function updateNewsProducts()
         ],
         false,
         false,
-        ['ID']
+        ['*']
     );
 
-    while ($product = $oldProducts->Fetch()) {
-        CIBlockElement::SetPropertyValuesEx($product['ID'], $iblockId, ['HIT' => false]);
+    while ($productData = $oldProducts->GetNextElement()) {
+        $product = $productData->GetFields();
+        $productPrp = $productData->GetProperties();
+            $hitValues = $productPrp['HIT']['VALUE_ENUM_ID'] ?? [];
+            foreach ($hitValues as $k => $hitValue) {
+                if ($hitValue == $propValueId) {
+                    unset($hitValues[$k]);
+                    break;
+                }
+            }
+            CIBlockElement::SetPropertyValuesEx($product['ID'], $iblockId, ['HIT' => $hitValues]);
     }
 
 
@@ -506,17 +515,21 @@ function updateNewsProducts()
         ],
         false,
         false,
-        ['ID']
+        ['*']
     );
 
-    while ($product = $newProducts->Fetch()) {
-        CIBlockElement::SetPropertyValuesEx($product['ID'], $iblockId, ['HIT' => $propValueId]);
+
+    while ($productData = $newProducts->GetNextElement()) {
+        $product = $productData->GetFields();
+        $productPrp = $productData->GetProperties();
+        $hitValues = $productPrp['HIT']['VALUE_ENUM_ID'] ?? [];
+        $hitValues[] = $propValueId;
+        CIBlockElement::SetPropertyValuesEx($product['ID'], $iblockId, ['HIT' => $hitValues]);
     }
+
 
     return "updateNewsProducts();";
 }
-
-
 
 function updateHitProducts()
 {
@@ -536,12 +549,23 @@ function updateHitProducts()
         ],
         false,
         false,
-        ['ID']
+        ['*']
     );
 
-    while ($product = $oldProducts->Fetch()) {
-        CIBlockElement::SetPropertyValuesEx($product['ID'], $iblockId, ['HIT' => false]);
+
+    while ($productData = $oldProducts->GetNextElement()) {
+        $product = $productData->GetFields();
+        $productPrp = $productData->GetProperties();
+        $hitValues = $productPrp['HIT']['VALUE_ENUM_ID'] ?? [];
+        foreach ($hitValues as $k => $hitValue) {
+            if ($hitValue == $propValueId) {
+                unset($hitValues[$k]);
+                break;
+            }
+        }
+        CIBlockElement::SetPropertyValuesEx($product['ID'], $iblockId, ['HIT' => $hitValues]);
     }
+
 
     $query = \Bitrix\Main\Application::getConnection()->query("
     SELECT
@@ -561,7 +585,24 @@ function updateHitProducts()
 ");
 
     while ($row = $query->fetch()) {
-        CIBlockElement::SetPropertyValuesEx($row['PRODUCT_ID'], $iblockId, ['HIT' => $propValueId]);
+        $oldProducts = CIBlockElement::GetList(
+            [],
+            [
+                'IBLOCK_ID' => $iblockId,
+                'ID' => $row['PRODUCT_ID']
+            ],
+            false,
+            false,
+            ['*']
+        );
+
+        while ($productData = $oldProducts->GetNextElement()) {
+            $product = $productData->GetFields();
+            $productPrp = $productData->GetProperties();
+            $hitValues = $productPrp['HIT']['VALUE_ENUM_ID'] ?? [];
+            $hitValues[] = $propValueId;
+            CIBlockElement::SetPropertyValuesEx($product['ID'], $iblockId, ['HIT' => $hitValues]);
+        }
     }
 
     return "updateHitProducts();";

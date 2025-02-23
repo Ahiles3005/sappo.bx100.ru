@@ -16,7 +16,7 @@ $this->setFrameMode(false);
 
 ?>
 
-<?='<?xml version="1.0" encoding="'.SITE_CHARSET.'"?>'?>
+<?/*='<?xml version="1.0" encoding="'.SITE_CHARSET.'"?>'*/?>
 <rss xmlns:yandex="http://news.yandex.ru" xmlns:media="http://search.yahoo.com/mrss/" xmlns:turbo="http://turbo.yandex.ru" version="2.0">
 <channel>
 <title><?=$arResult["NAME"].(mb_strlen($arResult["SECTION"]["NAME"])>0?" / ".$arResult["SECTION"]["NAME"]:"")?></title>
