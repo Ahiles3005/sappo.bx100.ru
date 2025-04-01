@@ -57,6 +57,11 @@ if (file_exists($_SERVER["DOCUMENT_ROOT"]."/local/php_interface/include/events.p
     require_once($_SERVER["DOCUMENT_ROOT"] . "/local/php_interface/include/events.php");
 }
 
+if (file_exists($_SERVER["DOCUMENT_ROOT"]."/local/php_interface/include/unisender.php")) {
+
+    require_once($_SERVER["DOCUMENT_ROOT"] . "/local/php_interface/include/unisender.php");
+}
+
 
 class aspro_import
 {
