@@ -538,7 +538,7 @@ class UnisenderWrap
         $url = str_replace('#ELEMENT_CODE#', $element['CODE'], $url);
 
         return [
-            'url' => 'https://sapo.ru' . $url,
+            'url' => 'https://sappo.ru' . $url,
             'name' => $element['NAME']
         ];
     }
@@ -558,7 +558,7 @@ class UnisenderWrap
             $urlElement = str_replace('#ELEMENT_CODE#', $element['CODE'], $urlElement);
 
             $data[] = [
-                'url' => 'https://sapo.ru' . $urlElement,
+                'url' => 'https://sappo.ru' . $urlElement,
                 'name' => $element['NAME']
             ];
         }
