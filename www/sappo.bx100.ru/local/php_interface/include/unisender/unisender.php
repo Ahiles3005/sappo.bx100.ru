@@ -609,7 +609,131 @@ class UnisenderWrap
         $entity_data_class = self::getHighload();
 
         foreach ($users as $user) {
-            $entity_data_class::add(['UF_FUSER_ID' => $user['FUSER_ID']]);
+            $entity_data_class::add(['UF_FUSER_ID' => $user['FUSER_ID'], 'UF_TIMESTAMP_FIRST_SEND' => time()]);
+
+            $name = $user['USER_LAST_NAME'] . ' ' . $user['USER_NAME'];
+            $email = $user['USER_EMAIL'];
+            if (!$email) {
+                continue;
+            }
+
+            $productsData = \Bitrix\Sale\Internals\BasketTable::getList([
+                "select" => [
+                    "PRODUCT_ID",
+                ],
+                "filter" => [
+                    "FUSER_ID" => $user['FUSER_ID'],
+                    "ORDER_ID" => null,
+                    "DELAY" => 'N',
+                ],
+
+            ])->fetchAll();
+
+            $productIds = [];
+            foreach ($productsData as $productData) {
+                $productIds[] = $productData['PRODUCT_ID'];
+            }
+
+            if (count($productIds) == 0) {
+                continue;
+            }
+
+
+            $productsData = self::getProductsData($productIds, 42);
+
+            $recipients[] = [
+                "email" => $email,
+                "substitutions" => [
+                    "Name" => $name,
+                    "basket" => self::getBasketHtml($productsData),
+                ]
+            ];
+        }
+
+        $testerEmail = \Bitrix\Main\Config\Option::get("askaron.settings", "UF_UNSIDER_TEST_EMAIL");
+        if (!empty($testerEmail)) {
+            $recipients = [];
+            $recipients[] = [
+                "email" => $testerEmail,
+                "substitutions" => [
+                    "Name" => $name ?? 'test',
+                    "basket" => self::getBasketHtml($productsData),
+                ]
+            ];
+        }
+
+
+        if (!empty($recipients)) {
+            $params = [
+                "message" => [
+                    "recipients" => $recipients,
+                    "template_id" => self::$templateBroshenaKorzina
+                ],
+            ];
+
+            try {
+                $client = new Unisender\UniGoClient(self::$apiKeyGo, 'go2.unisender.ru');
+                $response = $client->emails()->send($params);
+                self::saveLog(date('c'));
+                self::saveLog('BroshenaKorzina');
+                self::saveLog(json_encode($response));
+                self::saveLog(json_encode($params));
+                self::saveLog('#######');
+            } catch (\Throwable $e) {
+                self::saveLog(date('c'));
+                self::saveLog('sendEmailByDroppedBasket');
+                self::saveLog($e->getMessage());
+                self::saveLog('#######');
+            }
+        }
+
+        return "UnisenderWrap::sendEmailByDroppedBasket();";
+
+    }
+    public static function sendEmailByDroppedBasketAfter2Day()
+    {
+
+        $active = \Bitrix\Main\Config\Option::get("askaron.settings", "UF_ACTIVE_SEBDB");
+        if ($active != 1) {
+            return "UnisenderWrap::sendEmailByDroppedBasket();";
+        }
+
+        Loader::includeModule('catalog');
+        Loader::includeModule('sale');
+
+        self::clearDataEmailSendDroppedBasket();
+
+        $fUserIdsHasEmail = self::getFUserIdsHasEmailAndNotActiveAfter2Day();
+
+        $users = \Bitrix\Sale\Internals\BasketTable::getList([
+            "select" => [
+                "FUSER_ID",
+                "USER_ID" => "FUSER.USER.ID",
+                "USER_LOGIN" => "FUSER.USER.LOGIN",
+                "USER_NAME" => "FUSER.USER.NAME",
+                "USER_LAST_NAME" => "FUSER.USER.LAST_NAME",
+                "USER_EMAIL" => "FUSER.USER.EMAIL",
+            ],
+            "filter" => [
+                "ORDER_ID" => null,
+                "DELAY" => 'N',
+                "FUSER_ID" => $fUserIdsHasEmail,
+                "!FUSER.USER.ID" => false // Исключаем записи, где нет связи с пользователем
+            ],
+            "group" => [
+                "FUSER_ID",
+                "FUSER.USER.ID",
+                "FUSER.USER.LOGIN",
+                "FUSER.USER.NAME",
+                "FUSER.USER.LAST_NAME",
+                "FUSER.USER.EMAIL"
+            ]
+        ])->fetchAll();
+
+        $entity_data_class = self::getHighload();
+
+        foreach ($users as $user) {
+            $entity_data_class::add(['UF_FUSER_ID' => $user['FUSER_ID'], 'UF_TIMESTAMP_FIRST_SEND' => time()]);
 
             $name = $user['USER_LAST_NAME'] . ' ' . $user['USER_NAME'];
             $email = $user['USER_EMAIL'];
@@ -748,7 +872,7 @@ class UnisenderWrap
         $entity_data_class = self::getHighload();
 
         $fUserIdsData = $entity_data_class::getList([
-            "select" => ["UF_FUSER_ID", 'ID'],
+            "select" => ["UF_FUSER_ID", 'ID','UF_TIMESTAMP_FIRST_SEND'],
         ])->fetchAll();
 
         $fUserIdsSend = [];
@@ -759,6 +883,36 @@ class UnisenderWrap
         return $fUserIdsSend;
 
     }
+
+    private static function getFUserIdsHasEmailAndNotActiveAfter2Day()
+    {
+
+        $entity_data_class = self::getHighload();
+
+        $fUserIdsData = $entity_data_class::getList([
+            "select" => ["UF_FUSER_ID", 'ID','UF_TIMESTAMP_FIRST_SEND'],
+        ])->fetchAll();
+
+        $fUserIdsSend = [];
+
+        $currentDate = new DateTime();
+        foreach ($fUserIdsData as $fUserIdData) {
+            $timestamp = (int)$fUserIdData['UF_TIMESTAMP_FIRST_SEND'];
+            if ($timestamp <= 0) {
+                $timestamp = $currentDate->getTimestamp() - (60 * 60 * 24 * 3);
+            }
+            $dateFirstsend = new DateTime($timestamp);
+            $interval = $currentDate->diff($dateFirstsend);
+            if ($interval->days >= 2) {
+                $fUserIdsSend[] = $fUserIdData['UF_FUSER_ID'];
+            }
+
+        }
+
+        return $fUserIdsSend;
+
+    }
+
 
 
     private static function getHighload()
