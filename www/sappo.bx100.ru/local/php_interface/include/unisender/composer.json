@@ -1,0 +1,5 @@
+{
+    "require": {
+        "unisender/unigo-php": "^1.0"
+    }
+}

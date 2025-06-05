@@ -1,0 +1,35 @@
+{
+  "name": "unisender/unigo-php",
+  "description": "The UniGo SDK package what provide methods to interact with Unisender Go API.",
+  "version": "1.0.1",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Unisender Smart LLC as Unisender Go",
+      "homepage": "https://go.unisender.ru"
+    }
+  ],
+  "require": {
+    "php": "^7.4 || ^8.0",
+    "guzzlehttp/guzzle": "^6.5 || ^7",
+    "webmozart/assert": "^1.9.1"
+  },
+  "minimum-stability": "stable",
+  "config": {
+    "sort-packages": true
+  },
+  "autoload": {
+    "psr-4": {
+      "Unisender\\": "src",
+      "UniGoScripts\\": "scripts"
+    }
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.15"
+  },
+  "scripts": {
+    "test": "UniGoScripts\\UniGoApiChecker::testApi"
+  }
+}
+

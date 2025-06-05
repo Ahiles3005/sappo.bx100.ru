@@ -57,9 +57,9 @@ if (file_exists($_SERVER["DOCUMENT_ROOT"]."/local/php_interface/include/events.p
     require_once($_SERVER["DOCUMENT_ROOT"] . "/local/php_interface/include/events.php");
 }
 
-if (file_exists($_SERVER["DOCUMENT_ROOT"]."/local/php_interface/include/unisender.php")) {
+if (file_exists($_SERVER["DOCUMENT_ROOT"]."/local/php_interface/include/unisender/unisender.php")) {
 
-    require_once($_SERVER["DOCUMENT_ROOT"] . "/local/php_interface/include/unisender.php");
+    require_once($_SERVER["DOCUMENT_ROOT"] . "/local/php_interface/include/unisender/unisender.php");
 }
 
 
@@ -206,6 +206,8 @@ if (!function_exists("CAEDucemUpdateAfterExchange")) {
             $result = CIBlockElement::SetPropertyValuesEx($product["ID"], false, $PROP);
             $result2 = $el->Update($product["ID"], array('TIMESTAMP_X' => true));
         }
+      
+      return "CAEDucemUpdateAfterExchange();";
     }
 }
 
@@ -613,6 +615,75 @@ function updateHitProducts()
     return "updateHitProducts();";
 }
 
+if (\Bitrix\Main\Loader::includeModule('iblock'))
+{
+    \Bitrix\Main\EventManager::getInstance()->addEventHandler(
+        "iblock",
+        "OnTemplateGetFunctionClass",
+        array("FunctionMinPrice", "eventHandler")
+    );
+    include_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/iblock/lib/template/functions/fabric.php");
+    class FunctionMinPrice extends \Bitrix\Iblock\Template\Functions\FunctionBase
+    {
+        public static function eventHandler($event)
+        {
+            $parameters = $event->getParameters();
+            $functionName = $parameters[0];
+            if ($functionName === "minprice")
+            {
+                return new \Bitrix\Main\EventResult(
+                    \Bitrix\Main\EventResult::SUCCESS,
+                    "\\FunctionMinPrice"
+                );
+            }
+        }
+        public function calculate($parameters)
+        {
+            $arFilter = false;
 
+            if(isset($parameters[0])){
+
+                $rsSections = CIBlockSection::GetList([], ['CODE'=>$parameters[0],  'IBLOCK_ID' => 42], false, ["ID", "IBLOCK_ID", "CODE", "NAME"]);
+                while($arSec = $rsSections->Fetch()){
+
+                    $arSection = $arSec;
+                }
+                if($arSection){
+                    $arFilter = ['IBLOCK_ID'=>$arSection['IBLOCK_ID'], 'SECTION_ID'=>$arSection['ID'], 'INCLUDE_SUBSECTIONS' => "Y"];
+                }
+
+                if(isset($parameters[1])){
+                    $rsBrands = CIBlockElement::GetList([], ['IBLOCK_ID'=>46, 'NAME'=>$parameters[1]], false, false, ["ID"]);
+                    while($arBrn = $rsBrands->Fetch()){
+                        $arBrands = $arBrn;
+                    }
+                    if($arSection){
+                        $arFilter['PROPERTY_BRAND.ID'] = $arBrands['ID'];
+                    }
+                }
+
+                if(!$arFilter){
+                    reset($parameters);
+                    return '';
+                }
+                $rsElements = CIBlockElement::GetList(['SORT'=> 'asc'], $arFilter, false, false, ["ID"]);
+                while($arElem = $rsElements->Fetch()){
+                    $tmpPrice = '';
+                    $tmpPrice = CPrice::GetBasePrice($arElem['ID']);
+                    if(!empty($tmpPrice)){
+                        $arPrice[] = $tmpPrice['PRICE'];
+                    }
+                }
+                if($arPrice){
+                    $minPriceSection = \CCurrencyLang::CurrencyFormat(min($arPrice), \Bitrix\Currency\CurrencyManager::getBaseCurrency());
+                    return $minPriceSection;
+                }
+                reset($parameters);
+                return '';
+            }
+            return '';
+        }
+    }
+}
 
 ?>
