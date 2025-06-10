@@ -139,6 +139,10 @@ class UnisenderWrap
     }
 
 
+    /**
+     *
+     *
+     */
     public static function productSetSellout(&$arFields)
     {
 
@@ -253,7 +257,7 @@ class UnisenderWrap
                 $client = new Unisender\UniGoClient(self::$apiKeyGo, 'go2.unisender.ru');
                 $response = $client->emails()->send($params);
                 self::saveLog(date('c'));
-                self::saveLog('skidka');
+                self::saveLog('productSetSellout');
                 self::saveLog(json_encode($response));
                 self::saveLog(json_encode($params));
                 self::saveLog('#######');
@@ -362,7 +366,7 @@ class UnisenderWrap
                         $client = new Unisender\UniGoClient(self::$apiKeyGo, 'go2.unisender.ru');
                         $response = $client->emails()->send($params);
                         self::saveLog(date('c'));
-                        self::saveLog('TovarSkoroKonchitsa');
+                        self::saveLog('productLowQuantity');
                         self::saveLog(json_encode($response));
                         self::saveLog(json_encode($params));
                         self::saveLog('#######');
@@ -499,7 +503,7 @@ class UnisenderWrap
                         $client = new Unisender\UniGoClient(self::$apiKeyGo, 'go2.unisender.ru');
                         $response = $client->emails()->send($params);
                         self::saveLog(date('c'));
-                        self::saveLog('TovarPodZakaz');
+                        self::saveLog('hasProductArrived');
                         self::saveLog(json_encode($response));
                         self::saveLog(json_encode($params));
                         self::saveLog('#######');
@@ -675,7 +679,7 @@ class UnisenderWrap
                 $client = new Unisender\UniGoClient(self::$apiKeyGo, 'go2.unisender.ru');
                 $response = $client->emails()->send($params);
                 self::saveLog(date('c'));
-                self::saveLog('BroshenaKorzina');
+                self::saveLog('sendEmailByDroppedBasket');
                 self::saveLog(json_encode($response));
                 self::saveLog(json_encode($params));
                 self::saveLog('#######');
@@ -690,6 +694,7 @@ class UnisenderWrap
         return "UnisenderWrap::sendEmailByDroppedBasket();";
 
     }
+
     public static function sendEmailByDroppedBasketAfter2Day()
     {
 
@@ -703,7 +708,11 @@ class UnisenderWrap
 
         self::clearDataEmailSendDroppedBasket();
 
-        $fUserIdsHasEmail = self::getFUserIdsHasEmailAndNotActiveAfter2Day();
+        $highlightData = self::getFUserIdsHasEmailAndNotActiveAfter2Day();
+
+        $fUserIdsHasEmail = $highlightData['fuserId'];
+        $hilightIdByFuserIds = $highlightData['hl'];
+
 
         $users = \Bitrix\Sale\Internals\BasketTable::getList([
             "select" => [
@@ -732,8 +741,10 @@ class UnisenderWrap
 
         $entity_data_class = self::getHighload();
 
+
         foreach ($users as $user) {
-            $entity_data_class::add(['UF_FUSER_ID' => $user['FUSER_ID'], 'UF_TIMESTAMP_FIRST_SEND' => time()]);
+            $primeryId = $hilightIdByFuserIds[$user['FUSER_ID']];
+            $entity_data_class::update($primeryId,['UF_SENT_SECOND_TIME' => 1]);
 
             $name = $user['USER_LAST_NAME'] . ' ' . $user['USER_NAME'];
             $email = $user['USER_EMAIL'];
@@ -799,13 +810,13 @@ class UnisenderWrap
                 $client = new Unisender\UniGoClient(self::$apiKeyGo, 'go2.unisender.ru');
                 $response = $client->emails()->send($params);
                 self::saveLog(date('c'));
-                self::saveLog('BroshenaKorzina');
+                self::saveLog('sendEmailByDroppedBasketAfter2Day');
                 self::saveLog(json_encode($response));
                 self::saveLog(json_encode($params));
                 self::saveLog('#######');
             } catch (\Throwable $e) {
                 self::saveLog(date('c'));
-                self::saveLog('sendEmailByDroppedBasket');
+                self::saveLog('sendEmailByDroppedBasketAfter2Day');
                 self::saveLog($e->getMessage());
                 self::saveLog('#######');
             }
@@ -872,7 +883,7 @@ class UnisenderWrap
         $entity_data_class = self::getHighload();
 
         $fUserIdsData = $entity_data_class::getList([
-            "select" => ["UF_FUSER_ID", 'ID','UF_TIMESTAMP_FIRST_SEND'],
+            "select" => ["UF_FUSER_ID", 'ID', 'UF_TIMESTAMP_FIRST_SEND'],
         ])->fetchAll();
 
         $fUserIdsSend = [];
@@ -890,29 +901,28 @@ class UnisenderWrap
         $entity_data_class = self::getHighload();
 
         $fUserIdsData = $entity_data_class::getList([
-            "select" => ["UF_FUSER_ID", 'ID','UF_TIMESTAMP_FIRST_SEND'],
+            "select" => ["UF_FUSER_ID", 'ID', 'UF_TIMESTAMP_FIRST_SEND', 'UF_SENT_SECOND_TIME'],
+            "filter" => ["!UF_SENT_SECOND_TIME"=>1],
+
         ])->fetchAll();
 
         $fUserIdsSend = [];
+        $highlightIdByFuserIds = [];
 
-        $currentDate = new DateTime();
+        $currentDate = new DateTimeImmutable();
         foreach ($fUserIdsData as $fUserIdData) {
-            $timestamp = (int)$fUserIdData['UF_TIMESTAMP_FIRST_SEND'];
-            if ($timestamp <= 0) {
-                $timestamp = $currentDate->getTimestamp() - (60 * 60 * 24 * 3);
-            }
-            $dateFirstsend = new DateTime($timestamp);
+            $dateFirstsend = (new DateTimeImmutable())->setTimestamp((int)$fUserIdData['UF_TIMESTAMP_FIRST_SEND']);
             $interval = $currentDate->diff($dateFirstsend);
             if ($interval->days >= 2) {
                 $fUserIdsSend[] = $fUserIdData['UF_FUSER_ID'];
+                $hilightIdByFuserIds[$fUserIdData['UF_FUSER_ID']] = $fUserIdData['ID'];
             }
 
         }
 
-        return $fUserIdsSend;
+        return ['fuserId' => $fUserIdsSend, 'hl' => $hilightIdByFuserIds];
 
     }
-
 
 
     private static function getHighload()
