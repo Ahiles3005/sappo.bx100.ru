@@ -851,9 +851,6 @@ class UnisenderWrap
             "filter" => [
                 "SITE_ID" => 's1',
                 "!FUSER.USER.ID" => false
-            ],
-            "group" => [
-
             ]
         ])->fetchAll();
 
@@ -874,8 +871,7 @@ class UnisenderWrap
             "filter" => [
                 "!ORDER_ID" => null,
                 "FUSER_ID" => $fuserIds
-            ],
-
+            ]
         ])->fetchAll();
 
 
