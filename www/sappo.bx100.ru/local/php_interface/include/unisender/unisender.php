@@ -78,6 +78,8 @@ class UnisenderWrap
     private static string $templateSkidka = '44674df8-0ee0-11f0-834c-067a735718f5';
     private static string $templatePodZakaz = 'd870e87e-1782-11f0-89e2-f2d6584a5364';
     private static string $templateBroshenaKorzina = '1b776394-227a-11f0-9f3c-660a6fb0e4f7';
+    private static string $templateBroshenaKorzina2Day = '8c188596-46de-11f0-a993-def7068c4b3d';
+    private static string $templateBroshenieTovary = '13f4be90-46de-11f0-a426-f2f02b55ec83';
 
 
     public static function preprocessingSubscribeForSubscribe($data)
@@ -744,7 +746,7 @@ class UnisenderWrap
 
         foreach ($users as $user) {
             $primeryId = $hilightIdByFuserIds[$user['FUSER_ID']];
-            $entity_data_class::update($primeryId,['UF_SENT_SECOND_TIME' => 1]);
+            $entity_data_class::update($primeryId, ['UF_SENT_SECOND_TIME' => 1]);
 
             $name = $user['USER_LAST_NAME'] . ' ' . $user['USER_NAME'];
             $email = $user['USER_EMAIL'];
@@ -802,7 +804,7 @@ class UnisenderWrap
             $params = [
                 "message" => [
                     "recipients" => $recipients,
-                    "template_id" => self::$templateBroshenaKorzina
+                    "template_id" => self::$templateBroshenaKorzina2Day
                 ],
             ];
 
@@ -823,6 +825,133 @@ class UnisenderWrap
         }
 
         return "UnisenderWrap::sendEmailByDroppedBasket();";
+
+    }
+
+    public static function sendEmailByViewedProducts()
+    {
+
+        $active = \Bitrix\Main\Config\Option::get("askaron.settings", "UF_ACTIVE_VP");
+        if ($active != 1) {
+            return "UnisenderWrap::sendEmailByViewedProducts();";
+        }
+
+        Loader::includeModule('catalog');
+        Loader::includeModule('sale');
+        global $DB;
+
+        $viewedProductsData = \Bitrix\Catalog\CatalogViewedProductTable::getList([
+            "select" => [
+                "FUSER_ID",
+                "PRODUCT_ID",
+                "USER_NAME" => "FUSER.USER.NAME",
+                "USER_LAST_NAME" => "FUSER.USER.LAST_NAME",
+                "USER_EMAIL" => "FUSER.USER.EMAIL",
+            ],
+            "filter" => [
+                "SITE_ID" => 's1',
+                "!FUSER.USER.ID" => false
+            ],
+            "group" => [
+
+            ]
+        ])->fetchAll();
+
+
+        $fuserIds = [];
+        foreach ($viewedProductsData as $viewedProductData) {
+            $fuserIds[$viewedProductData['FUSER_ID']] = $viewedProductData['FUSER_ID'];
+        }
+
+        $productsInBasket = \Bitrix\Sale\Internals\BasketTable::getList([
+            "select" => [
+                "FUSER_ID",
+                "PRODUCT_ID",
+                "USER_NAME" => "FUSER.USER.NAME",
+                "USER_LAST_NAME" => "FUSER.USER.LAST_NAME",
+                "USER_EMAIL" => "FUSER.USER.EMAIL",
+            ],
+            "filter" => [
+                "!ORDER_ID" => null,
+                "FUSER_ID" => $fuserIds
+            ],
+
+        ])->fetchAll();
+
+
+        $firstFlat = array_map('json_encode', $viewedProductsData);
+        $secondFlat = array_map('json_encode', $productsInBasket);
+
+        $diff = array_diff($firstFlat, $secondFlat);
+
+        $resultDiff = array_map('json_decode', $diff, array_fill(0, count($diff), true));
+
+        $users = [];
+        foreach ($resultDiff as $element) {
+            $users[$element['FUSER_ID']]['productsId'][] = $element['PRODUCT_ID'];
+            $users[$element['FUSER_ID']]['name'] = $element['USER_NAME'];
+            $users[$element['FUSER_ID']]['last_name'] = $element['USER_LAST_NAME'];
+            $users[$element['FUSER_ID']]['email'] = $element['USER_EMAIL'];
+        }
+
+        foreach ($users as $fuserId => $user) {
+            $name = $user['last_name'] . ' ' . $user['name'];
+            $email = $user['email'];
+            if (!$email) {
+                continue;
+            }
+
+            $productsData = self::getProductsData($user['productsId'], 42);
+
+            $recipients[] = [
+                "email" => $email,
+                "substitutions" => [
+                    "Name" => $name,
+                    "basket" => self::getBasketHtml($productsData),
+                ]
+            ];
+        }
+
+        $testerEmail = \Bitrix\Main\Config\Option::get("askaron.settings", "UF_UNSIDER_TEST_EMAIL");
+        if (!empty($testerEmail)) {
+            $recipients = [];
+            $recipients[] = [
+                "email" => $testerEmail,
+                "substitutions" => [
+                    "Name" => $name ?? 'test',
+                    "basket" => self::getBasketHtml($productsData),
+                ]
+            ];
+        }
+
+
+        if (!empty($recipients)) {
+            $params = [
+                "message" => [
+                    "recipients" => $recipients,
+                    "template_id" => self::$templateBroshenieTovary
+                ],
+            ];
+
+            try {
+                $client = new Unisender\UniGoClient(self::$apiKeyGo, 'go2.unisender.ru');
+                $response = $client->emails()->send($params);
+                self::saveLog(date('c'));
+                self::saveLog('sendEmailByViewedProducts');
+                self::saveLog(json_encode($response));
+                self::saveLog(json_encode($params));
+                self::saveLog('#######');
+
+                $DB->Query('DELETE FROM b_catalog_viewed_product WHERE FUSER_ID=' . $fuserId, false, "File: " . __FILE__ . "<br>Line: " . __LINE__);
+            } catch (\Throwable $e) {
+                self::saveLog(date('c'));
+                self::saveLog('sendEmailByViewedProducts');
+                self::saveLog($e->getMessage());
+                self::saveLog('#######');
+            }
+        }
+
+        return "UnisenderWrap::sendEmailByViewedProducts();";
 
     }
 
@@ -902,7 +1031,7 @@ class UnisenderWrap
 
         $fUserIdsData = $entity_data_class::getList([
             "select" => ["UF_FUSER_ID", 'ID', 'UF_TIMESTAMP_FIRST_SEND', 'UF_SENT_SECOND_TIME'],
-            "filter" => ["!UF_SENT_SECOND_TIME"=>1],
+            "filter" => ["!UF_SENT_SECOND_TIME" => 1],
 
         ])->fetchAll();
 
@@ -974,3 +1103,4 @@ class UnisenderWrap
 
 
 }
+
