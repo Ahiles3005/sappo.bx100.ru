@@ -12,7 +12,7 @@ $bIncludedModule = (\Bitrix\Main\Loader::includeModule("aspro.max"));?>
 <head>
     <?
     if ($APPLICATION->GetPageProperty('canonical') == '') {
-        $canon_url = 'https' . $s . '://' . SITE_SERVER_NAME . $APPLICATION->GetCurPage();
+        $canon_url = 'https' . '://' . SITE_SERVER_NAME . $APPLICATION->GetCurPage();
         $APPLICATION->SetPageProperty('canonical', $canon_url);
     }
     ?>
@@ -31,21 +31,20 @@ $bIncludedModule = (\Bitrix\Main\Loader::includeModule("aspro.max"));?>
     <?if($bIncludedModule)
 		CMax::Start(SITE_ID);?>
 	<?include_once(str_replace('//', '/', $_SERVER['DOCUMENT_ROOT'].'/'.SITE_DIR.'include/header_include/head.php'));?>
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-5CD8R6M');</script>
-<!-- /Google Tag Manager -->
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZD8NM67P0S"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-ZD8NM67P0S');
+<!-- Top.Mail.Ru counter -->
+<script type="text/javascript">
+var _tmr = window._tmr || (window._tmr = []);
+_tmr.push({id: "3509615", type: "pageView", start: (new Date()).getTime(), pid: "USER_ID"});
+(function (d, w, id) {
+  if (d.getElementById(id)) return;
+  var ts = d.createElement("script"); ts.type = "text/javascript"; ts.async = true; ts.id = id;
+  ts.src = "https://top-fwz1.mail.ru/js/code.js";
+  var f = function () {var s = d.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ts, s);};
+  if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); }
+})(document, window, "tmr-code");
 </script>
+<noscript><div><img src="https://top-fwz1.mail.ru/counter?id=3509615;js=na" style="position:absolute;left:-9999px;" alt="Top.Mail.Ru" /></div></noscript>
+<!-- /Top.Mail.Ru counter -->
 <!-- B24 analytics -->
 <script>
 	(function(w,d,u){
@@ -63,9 +62,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <meta name="yandex-verification" content="e40ebbdb4d12e3fd" />
 <meta name="yandex-verification" content="9de739e4fe12100b" />
 <meta name="yandex-verification" content="97eadc8ee9ceb486" />
+
+
+    <?
+    $bodyBonusProgramClass = '';
+    if( \Bitrix\Main\Loader::includeModule('kilbil.bonus') ) {
+        \Kilbil\Bonus\Tools\StyleManager::addBonusStyles();
+        $bodyBonusProgramClass =  \Kilbil\Bonus\Tools\StyleManager::getCurrentBonusClass();
+    }?>
 </head>
 <?$bIndexBot = (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) && strpos($_SERVER['HTTP_USER_AGENT'], 'Lighthouse') !== false);?>
-<body class="<?=($bIndexBot ? "wbot" : "");?> site_<?=SITE_ID?> <?=($bIncludedModule ? CMax::getCurrentBodyClass() : '')?>" id="main" data-site="<?=SITE_DIR?>">
+<body class="<?=($bIndexBot ? "wbot" : "");?> site_<?=SITE_ID?> <?=($bIncludedModule ? CMax::getCurrentBodyClass() : '')?> <?= $bodyBonusProgramClass ?>" id="main" data-site="<?=SITE_DIR?>">
 	<!-- Google Tag Manager (noscript) -->
 	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5CD8R6M" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 	<!-- End Google Tag Manager (noscript) -->
@@ -107,4 +114,5 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 									<div class="maxwidth-theme">
 								<?endif;?>
 						<?endif;?>
+                   <div class="qweasdz" ></div>
 						<?CMax::checkRestartBuffer();?>

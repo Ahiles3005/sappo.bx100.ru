@@ -253,7 +253,7 @@ if(isset($isAjaxFilter) && $isAjaxFilter == "Y")
     <?$html=ob_get_clean();?>
     <?$APPLICATION->AddViewContent('left_menu', $html);?>
 <?}?>
-<div class="right_block1 clearfix catalog1 <?=strtolower($arTheme["FILTER_VIEW"]["VALUE"]);?>" id="right_block_ajax">
+<div class="right_block1 clearfix catalog1 ololo <?=strtolower($arTheme["FILTER_VIEW"]["VALUE"]);?>" id="right_block_ajax">
     <div class="filter-panel-wrapper <?CMax::getVariable('filter_exists');?>">
         <?if($isAjax=="N"){
             $frame = new \Bitrix\Main\Page\FrameHelper("viewtype-block-top");
@@ -380,10 +380,7 @@ if(isset($isAjaxFilter) && $isAjaxFilter == "Y")
                 }
             }
 
-
-
             ?>
-
             <?$APPLICATION->IncludeComponent(
                 "bitrix:catalog.section",
                 $template,
@@ -392,6 +389,7 @@ if(isset($isAjaxFilter) && $isAjaxFilter == "Y")
                     "STORES" => $arParams['STORES'],
                     "SHOW_BIG_BLOCK" => 'N',
                     "IS_CATALOG_PAGE" => 'Y',
+                    "FILL_ITEM_ALL_PRICES" => 'Y',
                     "SHOW_UNABLE_SKU_PROPS"=>$arParams["SHOW_UNABLE_SKU_PROPS"],
                     "ALT_TITLE_GET" => $arParams["ALT_TITLE_GET"],
                     "SEF_URL_TEMPLATES" => $arParams["SEF_URL_TEMPLATES"],

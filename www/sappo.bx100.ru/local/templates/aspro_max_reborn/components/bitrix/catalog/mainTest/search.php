@@ -10,6 +10,7 @@ $arParams['DISPLAY_WISH_BUTTONS'] = CMax::GetFrontParametrValue('CATALOG_DELAY')
 global $arTheme;
 ?>
 
+<?$APPLICATION->SetPageProperty("description", "Поиск на сайте"); ?>
 <?$APPLICATION->SetTitle(GetMessage("CMP_TITLE"));?>
 <?$APPLICATION->IncludeComponent(
 	"bitrix:catalog.search",

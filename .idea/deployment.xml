@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="sappobx" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false">
+  <component name="PublishConfigData" serverName="sppo2" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false">
     <option name="confirmBeforeUploading" value="false" />
     <serverData>
       <paths name="dev.sappo">
@@ -11,6 +11,13 @@
         </serverdata>
       </paths>
       <paths name="sappobx">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/data/www/sappo.ru" local="$PROJECT_DIR$/www/sappo.bx100.ru" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="sppo2">
         <serverdata>
           <mappings>
             <mapping deploy="/" local="$PROJECT_DIR$" web="/" />

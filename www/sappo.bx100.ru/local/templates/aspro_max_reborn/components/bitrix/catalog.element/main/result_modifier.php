@@ -1452,3 +1452,70 @@ if(!empty($arResult['DISPLAY_PROPERTIES']))
 	}
 	$arResult["GROUPS_PROPS"] = $arGroupsProp;
 }
+
+
+CModule::IncludeModule("iblock");
+
+function parseProductName($name) {
+	// Сначала ищем объём в любом месте названия (с поддержкой дробных чисел)
+	preg_match('/(\d+[\.,]\d+|\d+)\s*(мл|л|ml|l)\b/ui', $name, $volumeMatch);
+	$volume = $volumeMatch[0] ?? '';
+
+	// Удаляем объём из названия
+	$titleWithoutVolume = trim(preg_replace('/(\d+[\.,]\d+|\d+)\s*(мл|л|ml|l)\b/ui', '', $name));
+
+	// Разделяем оставшуюся часть по последней запятой (бренд обычно в конце)
+	$parts = array_map('trim', explode(',', $titleWithoutVolume));
+
+	// Если есть запятые, бренд — последняя часть, иначе — пусто
+	$brand = (count($parts) > 1) ? end($parts) : '';
+
+	// Основное название — всё, кроме бренда
+	$title = (count($parts) > 1) ? implode(',', array_slice($parts, 0, -1)) : $titleWithoutVolume;
+	$title = trim($title, " ,");
+
+	return [
+		'title' => $title,
+		'volume' => $volume,
+		'brand' => $brand,
+		'full_name' => $name
+	];
+}
+
+$currentElementId = $arResult['ID'] ?? 0;
+$currentElementName = $arResult['NAME'] ?? '';
+
+if ($currentElementId && $currentElementName) {
+	$currentProduct = parseProductName($currentElementName);
+
+	$similarProducts = [];
+	$res = CIBlockElement::GetList(
+		['NAME' => 'ASC'],
+		[
+			'IBLOCK_ID' => $arParams['IBLOCK_ID'],
+			'!ID' => $currentElementId,
+			'ACTIVE' => 'Y',
+		],
+		false,
+		false,
+		['ID', 'NAME', 'DETAIL_PAGE_URL']
+	);
+
+	while ($element = $res->GetNext()) {
+		$product = parseProductName($element['NAME']);
+
+		if (
+			$product['title'] === $currentProduct['title'] &&
+			$product['brand'] === $currentProduct['brand'] &&
+			$product['volume'] !== $currentProduct['volume']
+		) {
+			$similarProducts[] = [
+				'ID' => $element['ID'],
+				'NAME' => $element['NAME'],
+				'URL' => $element['DETAIL_PAGE_URL'],
+				'VOLUME' => $product['volume']
+			];
+		}
+	}
+	$arResult['SIMILAR_PRODUCTS'] = $similarProducts;
+}

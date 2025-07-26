@@ -3,7 +3,6 @@
   <component name="SshConfigs">
     <configs>
       <sshConfig authType="PASSWORD" host="31.28.254.6" id="65f72b0d-bfb8-4660-8a9e-a81cce1a8448" port="2201" nameFormat="DESCRIPTIVE" username="free" useOpenSSHConfig="true" />
-      <sshConfig authType="PASSWORD" host="sappo.bx100.ru" id="65f72b0d-bfb8-4660-8a9e-a81cce1a8448" port="2201" nameFormat="DESCRIPTIVE" username="free" useOpenSSHConfig="true" />
       <sshConfig authType="PASSWORD" host="de" id="789705a4-9e12-4d0f-9a4e-51eed9a31ef1" port="22" nameFormat="DESCRIPTIVE" useOpenSSHConfig="true" />
     </configs>
   </component>

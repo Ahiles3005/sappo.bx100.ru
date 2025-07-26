@@ -1,5 +1,4 @@
-<?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();?>
-<?$this->setFrameMode(true);?>
+<?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();?><?$this->setFrameMode(true);?>
 <?use \Bitrix\Main\Localization\Loc;?>
 
     <div class="basket_props_block" id="bx_basket_div_<?=$arResult["ID"];?>" style="display: none;">
@@ -787,7 +786,6 @@ $iCountProps = count($arResult['DISPLAY_PROPERTIES']);?>
                     </div>
                     <?$productHelpText = ob_get_clean();?>
                 <?endif;?>
-
                 <?ob_start()?>
                 <?$bShowMoreLink = ($iCountProps > $arParams['VISIBLE_PROP_COUNT']);?>
                 <?if( ($arResult['DISPLAY_PROPERTIES'] || $arResult['DISPLAY_PROPERTIES_OFFERS']) && $arParams['VISIBLE_PROP_COUNT'] > 0 ):?>
@@ -810,7 +808,7 @@ $iCountProps = count($arResult['DISPLAY_PROPERTIES']);?>
                                             </div>
                                             <div class="properties__hr muted properties__item--inline">&mdash;</div>
                                             <div class="properties__value darken properties__item--inline">
-                                                <?if(count($arProp["DISPLAY_VALUE"]) > 1):?>
+                                                <?if(is_array($arProp["DISPLAY_VALUE"]) && count($arProp["DISPLAY_VALUE"]) > 1):?>
                                                     <?=implode(', ', $arProp["DISPLAY_VALUE"]);?>
                                                 <?else:?>
                                                     <?=$arProp["DISPLAY_VALUE"];?>
@@ -884,8 +882,8 @@ $iCountProps = count($arResult['DISPLAY_PROPERTIES']);?>
                                 <?elseif($arResult["PRICES"]):?>
 
                                     <?//доработка отображения старых цен в скидку
-                                    $basePrice = $arResult["PRICES"]["Соглашение ИМ"]["DISCOUNT_VALUE"];
-                                    $oldPrice = $arResult["PRICES"]["price without discount"]["DISCOUNT_VALUE"];
+                                    $basePrice = $arResult["PRICES"]["Цена"]["DISCOUNT_VALUE"];
+                                    $oldPrice = $arResult["PRICES"]["Цена без скидки"]["DISCOUNT_VALUE"];
                                     $ecoP = $oldPrice - $basePrice;
 
 
@@ -929,7 +927,7 @@ $iCountProps = count($arResult['DISPLAY_PROPERTIES']);?>
 
                                     <?
                                     }else{
-                                        \Aspro\Functions\CAsproMaxItem::showItemPrices($arParams, $arResult["PRICES"], $strMeasure, $min_price_id, ($arParams["SHOW_DISCOUNT_PERCENT_NUMBER"] == "Y" ? "N" : "Y"));
+                                        \Aspro\Functions\CAsproMaxItem::showItemPrices($arParams, [$arResult["PRICES"]["Цена"]], $strMeasure, $min_price_id, ($arParams["SHOW_DISCOUNT_PERCENT_NUMBER"] == "Y" ? "N" : "Y"));
                                     }
                                 endif;
                             endif;
@@ -1026,7 +1024,7 @@ $iCountProps = count($arResult['DISPLAY_PROPERTIES']);?>
 
                     <?//buttons?>
                     <?$this->SetViewTarget('PRODUCT_SIDE_INFO', 500);
-                    $basePrice = $arResult["PRICES"]["Соглашение ИМ"]["DISCOUNT_VALUE"];
+                    $basePrice = $arResult["PRICES"]["Цена"]["DISCOUNT_VALUE"];
 
                     \Bitrix\Main\Loader::includeModule('kilbil.bonus');
                     $catalog = new \Kilbil\Bonus\Ecommerce\Catalog\Catalog();
@@ -1035,6 +1033,16 @@ $iCountProps = count($arResult['DISPLAY_PROPERTIES']);?>
                     ?>
 
                     <div class="sbonus-product-detail">Начислим бонусы: <div class="sbonus-product"><span>+<?= round($bonusesSum[ $arResult['ID'] ]); ?></span></div></div>
+                    <?if($arResult['SIMILAR_PRODUCTS']){?>
+                        <div class="similar-products">
+                            <div class="similar-products__title">Доступно в других объемах:</div>
+                            <div class="similar-products__list">
+                                <?foreach ($arResult['SIMILAR_PRODUCTS'] as $arSimilar){?>
+                                <a class="similar-products__item" href="<?=$arSimilar['URL']?>"><?=$arSimilar['VOLUME']?></a>
+                                <?}?>
+                            </div>
+                        </div>
+                    <?}?>
 
                     <div class="js-prices-in-side product-action">
                         <div class="buy_block">
@@ -1153,7 +1161,16 @@ $iCountProps = count($arResult['DISPLAY_PROPERTIES']);?>
                         </div>
 
                         <div class="sbonus-product-detail">Начислим бонусы: <div class="sbonus-product"><span>+<?= round($bonusesSum[ $arResult['ID'] ]); ?></span></div></div>
-
+                        <?if($arResult['SIMILAR_PRODUCTS']){?>
+                            <div class="similar-products">
+                                <div class="similar-products__title">Доступно в других объемах:</div>
+                                <div class="similar-products__list">
+                                    <?foreach ($arResult['SIMILAR_PRODUCTS'] as $arSimilar){?>
+                                        <a class="similar-products__item" href="<?=$arSimilar['URL']?>"><?=$arSimilar['VOLUME']?></a>
+                                    <?}?>
+                                </div>
+                            </div>
+                        <?}?>
 
                         <div class="js-prices-in-item"></div>
 
@@ -1447,7 +1464,7 @@ $iCountProps = count($arResult['DISPLAY_PROPERTIES']);?>
                             <?if($arProp["HINT"] && $arParams["SHOW_HINTS"]=="Y"):?><div class="hint"><span class="icon"><i>?</i></span><div class="tooltip"><?=$arProp["HINT"]?></div></div><?endif;?>
                         </div>
                         <div class="char_value darken" itemprop="value">
-                            <?if(count($arProp["DISPLAY_VALUE"]) > 1):?>
+                            <?if(is_array($arProp["DISPLAY_VALUE"]) && count($arProp["DISPLAY_VALUE"]) > 1):?>
                                 <?=implode(', ', $arProp["DISPLAY_VALUE"]);?>
                             <?else:?>
                                 <?=$arProp["DISPLAY_VALUE"];?>
@@ -1469,7 +1486,7 @@ $iCountProps = count($arResult['DISPLAY_PROPERTIES']);?>
                             </td>
                             <td class="char_value">
 									<span itemprop="value">
-										<?if(count($arProp["DISPLAY_VALUE"]) > 1):?>
+										<?if(is_array($arProp["DISPLAY_VALUE"]) && count($arProp["DISPLAY_VALUE"]) > 1):?>
                                             <?=implode(', ', $arProp["DISPLAY_VALUE"]);?>
                                         <?else:?>
                                             <?=$arProp["DISPLAY_VALUE"];?>

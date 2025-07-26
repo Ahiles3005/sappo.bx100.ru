@@ -204,7 +204,7 @@ $(document).on("mouseenter", "#headerfixed .menu-item.wide_menu", function () {
     function toggleParagraphsBasedOnScreenWidth() {
             var introtext = $(".introtext");
             var paragraphs = $(".introtext p:not(:first-of-type)");
-            var arrow = introtext.find(".toggle-arrow");
+            var arrow = $(".toggle-arrow");
 
             // Проверяем, есть ли скрытые параграфы
             if (paragraphs.length > 0) {

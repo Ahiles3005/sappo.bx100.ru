@@ -33,17 +33,17 @@
 											<div class="price"><?=$arElement["MIN_PRICE"]["PRINT_VALUE"]?></div>
 										<?endif;?>
 
-									<?}elseif($arElement["PRICES"]["Соглашение ИМ"]["VALUE"] < $arElement["PRICES"]["price without discount"]["VALUE"]){?>
+									<?}elseif($arElement["PRICES"]["Цена"]["VALUE"] < $arElement["PRICES"]["Цена без скидки"]["VALUE"]){?>
 										<?foreach($arElement["PRICES"] as $code=>$arPrice):?>
-										<?if ($code !== "price without discount"):?>
+										<?if ($code !== "Цена без скидки"):?>
 											<?if($arPrice["CAN_ACCESS"]):?>
 												<?if (count($arElement["PRICES"])>1):?>
 													<div class="search_price_wrap">
 												<?endif;?>
-												<?if($arElement["PRICES"]["Соглашение ИМ"]["VALUE"] < $arElement["PRICES"]["price without discount"]["VALUE"]):?>
+												<?if($arElement["PRICES"]["Цена"]["VALUE"] < $arElement["PRICES"]["Цена без скидки"]["VALUE"]):?>
 													<div class="price"><?=$arPrice["PRINT_DISCOUNT_VALUE"]?></div>
 													<div class="price discount">
-														<strike><?=$arElement["PRICES"]["price without discount"]["VALUE"]?></strike>₽
+														<strike><?=$arElement["PRICES"]["Цена без скидки"]["VALUE"]?></strike>₽
 													</div>
 												<?else:?>
 													<div class="price"><?=$arPrice["PRINT_VALUE"]?></div>
@@ -58,7 +58,7 @@
 
 									<?}else{?>
 										<?foreach($arElement["PRICES"] as $code=>$arPrice):?>
-										<?if ($code !== "price without discount"):?>
+										<?if ($code !== "Цена без скидки"):?>
 											<?if($arPrice["CAN_ACCESS"]):?>
 												<?if (count($arElement["PRICES"])>1):?>
 													<div class="search_price_wrap">

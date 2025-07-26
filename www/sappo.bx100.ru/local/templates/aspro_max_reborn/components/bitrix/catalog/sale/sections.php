@@ -12,13 +12,17 @@ $arPageParams = $arSection = $section = array();
 $_SESSION['SMART_FILTER_VAR'] = $arParams['FILTER_NAME'];
 
 /*получим настройки акции*/
-$arSelect = array("ID", "IBLOCK_ID", "NAME", "PROPERTY_BANNER");
-$arFilter = array("IBLOCK_ID" => 68, "ACTIVE" => "Y");
-$resAction = CIBlockElement::GetList(array("ID"=>"DESC"), $arFilter, false, false, $arSelect);
-if ($obAction = $resAction->Fetch()) {
-    $APPLICATION->SetTitle($obAction['NAME']);
-   // $APPLICATION->AddChainItem($obAction['NAME'], '/catalog/sale/');
-    $GLOBALS['bannerFilter'] = ['ID' => $obAction['PROPERTY_BANNER_VALUE']];
+if(!isset($arParams['USE_SETTING'])){
+    $arSelect = array("ID", "IBLOCK_ID", "NAME", "PROPERTY_BANNER");
+    $arFilter = array("IBLOCK_ID" => 68, "ACTIVE" => "Y");
+    $resAction = CIBlockElement::GetList(array("ID"=>"DESC"), $arFilter, false, false, $arSelect);
+    if ($obAction = $resAction->Fetch()) {
+        $APPLICATION->SetTitle($obAction['NAME']);
+       // $APPLICATION->AddChainItem($obAction['NAME'], '/catalog/sale/');
+        $GLOBALS['bannerFilter'] = ['ID' => $obAction['PROPERTY_BANNER_VALUE']];
+    }
+}else{
+    $GLOBALS['bannerFilter'] = ['ID' => 0];
 }
 
 

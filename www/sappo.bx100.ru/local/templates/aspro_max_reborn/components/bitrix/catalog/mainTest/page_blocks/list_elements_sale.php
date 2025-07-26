@@ -462,8 +462,8 @@ if(isset($isAjaxFilter) && $isAjaxFilter == "Y")
                     "MESSAGE_404" => $arParams["MESSAGE_404"],
                     "FILE_404" => $arParams["FILE_404"],
                     "PRICE_CODE" => array(
-                        0 => "Соглашение ИМ",
-                        1 => "price without discount",
+                        0 => "Цена",
+                        1 => "Цена без скидки",
                     ),
                     "USE_PRICE_COUNT" => $arParams["USE_PRICE_COUNT"],
                     "SHOW_PRICE_COUNT" => $arParams["SHOW_PRICE_COUNT"],

@@ -121,6 +121,8 @@ $(document).ready(function (){
 		}
 	}
 
+	moveBuyBlock();
+
 	BX.addCustomEvent('onWindowResize', function(eventdata) {
 		try{
 			ignoreResize.push(true);

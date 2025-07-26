@@ -35,6 +35,7 @@ if (is_array($arParams["STORES"]) && !empty($arParams["STORES"])) {
 		"IBLOCK_TYPE" => $arParams["IBLOCK_TYPE"],
 		"IBLOCK_ID" => \Bitrix\Main\Config\Option::get("aspro.max", "CATALOG_IBLOCK_ID", '42'),
 		"PAGE_ELEMENT_COUNT" => ($arParams["DISPLAY_ELEMENT_SLIDER"] ? $arParams["DISPLAY_ELEMENT_SLIDER"] : 10),
+		"FILL_ITEM_ALL_PRICES" => 'Y',
 		"SORT_BY1" => "SORT",
 		"SORT_ORDER1" => "ASC",
 		"SORT_BY2" => "ID",
