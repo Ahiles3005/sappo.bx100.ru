@@ -14,7 +14,11 @@ use \Bitrix\Main\Localization\Loc;?>
 			<div class="io_wrapper">
 				<div class="city_title"><?=Loc::getMessage('CITY_TITLE');?></div>
 				<div class="js_city_chooser  animate-load  io_wrapper" data-event="jqm" data-name="city_chooser_small" data-param-url="<?=urlencode($APPLICATION->GetCurUri());?>" data-param-form_id="city_chooser">
-					<?=CMax::showIconSvg("mark", SITE_TEMPLATE_PATH."/images/svg/sappo_location.svg");?><span><?=$arResult['CURRENT_REGION']['NAME'];?></span><span class="arrow"><?=CMax::showIconSvg("down", SITE_TEMPLATE_PATH."/images/svg/trianglearrow_down.svg");?></span>
+					<?=CMax::showIconSvg("mark", SITE_TEMPLATE_PATH."/images/svg/sappo_location2.svg");?>
+                    <span><?=$arResult['CURRENT_REGION']['NAME'];?></span>
+                    <span class="arrow">
+                        <?=CMax::showIconSvg("down", SITE_TEMPLATE_PATH."/images/svg/trianglearrow_down2.svg");?>
+                    </span>
 				</div>
 			</div>
 			<?if($arResult['SHOW_REGION_CONFIRM']):?>
