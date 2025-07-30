@@ -1,111 +1,61 @@
 <?if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();?>
 <?$this->setFrameMode(true);?>
-<div class="social-icons">
-	<?if(
-		$arParams["SOCIAL_TITLE"] && (
-			!empty($arResult["SOCIAL_VK"]) || 
-			!empty($arResult["SOCIAL_ODNOKLASSNIKI"]) || 
-			// !empty($arResult["SOCIAL_FACEBOOK"]) || 
-			!empty($arResult["SOCIAL_TWITTER"]) || 
-			//!empty($arResult["SOCIAL_INSTAGRAM"]) || 
-			!empty($arResult["SOCIAL_MAIL"]) || 
-			!empty($arResult["SOCIAL_YOUTUBE"]) || 
-			//!empty($arResult["SOCIAL_GOOGLEPLUS"])) ||
-			!empty($arResult["SOCIAL_VIBER"]) ||
-			!empty($arResult["SOCIAL_WHATS"]) ||
-			!empty($arResult["SOCIAL_WHATS_CUSTOM"]) ||
-			!empty($arResult["SOCIAL_VIBER_CUSTOM_DESKTOP"]) ||
-			!empty($arResult["SOCIAL_VIBER_CUSTOM_MOBILE"]) ||
-			!empty($arResult["SOCIAL_ZEN"]) ||
-			!empty($arResult["SOCIAL_PINTEREST"]) ||
-			!empty($arResult["SOCIAL_SNAPCHAT"]) ||
-			!empty($arResult["SOCIAL_TIKTOK"]) ||
-			!empty($arResult["SOCIAL_LINKEDIN"])
-		)
-	):?>
-		<div class="small_title"><?=$arParams["SOCIAL_TITLE"];?></div>
-	<?endif;?>
+
+
 	<!-- noindex -->
-	<ul>
+
+
+<!--<a class="c-common--a__SOCIALS _insta" href="#">-->
+<!--    <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">-->
+<!--        <path d="M9 5.00781C11.4609 5.00781 13.4922 7.03906 13.4922 9.5C13.4922 12 11.4609 13.9922 9 13.9922C6.5 13.9922 4.50781 12 4.50781 9.5C4.50781 7.03906 6.5 5.00781 9 5.00781ZM9 12.4297C10.6016 12.4297 11.8906 11.1406 11.8906 9.5C11.8906 7.89844 10.6016 6.60938 9 6.60938C7.35938 6.60938 6.07031 7.89844 6.07031 9.5C6.07031 11.1406 7.39844 12.4297 9 12.4297ZM14.7031 4.85156C14.7031 5.4375 14.2344 5.90625 13.6484 5.90625C13.0625 5.90625 12.5938 5.4375 12.5938 4.85156C12.5938 4.26562 13.0625 3.79688 13.6484 3.79688C14.2344 3.79688 14.7031 4.26562 14.7031 4.85156ZM17.6719 5.90625C17.75 7.35156 17.75 11.6875 17.6719 13.1328C17.5938 14.5391 17.2812 15.75 16.2656 16.8047C15.25 17.8203 14 18.1328 12.5938 18.2109C11.1484 18.2891 6.8125 18.2891 5.36719 18.2109C3.96094 18.1328 2.75 17.8203 1.69531 16.8047C0.679688 15.75 0.367188 14.5391 0.289062 13.1328C0.210938 11.6875 0.210938 7.35156 0.289062 5.90625C0.367188 4.5 0.679688 3.25 1.69531 2.23438C2.75 1.21875 3.96094 0.90625 5.36719 0.828125C6.8125 0.75 11.1484 0.75 12.5938 0.828125C14 0.90625 15.25 1.21875 16.2656 2.23438C17.2812 3.25 17.5938 4.5 17.6719 5.90625ZM15.7969 14.6562C16.2656 13.5234 16.1484 10.7891 16.1484 9.5C16.1484 8.25 16.2656 5.51562 15.7969 4.34375C15.4844 3.60156 14.8984 2.97656 14.1562 2.70312C12.9844 2.23438 10.25 2.35156 9 2.35156C7.71094 2.35156 4.97656 2.23438 3.84375 2.70312C3.0625 3.01562 2.47656 3.60156 2.16406 4.34375C1.69531 5.51562 1.8125 8.25 1.8125 9.5C1.8125 10.7891 1.69531 13.5234 2.16406 14.6562C2.47656 15.4375 3.0625 16.0234 3.84375 16.3359C4.97656 16.8047 7.71094 16.6875 9 16.6875C10.25 16.6875 12.9844 16.8047 14.1562 16.3359C14.8984 16.0234 15.5234 15.4375 15.7969 14.6562Z"-->
+<!--              fill="white"/>-->
+<!--    </svg>-->
+<!--</a>-->
+<!---->
+<!---->
+<!--<a class="c-common--a__SOCIALS _rutube" href="#">-->
+<!--    <svg width="24" height="22" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg">-->
+<!--        <g clip-path="url(#clip0_1279_1227)">-->
+<!--            <path d="M12.6444 13.1981H3.76549V9.6408H12.6444C13.163 9.6408 13.5236 9.73232 13.7046 9.89216C13.8856 10.052 13.9977 10.3484 13.9977 10.7815V12.0588C13.9977 12.5151 13.8856 12.8115 13.7046 12.9714C13.5236 13.1312 13.163 13.1995 12.6444 13.1995V13.1981ZM13.2535 6.28702H0V21.4999H3.76549V16.5505H10.7049L13.9977 21.4999H18.2143L14.5839 16.5273C15.9223 16.3265 16.5233 15.9112 17.019 15.2268C17.5147 14.5424 17.7632 13.4481 17.7632 11.9878V10.8471C17.7632 9.98096 17.6727 9.29653 17.5147 8.77196C17.3567 8.24737 17.0865 7.79109 16.703 7.38127C16.2978 6.99328 15.8467 6.72007 15.3051 6.537C14.7635 6.37717 14.0868 6.28564 13.2535 6.28564V6.28702Z"-->
+<!--                  fill="white"/>-->
+<!--            <path d="M21.1067 6.28571C22.7044 6.28571 23.9996 4.99053 23.9996 3.39286C23.9996 1.79518 22.7044 0.5 21.1067 0.5C19.5091 0.5 18.2139 1.79518 18.2139 3.39286C18.2139 4.99053 19.5091 6.28571 21.1067 6.28571Z"-->
+<!--                  fill="white"/>-->
+<!--        </g>-->
+<!--        <defs>-->
+<!--            <clipPath id="clip0_1279_1227">-->
+<!--                <rect width="24" height="21" fill="white" transform="translate(0 0.5)"/>-->
+<!--            </clipPath>-->
+<!--        </defs>-->
+<!--    </svg>-->
+<!--</a>-->
+
+
 		<?if(!empty($arResult['SOCIAL_VK'])):?>
-			<li class="vk">
-				<a href="<?=$arResult['SOCIAL_VK']?>" target="_blank" rel="nofollow" title="<?=GetMessage('TEMPL_SOCIAL_VK')?>">
-					<?=GetMessage('TEMPL_SOCIAL_VK')?>
-				</a>
-			</li>
+            <a class="c-common--a__SOCIALS _vk" target="_blank"  rel="nofollow" href="<?=$arResult['SOCIAL_VK']?>" title="<?=GetMessage('TEMPL_SOCIAL_VK')?>">
+                <svg width="22" height="13" viewBox="0 0 22 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21.2891 1.10938C20.9766 2.4375 18.1641 6.42188 18.1641 6.42188C17.9297 6.8125 17.8125 7.00781 18.1641 7.4375C18.3203 7.63281 21.25 10.4453 21.6797 11.7734C21.875 12.4375 21.5625 12.75 20.8984 12.75H18.5938C17.7344 12.75 17.4609 12.0859 15.8984 10.5234C14.5312 9.19531 13.9453 9 13.5938 9C12.8906 9 13.0078 9.27344 13.0078 11.8906C13.0078 12.4375 12.8125 12.75 11.3672 12.75C8.94531 12.75 6.25 11.3047 4.33594 8.57031C1.48438 4.54688 0.703125 1.53906 0.703125 0.914062C0.703125 0.5625 0.859375 0.25 1.48438 0.25H3.78906C4.375 0.25 4.60938 0.523438 4.84375 1.14844C5.97656 4.42969 7.85156 7.32031 8.63281 7.32031C8.94531 7.32031 9.0625 7.16406 9.0625 6.42188V3.02344C8.98438 1.46094 8.16406 1.34375 8.16406 0.796875C8.16406 0.523438 8.35938 0.25 8.75 0.25H12.3438C12.8516 0.25 13.0078 0.523438 13.0078 1.10938V5.67969C13.0078 6.14844 13.2422 6.34375 13.3594 6.34375C13.6719 6.34375 13.9062 6.14844 14.4531 5.64062C16.0938 3.76562 17.2656 0.914062 17.2656 0.914062C17.4219 0.5625 17.6953 0.25 18.2812 0.25H20.5859C21.2891 0.25 21.4062 0.640625 21.2891 1.10938Z"
+                          fill="white"/>
+                </svg>
+            </a>
 		<?endif;?>
 		<?if(!empty($arResult['SOCIAL_YOUTUBE'])):?>
-			<li class="ytb">
-				<a href="<?=$arResult['SOCIAL_YOUTUBE']?>" target="_blank" rel="nofollow" title="<?=GetMessage('TEMPL_SOCIAL_YOUTUBE')?>">
-					<?=GetMessage('TEMPL_SOCIAL_YOUTUBE')?>
-				</a>
-			</li>
+            <a class="c-common--a__SOCIALS _youtube" href="<?=$arResult['SOCIAL_YOUTUBE']?>" target="_blank" rel="nofollow" title="<?=GetMessage('TEMPL_SOCIAL_YOUTUBE')?>">
+                <svg width="24" height="17" viewBox="0 0 24 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M23.0898 3.12109C23.6055 4.92578 23.6055 8.79297 23.6055 8.79297C23.6055 8.79297 23.6055 12.6172 23.0898 14.4648C22.832 15.4961 22.0156 16.2695 21.0273 16.5273C19.1797 17 11.875 17 11.875 17C11.875 17 4.52734 17 2.67969 16.5273C1.69141 16.2695 0.875 15.4961 0.617188 14.4648C0.101562 12.6172 0.101562 8.79297 0.101562 8.79297C0.101562 8.79297 0.101562 4.92578 0.617188 3.12109C0.875 2.08984 1.69141 1.27344 2.67969 1.01562C4.52734 0.5 11.875 0.5 11.875 0.5C11.875 0.5 19.1797 0.5 21.0273 1.01562C22.0156 1.27344 22.832 2.08984 23.0898 3.12109ZM9.46875 12.2734L15.5703 8.79297L9.46875 5.3125V12.2734Z"
+                          fill="white"/>
+                </svg>
+            </a>
 		<?endif;?>
-		<?/*if(!empty($arResult['SOCIAL_FACEBOOK'])):?>
-			<li class="facebook">
-				<a href="<?=$arResult['SOCIAL_FACEBOOK']?>" target="_blank" rel="nofollow" title="<?=GetMessage('TEMPL_SOCIAL_FACEBOOK')?>">
-					<?=GetMessage('TEMPL_SOCIAL_FACEBOOK')?>
-				</a>
-			</li>
-		<?endif;*/?>
-		<?if(!empty($arResult['SOCIAL_TWITTER'])):?>
-			<li class="twitter">
-				<a href="<?=$arResult['SOCIAL_TWITTER']?>" target="_blank" rel="nofollow" title="<?=GetMessage('TEMPL_SOCIAL_TWITTER')?>">
-					<?=GetMessage('TEMPL_SOCIAL_TWITTER')?>
-				</a>
-			</li>
-		<?endif;?>
-		<?/*if(!empty($arResult['SOCIAL_INSTAGRAM'])):?>
-			<li class="instagram">
-				<a href="<?=$arResult['SOCIAL_INSTAGRAM']?>" target="_blank" rel="nofollow" title="<?=GetMessage('TEMPL_SOCIAL_INSTAGRAM')?>">
-					<?=GetMessage('TEMPL_SOCIAL_INSTAGRAM')?>
-				</a>
-			</li>
-		<?endif;*/?>
+
 		<?if(!empty($arResult['SOCIAL_TELEGRAM'])):?>
-			<li class="telegram">
-				<a href="<?=$arResult['SOCIAL_TELEGRAM']?>" target="_blank" rel="nofollow" title="<?=GetMessage('TEMPL_SOCIAL_TELEGRAM')?>">
-					<?=GetMessage('TEMPL_SOCIAL_TELEGRAM')?>
-				</a>
-			</li>
+            <a class="c-common--a__SOCIALS _telega" href="<?=$arResult['SOCIAL_TELEGRAM']?>" target="_blank" rel="nofollow" title="<?=GetMessage('TEMPL_SOCIAL_TELEGRAM')?>">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11.625 0.375C18.0469 0.375 23.25 5.57812 23.25 12C23.25 18.4219 18.0469 23.625 11.625 23.625C5.20312 23.625 0 18.4219 0 12C0 5.57812 5.20312 0.375 11.625 0.375ZM17.2969 8.34375C17.4844 7.59375 17.0156 7.26562 16.5 7.45312L5.29688 11.7656C4.54688 12.0469 4.54688 12.5156 5.15625 12.7031L8.01562 13.5938L14.6719 9.375C15 9.1875 15.2812 9.32812 15.0469 9.51562L9.65625 14.3906L9.46875 17.3438C9.75 17.3438 9.89062 17.2031 10.0312 17.0625L11.4375 15.7031L14.3438 17.8594C14.9062 18.1406 15.2812 18 15.4219 17.3438L17.2969 8.34375Z"
+                          fill="white"/>
+                </svg>
+            </a>
 		<?endif;?>
-		<?if(!empty($arResult['SOCIAL_ODNOKLASSNIKI'])):?>
-			<li class="odn">
-				<a href="<?=$arResult['SOCIAL_ODNOKLASSNIKI']?>" target="_blank" rel="nofollow" title="<?=GetMessage('TEMPL_SOCIAL_ODNOKLASSNIKI')?>">
-					<?=GetMessage('TEMPL_SOCIAL_ODNOKLASSNIKI')?>
-				</a>
-			</li>
-		<?endif;?>
-		<?/*if(!empty($arResult['SOCIAL_GOOGLEPLUS'])):?>
-			<li class="gplus">
-				<a href="<?=$arResult['SOCIAL_GOOGLEPLUS']?>" target="_blank" rel="nofollow" title="<?=GetMessage('TEMPL_SOCIAL_GOOGLEPLUS')?>">
-					<?=GetMessage('TEMPL_SOCIAL_GOOGLEPLUS')?>
-				</a>
-			</li>
-		<?endif;*/?>
-		<?if(!empty($arResult['SOCIAL_MAIL'])):?>
-			<li class="mail">
-				<a href="<?=$arResult['SOCIAL_MAIL']?>" target="_blank" rel="nofollow" title="<?=GetMessage('TEMPL_SOCIAL_MAILRU')?>">
-					<?=GetMessage('TEMPL_SOCIAL_GOOGLEPLUS')?>
-				</a>
-			</li>
-		<?endif;?>
-		<?if(!empty($arResult['SOCIAL_VIBER']) || !empty($arResult["SOCIAL_VIBER_CUSTOM_DESKTOP"]) || !empty($arResult["SOCIAL_VIBER_CUSTOM_MOBILE"]) ):?>
-			<?			
-			$hrefDesktop = strlen(trim($arResult["SOCIAL_VIBER_CUSTOM_DESKTOP"])) ? $arResult["SOCIAL_VIBER_CUSTOM_DESKTOP"] : 'viber://chat?number=+'.$arResult['SOCIAL_VIBER'];
-			$hrefMobile = strlen(trim($arResult["SOCIAL_VIBER_CUSTOM_MOBILE"])) ? $arResult["SOCIAL_VIBER_CUSTOM_MOBILE"] : 'viber://add?number='.$arResult['SOCIAL_VIBER'];
-			?>	
-			<li class="viber viber_mobile">
-				<a href="<?=$hrefMobile?>" target="_blank" rel="nofollow" title="<?=GetMessage('TEMPL_SOCIAL_VIBER')?>">
-					<?=GetMessage('TEMPL_SOCIAL_VIBER')?>
-				</a>
-			</li>
-			<li class="viber viber_desktop">
-				<a href="<?=$hrefDesktop?>" target="_blank" rel="nofollow" title="<?=GetMessage('TEMPL_SOCIAL_VIBER')?>">
-					<?=GetMessage('TEMPL_SOCIAL_VIBER')?>
-				</a>
-			</li>
-		<?endif;?>
+
 		<?if(!empty($arResult['SOCIAL_WHATS']) || !empty($arResult["SOCIAL_WHATS_CUSTOM"]) ):?>
 			<?
 			if( strlen(trim($arResult["SOCIAL_WHATS_CUSTOM"])) ){
@@ -121,47 +71,33 @@
 				$whatsHref = 'https://wa.me/'.$arResult['SOCIAL_WHATS'].$whatsText;
 			}			
 			?>
-			<li class="whats">
-				<a href="<?=$whatsHref?>" target="_blank" rel="nofollow" title="<?=GetMessage('TEMPL_SOCIAL_WHATS')?>">
-					<?=GetMessage('TEMPL_SOCIAL_WHATS')?>
-				</a>
-			</li>
+
+            <a class="c-common--a__SOCIALS _whatsapp" href="<?=$whatsHref?>" target="_blank" rel="nofollow" title="<?=GetMessage('TEMPL_SOCIAL_WHATS')?>">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                          d="M18.9852 16.9453C18.696 17.764 17.5464 18.4412 16.6296 18.6393C16.002 18.7725 15.1836 18.8779 12.426 17.7352C9.3288 16.452 5.028 11.8812 5.028 8.83945C5.028 7.29099 5.9208 5.48789 7.482 5.48789C8.2332 5.48789 8.3988 5.50254 8.646 6.09551C8.9352 6.79412 9.64081 8.51535 9.7248 8.6918C10.0716 9.41561 9.37199 9.83934 8.86439 10.4695C8.70239 10.6592 8.51881 10.8643 8.72401 11.2172C8.92801 11.5629 9.6336 12.7129 10.6704 13.6359C12.0096 14.8291 13.0956 15.21 13.4844 15.3721C13.7736 15.4921 14.1192 15.4641 14.3304 15.2385C14.598 14.9492 14.9304 14.4692 15.2688 13.9963C15.5076 13.6578 15.8112 13.6155 16.1292 13.7355C16.344 13.81 19.074 15.0778 19.1892 15.2807C19.2744 15.4283 19.2744 16.1267 18.9852 16.9453ZM12.0024 0H11.9964C5.38079 0 0 5.38242 0 12C0 14.624 0.846008 17.0584 2.28481 19.033L0.789606 23.492L5.40121 22.0184C7.29841 23.2739 9.5628 24 12.0024 24C18.618 24 24 18.6176 24 12C24 5.38242 18.618 0 12.0024 0Z"
+                          fill="white"/>
+                </svg>
+            </a>
 		<?endif;?>
 		<?if(!empty($arResult['SOCIAL_ZEN'])):?>
-			<li class="zen">
-				<a href="<?=$arResult['SOCIAL_ZEN']?>" target="_blank" rel="nofollow" title="<?=GetMessage('TEMPL_SOCIAL_ZEN')?>">
-					<?=GetMessage('TEMPL_SOCIAL_ZEN')?>
-				</a>
-			</li>
+            <a class="c-common--a__SOCIALS _dzen" href="<?=$arResult['SOCIAL_ZEN']?>" target="_blank" rel="nofollow" title="<?=GetMessage('TEMPL_SOCIAL_ZEN')?>">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_1279_1221)">
+                        <path d="M0 11.9995C0 5.37208 5.37257 -0.000488281 12 -0.000488281C18.6274 -0.000488281 24 5.37208 24 11.9995C24 18.6269 18.6274 23.9995 12 23.9995C5.37257 23.9995 0 18.6269 0 11.9995Z"
+                              fill="white"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                              d="M11.7572 -0.000488281C11.7005 4.9364 11.3776 7.69931 9.53871 9.53823C7.6998 11.3771 4.93689 11.7 0 11.7567V12.4731C4.93689 12.5298 7.6998 12.8526 9.53871 14.6915C11.3488 16.5016 11.69 19.2069 11.7543 23.9995H12.4765C12.5408 19.2069 12.882 16.5016 14.692 14.6915C16.5021 12.8815 19.2074 12.5403 24 12.476V11.7538C19.2074 11.6895 16.5021 11.3483 14.692 9.53823C12.8531 7.69931 12.5303 4.9364 12.4736 -0.000488281H11.7572Z"
+                              fill="#00ABEF"/>
+                    </g>
+                    <defs>
+                        <clipPath id="clip0_1279_1221">
+                            <rect width="24" height="24" fill="white"/>
+                        </clipPath>
+                    </defs>
+                </svg>
+            </a>
 		<?endif;?>
-		<?if(!empty($arResult['SOCIAL_TIKTOK'])):?>
-			<li class="tiktok">
-				<a href="<?=$arResult['SOCIAL_TIKTOK']?>" target="_blank" rel="nofollow" title="<?=GetMessage('TEMPL_SOCIAL_TIKTOK')?>">
-					<?=GetMessage('TEMPL_SOCIAL_TIKTOK')?>
-				</a>
-			</li>
-		<?endif;?>
-		<?if(!empty($arResult['SOCIAL_PINTEREST'])):?>
-			<li class="pinterest">
-				<a href="<?=$arResult['SOCIAL_PINTEREST']?>" target="_blank" rel="nofollow" title="<?=GetMessage('TEMPL_SOCIAL_PINTEREST')?>">
-					<?=GetMessage('TEMPL_SOCIAL_PINTEREST')?>
-				</a>
-			</li>
-		<?endif;?>
-		<?if(!empty($arResult['SOCIAL_SNAPCHAT'])):?>
-			<li class="snapchat">
-				<a href="<?=$arResult['SOCIAL_SNAPCHAT']?>" target="_blank" rel="nofollow" title="<?=GetMessage('TEMPL_SOCIAL_SNAPCHAT')?>">
-					<?=GetMessage('TEMPL_SOCIAL_SNAPCHAT')?>
-				</a>
-			</li>
-		<?endif;?>
-		<?if(!empty($arResult['SOCIAL_LINKEDIN'])):?>
-			<li class="linkedin">
-				<a href="<?=$arResult['SOCIAL_LINKEDIN']?>" target="_blank" rel="nofollow" title="<?=GetMessage('TEMPL_SOCIAL_LINKEDIN')?>">
-					<?=GetMessage('TEMPL_SOCIAL_LINKEDIN')?>
-				</a>
-			</li>
-		<?endif;?>
-	</ul>
+
+
 	<!-- /noindex -->
-</div>

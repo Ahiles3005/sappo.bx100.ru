@@ -1,133 +1,19 @@
 <? if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die(); ?>
 <?
 global $arTheme;
+global $arRegion;
+$arBackParametrs = CMax::GetBackParametrsValues(SITE_ID);
+$phone = ($arRegion ? $arRegion['PHONES'][0]['PHONE'] : $arBackParametrs['HEADER_PHONES_array_PHONE_VALUE_0']);
+$phonePLus = ltrim(str_replace(' ', '', $phone), '8');
 ?>
-
-<div class="footer-v5">
-    <div class="footer-inner shorten">
-        <div class="footer_top">
-            <div class="maxwidth-theme">
-                <div class="row">
-                    <div class="wrapper col-md-9">
-                        <div class="first_bottom_menu">
-                            <? $APPLICATION->IncludeComponent(
-                                "bitrix:menu",
-                                "custom",
-                                [
-                                    "ROOT_MENU_TYPE" => "top",
-                                    "MENU_CACHE_TYPE" => "A",
-                                    "MENU_CACHE_TIME" => "3600000",
-                                    "MENU_CACHE_USE_GROUPS" => "N",
-                                    "MENU_CACHE_GET_VARS" => [
-                                    ],
-                                    "MAX_LEVEL" => "1",
-                                    "CHILD_MENU_TYPE" => "left",
-                                    "USE_EXT" => "Y",
-                                    "DELAY" => "N",
-                                    "ALLOW_MULTI_SELECT" => "Y",
-                                    "COMPONENT_TEMPLATE" => "custom"
-                                ],
-                                false
-                            ); ?>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="info">
-                            <? if (\Bitrix\Main\Loader::includeModule('subscribe') && $arTheme['HIDE_SUBSCRIBE']['VALUE'] != 'Y'): ?>
-                                <div class="subscribe_button">
-									<span class="btn" data-event="jqm" data-param-id="subscribe"
-                                          data-param-type="subscribe"
-                                          data-name="subscribe"><?= GetMessage('SUBSCRIBE_TITLE') ?>
-                                        <?= CMax::showIconSvg('subscribe', SITE_TEMPLATE_PATH . '/images/svg/subscribe_small_footer.svg') ?></span>
-                                </div>
-                            <? endif; ?>
-                        </div>
-                        <div class="contact-block col-md-12">
-                            <div class="info">
-                                <div class="row">
-                                    <div class="col-md-12 col-sm-12">
-                                        <div class="phone blocks">
-                                            <div class="inline-block">
-                                                <? CMax::ShowHeaderPhones('white sm', true); ?>
-                                            </div>
-                                            <? $callbackExploded = explode(',', $arTheme['SHOW_CALLBACK']['VALUE']);
-                                            if (in_array('FOOTER', $callbackExploded)):?>
-                                                <div class="inline-block callback_wrap">
-                                                    <span class="callback-block animate-load colored" data-event="jqm"
-                                                          data-param-form_id="CALLBACK"
-                                                          data-name="callback"><?= GetMessage("CALLBACK") ?></span>
-                                                </div>
-                                            <? endif; ?>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12 col-sm-12">
-                                        <?= CMax::showEmail('email blocks') ?>
-                                    </div>
-                                    <div class="col-md-12 col-sm-12">
-                                        <?= CMax::showAddress('address blocks') ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="footer_bottom">
-            <div class="maxwidth-theme">
-                <div class="wrapper">
-                    <div class="row">
-                        <div class="link-block col-md-8 col-sm-5 pull-right">
-                            <div class="pull-right">
-                                <div class="pays">
-                                    <? $APPLICATION->IncludeFile(SITE_DIR . "include/footer/copy/pay_system_icons.php", [], [
-                                            "MODE" => "php",
-                                            "NAME" => "onfidentiality",
-                                            "TEMPLATE" => "include_area.php",
-                                        ]
-                                    ); ?>
-                                </div>
-                            </div>
-                            <div id="bx-composite-banner" class="pull-right"></div>
-                            <div class="pull-right">
-                                <?= CMax::ShowPrintLink(); ?>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-sm-5">
-                            <div class="copy-block">
-                                <div class="copy font_xs">
-                                    <? $APPLICATION->IncludeFile(SITE_DIR . "include/footer/copy/copyright.php", [], [
-                                            "MODE" => "php",
-                                            "NAME" => "Copyright",
-                                            "TEMPLATE" => "include_area.php",
-                                        ]
-                                    ); ?>
-                                </div>
-                            </div>
-                            <div class="confidentiality info">
-                                <?= CMax::showIconSvg('privacy_policy', SITE_TEMPLATE_PATH . '/images/svg/privacy_policy.svg') ?>
-                                <? $APPLICATION->IncludeFile(SITE_DIR . "include/footer/confidentiality.php", [], [
-                                        "MODE" => "php",
-                                        "NAME" => "onfidentiality",
-                                        "TEMPLATE" => "include_area.php",
-                                    ]
-                                ); ?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 <div class="c-common--div__MAXWIDTH maxwidth-theme">
     <div class="c-footerMob">
         <img class="c-footer--img__LOGO" src="images/footer/c-footer_logo.svg" alt="Логотип">
 
         <div class="c-footer--div__SOCIALS">
+
+
             <? $APPLICATION->IncludeComponent(
                 "aspro:social.info.max",
                 "sappo_footer_new",
@@ -141,115 +27,43 @@ global $arTheme;
                 false
             ); ?>
 
-            <a class="c-common--a__SOCIALS" href="#">
-                <svg width="22" height="13" viewBox="0 0 22 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M21.2891 1.10938C20.9766 2.4375 18.1641 6.42188 18.1641 6.42188C17.9297 6.8125 17.8125 7.00781 18.1641 7.4375C18.3203 7.63281 21.25 10.4453 21.6797 11.7734C21.875 12.4375 21.5625 12.75 20.8984 12.75H18.5938C17.7344 12.75 17.4609 12.0859 15.8984 10.5234C14.5312 9.19531 13.9453 9 13.5938 9C12.8906 9 13.0078 9.27344 13.0078 11.8906C13.0078 12.4375 12.8125 12.75 11.3672 12.75C8.94531 12.75 6.25 11.3047 4.33594 8.57031C1.48438 4.54688 0.703125 1.53906 0.703125 0.914062C0.703125 0.5625 0.859375 0.25 1.48438 0.25H3.78906C4.375 0.25 4.60938 0.523438 4.84375 1.14844C5.97656 4.42969 7.85156 7.32031 8.63281 7.32031C8.94531 7.32031 9.0625 7.16406 9.0625 6.42188V3.02344C8.98438 1.46094 8.16406 1.34375 8.16406 0.796875C8.16406 0.523438 8.35938 0.25 8.75 0.25H12.3438C12.8516 0.25 13.0078 0.523438 13.0078 1.10938V5.67969C13.0078 6.14844 13.2422 6.34375 13.3594 6.34375C13.6719 6.34375 13.9062 6.14844 14.4531 5.64062C16.0938 3.76562 17.2656 0.914062 17.2656 0.914062C17.4219 0.5625 17.6953 0.25 18.2812 0.25H20.5859C21.2891 0.25 21.4062 0.640625 21.2891 1.10938Z"
-                          fill="white"/>
-                </svg>
-            </a>
-            <a class="c-common--a__SOCIALS" href="#">
-                <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9 5.00781C11.4609 5.00781 13.4922 7.03906 13.4922 9.5C13.4922 12 11.4609 13.9922 9 13.9922C6.5 13.9922 4.50781 12 4.50781 9.5C4.50781 7.03906 6.5 5.00781 9 5.00781ZM9 12.4297C10.6016 12.4297 11.8906 11.1406 11.8906 9.5C11.8906 7.89844 10.6016 6.60938 9 6.60938C7.35938 6.60938 6.07031 7.89844 6.07031 9.5C6.07031 11.1406 7.39844 12.4297 9 12.4297ZM14.7031 4.85156C14.7031 5.4375 14.2344 5.90625 13.6484 5.90625C13.0625 5.90625 12.5938 5.4375 12.5938 4.85156C12.5938 4.26562 13.0625 3.79688 13.6484 3.79688C14.2344 3.79688 14.7031 4.26562 14.7031 4.85156ZM17.6719 5.90625C17.75 7.35156 17.75 11.6875 17.6719 13.1328C17.5938 14.5391 17.2812 15.75 16.2656 16.8047C15.25 17.8203 14 18.1328 12.5938 18.2109C11.1484 18.2891 6.8125 18.2891 5.36719 18.2109C3.96094 18.1328 2.75 17.8203 1.69531 16.8047C0.679688 15.75 0.367188 14.5391 0.289062 13.1328C0.210938 11.6875 0.210938 7.35156 0.289062 5.90625C0.367188 4.5 0.679688 3.25 1.69531 2.23438C2.75 1.21875 3.96094 0.90625 5.36719 0.828125C6.8125 0.75 11.1484 0.75 12.5938 0.828125C14 0.90625 15.25 1.21875 16.2656 2.23438C17.2812 3.25 17.5938 4.5 17.6719 5.90625ZM15.7969 14.6562C16.2656 13.5234 16.1484 10.7891 16.1484 9.5C16.1484 8.25 16.2656 5.51562 15.7969 4.34375C15.4844 3.60156 14.8984 2.97656 14.1562 2.70312C12.9844 2.23438 10.25 2.35156 9 2.35156C7.71094 2.35156 4.97656 2.23438 3.84375 2.70312C3.0625 3.01562 2.47656 3.60156 2.16406 4.34375C1.69531 5.51562 1.8125 8.25 1.8125 9.5C1.8125 10.7891 1.69531 13.5234 2.16406 14.6562C2.47656 15.4375 3.0625 16.0234 3.84375 16.3359C4.97656 16.8047 7.71094 16.6875 9 16.6875C10.25 16.6875 12.9844 16.8047 14.1562 16.3359C14.8984 16.0234 15.5234 15.4375 15.7969 14.6562Z"
-                          fill="white"/>
-                </svg>
-            </a>
-            <a class="c-common--a__SOCIALS" href="#">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M11.625 0.375C18.0469 0.375 23.25 5.57812 23.25 12C23.25 18.4219 18.0469 23.625 11.625 23.625C5.20312 23.625 0 18.4219 0 12C0 5.57812 5.20312 0.375 11.625 0.375ZM17.2969 8.34375C17.4844 7.59375 17.0156 7.26562 16.5 7.45312L5.29688 11.7656C4.54688 12.0469 4.54688 12.5156 5.15625 12.7031L8.01562 13.5938L14.6719 9.375C15 9.1875 15.2812 9.32812 15.0469 9.51562L9.65625 14.3906L9.46875 17.3438C9.75 17.3438 9.89062 17.2031 10.0312 17.0625L11.4375 15.7031L14.3438 17.8594C14.9062 18.1406 15.2812 18 15.4219 17.3438L17.2969 8.34375Z"
-                          fill="white"/>
-                </svg>
-            </a>
-            <a class="c-common--a__SOCIALS" href="#">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <g clip-path="url(#clip0_1279_1221)">
-                        <path d="M0 11.9995C0 5.37208 5.37257 -0.000488281 12 -0.000488281C18.6274 -0.000488281 24 5.37208 24 11.9995C24 18.6269 18.6274 23.9995 12 23.9995C5.37257 23.9995 0 18.6269 0 11.9995Z"
-                              fill="white"/>
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                              d="M11.7572 -0.000488281C11.7005 4.9364 11.3776 7.69931 9.53871 9.53823C7.6998 11.3771 4.93689 11.7 0 11.7567V12.4731C4.93689 12.5298 7.6998 12.8526 9.53871 14.6915C11.3488 16.5016 11.69 19.2069 11.7543 23.9995H12.4765C12.5408 19.2069 12.882 16.5016 14.692 14.6915C16.5021 12.8815 19.2074 12.5403 24 12.476V11.7538C19.2074 11.6895 16.5021 11.3483 14.692 9.53823C12.8531 7.69931 12.5303 4.9364 12.4736 -0.000488281H11.7572Z"
-                              fill="#00ABEF"/>
-                    </g>
-                    <defs>
-                        <clipPath id="clip0_1279_1221">
-                            <rect width="24" height="24" fill="white"/>
-                        </clipPath>
-                    </defs>
-                </svg>
-            </a>
-            <a class="c-common--a__SOCIALS" href="#">
-                <svg width="24" height="17" viewBox="0 0 24 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M23.0898 3.12109C23.6055 4.92578 23.6055 8.79297 23.6055 8.79297C23.6055 8.79297 23.6055 12.6172 23.0898 14.4648C22.832 15.4961 22.0156 16.2695 21.0273 16.5273C19.1797 17 11.875 17 11.875 17C11.875 17 4.52734 17 2.67969 16.5273C1.69141 16.2695 0.875 15.4961 0.617188 14.4648C0.101562 12.6172 0.101562 8.79297 0.101562 8.79297C0.101562 8.79297 0.101562 4.92578 0.617188 3.12109C0.875 2.08984 1.69141 1.27344 2.67969 1.01562C4.52734 0.5 11.875 0.5 11.875 0.5C11.875 0.5 19.1797 0.5 21.0273 1.01562C22.0156 1.27344 22.832 2.08984 23.0898 3.12109ZM9.46875 12.2734L15.5703 8.79297L9.46875 5.3125V12.2734Z"
-                          fill="white"/>
-                </svg>
-            </a>
-            <a class="c-common--a__SOCIALS" href="#">
-                <svg width="24" height="22" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <g clip-path="url(#clip0_1279_1227)">
-                        <path d="M12.6444 13.1981H3.76549V9.6408H12.6444C13.163 9.6408 13.5236 9.73232 13.7046 9.89216C13.8856 10.052 13.9977 10.3484 13.9977 10.7815V12.0588C13.9977 12.5151 13.8856 12.8115 13.7046 12.9714C13.5236 13.1312 13.163 13.1995 12.6444 13.1995V13.1981ZM13.2535 6.28702H0V21.4999H3.76549V16.5505H10.7049L13.9977 21.4999H18.2143L14.5839 16.5273C15.9223 16.3265 16.5233 15.9112 17.019 15.2268C17.5147 14.5424 17.7632 13.4481 17.7632 11.9878V10.8471C17.7632 9.98096 17.6727 9.29653 17.5147 8.77196C17.3567 8.24737 17.0865 7.79109 16.703 7.38127C16.2978 6.99328 15.8467 6.72007 15.3051 6.537C14.7635 6.37717 14.0868 6.28564 13.2535 6.28564V6.28702Z"
-                              fill="white"/>
-                        <path d="M21.1067 6.28571C22.7044 6.28571 23.9996 4.99053 23.9996 3.39286C23.9996 1.79518 22.7044 0.5 21.1067 0.5C19.5091 0.5 18.2139 1.79518 18.2139 3.39286C18.2139 4.99053 19.5091 6.28571 21.1067 6.28571Z"
-                              fill="white"/>
-                    </g>
-                    <defs>
-                        <clipPath id="clip0_1279_1227">
-                            <rect width="24" height="21" fill="white" transform="translate(0 0.5)"/>
-                        </clipPath>
-                    </defs>
-                </svg>
-            </a>
-            <a class="c-common--a__SOCIALS" href="#">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" clip-rule="evenodd"
-                          d="M18.9852 16.9453C18.696 17.764 17.5464 18.4412 16.6296 18.6393C16.002 18.7725 15.1836 18.8779 12.426 17.7352C9.3288 16.452 5.028 11.8812 5.028 8.83945C5.028 7.29099 5.9208 5.48789 7.482 5.48789C8.2332 5.48789 8.3988 5.50254 8.646 6.09551C8.9352 6.79412 9.64081 8.51535 9.7248 8.6918C10.0716 9.41561 9.37199 9.83934 8.86439 10.4695C8.70239 10.6592 8.51881 10.8643 8.72401 11.2172C8.92801 11.5629 9.6336 12.7129 10.6704 13.6359C12.0096 14.8291 13.0956 15.21 13.4844 15.3721C13.7736 15.4921 14.1192 15.4641 14.3304 15.2385C14.598 14.9492 14.9304 14.4692 15.2688 13.9963C15.5076 13.6578 15.8112 13.6155 16.1292 13.7355C16.344 13.81 19.074 15.0778 19.1892 15.2807C19.2744 15.4283 19.2744 16.1267 18.9852 16.9453ZM12.0024 0H11.9964C5.38079 0 0 5.38242 0 12C0 14.624 0.846008 17.0584 2.28481 19.033L0.789606 23.492L5.40121 22.0184C7.29841 23.2739 9.5628 24 12.0024 24C18.618 24 24 18.6176 24 12C24 5.38242 18.618 0 12.0024 0Z"
-                          fill="white"/>
-                </svg>
-            </a>
         </div>
 
 
         <div class="c-footer--div__CONTACTS">
             <!-- Москва и область -->
-            <a class="c-footer--a__PHONE" href="tel:+74993501104">
+            <a class="c-footer--a__PHONE" href="tel:+<?= $phonePLus ?>">
                 <svg class="c-footer--svg__PHONE1" width="24" height="24" viewBox="0 0 12 12" fill="none"
                      xmlns="http://www.w3.org/2000/svg">
                     <path d="M11.3 12C9.91111 12 8.53889 11.6972 7.18333 11.0917C5.82778 10.4861 4.59444 9.62778 3.48333 8.51667C2.37222 7.40556 1.51389 6.17222 0.908333 4.81667C0.302778 3.46111 0 2.08889 0 0.7C0 0.5 0.0666667 0.333333 0.2 0.2C0.333333 0.0666667 0.5 0 0.7 0H3.4C3.55556 0 3.69444 0.0527778 3.81667 0.158333C3.93889 0.263889 4.01111 0.388889 4.03333 0.533333L4.46667 2.86667C4.48889 3.04444 4.48333 3.19444 4.45 3.31667C4.41667 3.43889 4.35556 3.54444 4.26667 3.63333L2.65 5.26667C2.87222 5.67778 3.13611 6.075 3.44167 6.45833C3.74722 6.84167 4.08333 7.21111 4.45 7.56667C4.79444 7.91111 5.15556 8.23056 5.53333 8.525C5.91111 8.81944 6.31111 9.08889 6.73333 9.33333L8.3 7.76667C8.4 7.66667 8.53056 7.59167 8.69167 7.54167C8.85278 7.49167 9.01111 7.47778 9.16667 7.5L11.4667 7.96667C11.6222 8.01111 11.75 8.09167 11.85 8.20833C11.95 8.325 12 8.45556 12 8.6V11.3C12 11.5 11.9333 11.6667 11.8 11.8C11.6667 11.9333 11.5 12 11.3 12ZM2.01667 4L3.11667 2.9L2.83333 1.33333H1.35C1.40556 1.78889 1.48333 2.23889 1.58333 2.68333C1.68333 3.12778 1.82778 3.56667 2.01667 4ZM7.98333 9.96667C8.41667 10.1556 8.85833 10.3056 9.30833 10.4167C9.75833 10.5278 10.2111 10.6 10.6667 10.6333V9.16667L9.1 8.85L7.98333 9.96667Z"
                           fill="#fff"></path>
                 </svg>
-                <span>8 499 350-11-04</span>
-            </a>
-            <!-- Остальные регионы -->
-            <a class="c-footer--a__PHONE hid" href="tel:+78003501104">
-                <svg class="c-footer--svg__PHONE1" width="24" height="24" viewBox="0 0 12 12" fill="none"
-                     xmlns="http://www.w3.org/2000/svg">
-                    <path d="M11.3 12C9.91111 12 8.53889 11.6972 7.18333 11.0917C5.82778 10.4861 4.59444 9.62778 3.48333 8.51667C2.37222 7.40556 1.51389 6.17222 0.908333 4.81667C0.302778 3.46111 0 2.08889 0 0.7C0 0.5 0.0666667 0.333333 0.2 0.2C0.333333 0.0666667 0.5 0 0.7 0H3.4C3.55556 0 3.69444 0.0527778 3.81667 0.158333C3.93889 0.263889 4.01111 0.388889 4.03333 0.533333L4.46667 2.86667C4.48889 3.04444 4.48333 3.19444 4.45 3.31667C4.41667 3.43889 4.35556 3.54444 4.26667 3.63333L2.65 5.26667C2.87222 5.67778 3.13611 6.075 3.44167 6.45833C3.74722 6.84167 4.08333 7.21111 4.45 7.56667C4.79444 7.91111 5.15556 8.23056 5.53333 8.525C5.91111 8.81944 6.31111 9.08889 6.73333 9.33333L8.3 7.76667C8.4 7.66667 8.53056 7.59167 8.69167 7.54167C8.85278 7.49167 9.01111 7.47778 9.16667 7.5L11.4667 7.96667C11.6222 8.01111 11.75 8.09167 11.85 8.20833C11.95 8.325 12 8.45556 12 8.6V11.3C12 11.5 11.9333 11.6667 11.8 11.8C11.6667 11.9333 11.5 12 11.3 12ZM2.01667 4L3.11667 2.9L2.83333 1.33333H1.35C1.40556 1.78889 1.48333 2.23889 1.58333 2.68333C1.68333 3.12778 1.82778 3.56667 2.01667 4ZM7.98333 9.96667C8.41667 10.1556 8.85833 10.3056 9.30833 10.4167C9.75833 10.5278 10.2111 10.6 10.6667 10.6333V9.16667L9.1 8.85L7.98333 9.96667Z"
-                          fill="#fff"></path>
-                </svg>
-                <span>8 800 350-11-04</span>
+                <span><?= $phone ?></span>
             </a>
 
-
-            <!-- Москва и область -->
-            <a class="c-footer--a__MAIL" href="mailto:msk@sappo.ru">
-                <svg class="c-footer--svg__MAIL1" width="17" height="14" viewBox="0 0 17 14" fill="none"
-                     xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0.5 13.6663V0.333008L16.3333 6.99967L0.5 13.6663ZM2.16667 11.1663L12.0417 6.99967L2.16667 2.83301V5.74967L7.16667 6.99967L2.16667 8.24967V11.1663Z"
-                          fill="white"/>
-                </svg>
-                <span>msk@sappo.ru</span>
-            </a>
-            <!-- Остальные регионы -->
-            <a class="c-footer--a__MAIL hid" href="mailto:info@sappo.ru">
-                <svg class="c-footer--svg__MAIL1" width="17" height="14" viewBox="0 0 17 14" fill="none"
-                     xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0.5 13.6663V0.333008L16.3333 6.99967L0.5 13.6663ZM2.16667 11.1663L12.0417 6.99967L2.16667 2.83301V5.74967L7.16667 6.99967L2.16667 8.24967V11.1663Z"
-                          fill="white"/>
-                </svg>
-                <span>info@sappo.ru</span>
-            </a>
+            <? if ($arRegion): ?>
+                <? if ($arRegion['PROPERTY_EMAIL_VALUE']): ?>
+                    <? foreach ($arRegion['PROPERTY_EMAIL_VALUE'] as $value): ?>
+                        <a class="c-footer--a__MAIL" href="mailto:<?= $value ?>">
+                            <svg class="c-footer--svg__MAIL1" width="17" height="14" viewBox="0 0 17 14" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M0.5 13.6663V0.333008L16.3333 6.99967L0.5 13.6663ZM2.16667 11.1663L12.0417 6.99967L2.16667 2.83301V5.74967L7.16667 6.99967L2.16667 8.24967V11.1663Z"
+                                      fill="white"/>
+                            </svg>
+                            <span><?= $value ?></span>
+                        </a>
+                    <? endforeach; ?>
+                <? endif; ?>
+            <? endif; ?>
 
 
             <p class="c-footer--p__CONTACTS">
-                C 2008 года успешно развиваем и
-                вносим свой вклад в популяризацию детейлинг культуры России!
+                <? $APPLICATION->IncludeFile(SITE_DIR . "include/footer/text_1.php", [], [
+                        "MODE" => "php",
+                        "NAME" => "text_1",
+                        "TEMPLATE" => "include_area.php",
+                    ]
+                ); ?>
             </p>
 
 
@@ -273,184 +87,39 @@ global $arTheme;
 
 
         <div class="c-footerMob--div__MENU">
-            <div class="c-footerMob--div__MENU_ITEM">
-                <p class="c-footerMob--p__TITLE">
-                                <span>
-                                    Каталог
-                                </span>
-                    <svg class="c-footerMob--svg__TITLE" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 15.4L6 9.4L7.4 8L12 12.6L16.6 8L18 9.4L12 15.4Z" fill="white"/>
-                    </svg>
-                </p>
-                <ul class="c-footerMob--ul">
-                    <li class="c-footerMob--li">
-                        <a class="c-footerMob--a__MENU" href="#">
-                            <span>Мойка и уход</span>
-                            <span>1385</span>
-                        </a>
-                    </li>
-
-                    <li class="c-footerMob--li">
-                        <a class="c-footerMob--a__MENU" href="#">
-                            <span>Полировка</span>
-                            <span>1162</span>
-                        </a>
-                    </li>
-
-                    <li class="c-footerMob--li">
-                        <a class="c-footerMob--a__MENU" href="#">
-                            <span>Реставрация кожи</span>
-                            <span>295</span>
-                        </a>
-                    </li>
-
-                    <li class="c-footerMob--li">
-                        <a class="c-footerMob--a__MENU" href="#">
-                            <span>Оборудование</span>
-                            <span>472</span>
-                        </a>
-                    </li>
-
-                    <li class="c-footerMob--li">
-                        <a class="c-footerMob--a__MENU" href="#">
-                            <span>Аксессуары</span>
-                            <span>943</span>
-                        </a>
-                    </li>
-
-                    <li class="c-footerMob--li">
-                        <a class="c-footerMob--a__MENU" href="#">
-                            <span>Защитные покрытия</span>
-                            <span>472</span>
-                        </a>
-                    </li>
-
-                    <li class="c-footerMob--li">
-                        <a class="c-footerMob--a__MENU" href="#">
-                            <span>Прочее</span>
-                            <span>373</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
 
 
-            <div class="c-footerMob--div__MENU_ITEM">
-                <p class="c-footerMob--p__TITLE">
-                                <span>
-                                    Полезное
-                                </span>
-                    <svg class="c-footerMob--svg__TITLE" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 15.4L6 9.4L7.4 8L12 12.6L16.6 8L18 9.4L12 15.4Z" fill="white"/>
-                    </svg>
-                </p>
-                <ul class="c-footerMob--ul">
-                    <li class="c-footerMob--li">
-                        <a class="c-footerMob--a__MENU" href="#">
-                            <span>Статьи</span>
-                            <span></span>
-                        </a>
-                    </li>
-
-                    <li class="c-footerMob--li">
-                        <a class="c-footerMob--a__MENU" href="#">
-                            <span>Новости</span>
-                            <span></span>
-                        </a>
-                    </li>
-
-                    <li class="c-footerMob--li">
-                        <a class="c-footerMob--a__MENU" href="#">
-                            <span>Обучение</span>
-                            <span></span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            <? $APPLICATION->IncludeFile(SITE_DIR . "include/footer/menu/new_bottom_mobile_1.php", [], [
+                    "MODE" => "php",
+                    "NAME" => "new_bottom_mobile_3_1",
+                    "TEMPLATE" => "include_area.php",
+                ]
+            ); ?>
 
 
-            <div class="c-footerMob--div__MENU_ITEM">
-                <p class="c-footerMob--p__TITLE">
-                                <span>
-                                    Компания
-                                </span>
-                    <svg class="c-footerMob--svg__TITLE" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 15.4L6 9.4L7.4 8L12 12.6L16.6 8L18 9.4L12 15.4Z" fill="white"/>
-                    </svg>
-                </p>
-                <ul class="c-footerMob--ul">
-                    <li class="c-footerMob--li">
-                        <a class="c-footerMob--a__MENU" href="#">
-                            <span>О нас</span>
-                        </a>
-                    </li>
+            <? $APPLICATION->IncludeFile(SITE_DIR . "include/footer/menu/new_bottom_mobile_3_1.php", [], [
+                    "MODE" => "php",
+                    "NAME" => "new_bottom_mobile_3_1",
+                    "TEMPLATE" => "include_area.php",
+                ]
+            ); ?>
 
-                    <li class="c-footerMob--li">
-                        <a class="c-footerMob--a__MENU" href="#">
-                            <span>Контакты</span>
-                        </a>
-                    </li>
+            <? $APPLICATION->IncludeFile(SITE_DIR . "include/footer/menu/new_bottom_mobile_3_2.php", [], [
+                    "MODE" => "php",
+                    "NAME" => "new_bottom_mobile_3_2",
+                    "TEMPLATE" => "include_area.php",
+                ]
+            ); ?>
 
-                    <li class="c-footerMob--li">
-                        <a class="c-footerMob--a__MENU" href="#">
-                            <span>Вакансии</span>
-                        </a>
-                    </li>
-
-                    <li class="c-footerMob--li">
-                        <a class="c-footerMob--a__MENU" href="#">
-                            <span>Отзывы</span>
-                        </a>
-                    </li>
-
-                    <li class="c-footerMob--li">
-                        <a class="c-footerMob--a__MENU" href="#">
-                            <span>Сертификаты</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            <? $APPLICATION->IncludeFile(SITE_DIR . "include/footer/menu/new_bottom_mobile_3_3.php", [], [
+                    "MODE" => "php",
+                    "NAME" => "new_bottom_mobile_3_3",
+                    "TEMPLATE" => "include_area.php",
+                ]
+            ); ?>
 
 
-            <div class="c-footerMob--div__MENU_ITEM">
-                <p class="c-footerMob--p__TITLE">
-                                <span>
-                                    Клиентам
-                                </span>
-                    <svg class="c-footerMob--svg__TITLE" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 15.4L6 9.4L7.4 8L12 12.6L16.6 8L18 9.4L12 15.4Z" fill="white"/>
-                    </svg>
-                </p>
-                <ul class="c-footerMob--ul">
-                    <li class="c-footerMob--li">
-                        <a class="c-footerMob--a__MENU" href="#">
-                            <span>Оплата</span>
-                        </a>
-                    </li>
 
-                    <li class="c-footerMob--li">
-                        <a class="c-footerMob--a__MENU" href="#">
-                            <span>Доставка</span>
-                        </a>
-                    </li>
-
-                    <li class="c-footerMob--li">
-                        <a class="c-footerMob--a__MENU" href="#">
-                            <span>Распродажа</span>
-                        </a>
-                    </li>
-
-                    <li class="c-footerMob--li">
-                        <a class="c-footerMob--a__MENU" href="#">
-                            <span>Программа лояльности</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
         </div>
 
 
@@ -464,127 +133,81 @@ global $arTheme;
 
         <div class="c-footer--div__BOTTOM">
                         <span class="c-footer--span__BOTTOM">
-                            Политика конфиденциальности
+
+                            <? $APPLICATION->IncludeFile(SITE_DIR . "include/footer/confidentiality.php", [], [
+                                    "MODE" => "php",
+                                    "NAME" => "onfidentiality",
+                                    "TEMPLATE" => "include_area.php",
+                                ]
+                            ); ?>
                         </span>
             <span class="c-footer--span__BOTTOM">
-                            © 2008–2025 SAPPO™ Detailing & Shop
+                <? $APPLICATION->IncludeFile(SITE_DIR . "include/footer/copy/copyright.php", [], [
+                        "MODE" => "php",
+                        "NAME" => "Copyright",
+                        "TEMPLATE" => "include_area.php",
+                    ]
+                ); ?>
                         </span>
         </div>
     </div>
 
-
+    доделать меню для мобильной версии
     <div class="c-footerDesc">
         <div class="c-footerDesc--div__LEFT">
             <div class="c-footerDesc--div__LEFT_TOP">
                 <img class="c-footer--img__LOGO" src="images/footer/c-footer_logo.svg" alt="Логотип">
                 <div class="c-footer--div__SOCIALS">
-                    <a class="c-common--a__SOCIALS" href="#">
-                        <svg width="22" height="13" viewBox="0 0 22 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M21.2891 1.10938C20.9766 2.4375 18.1641 6.42188 18.1641 6.42188C17.9297 6.8125 17.8125 7.00781 18.1641 7.4375C18.3203 7.63281 21.25 10.4453 21.6797 11.7734C21.875 12.4375 21.5625 12.75 20.8984 12.75H18.5938C17.7344 12.75 17.4609 12.0859 15.8984 10.5234C14.5312 9.19531 13.9453 9 13.5938 9C12.8906 9 13.0078 9.27344 13.0078 11.8906C13.0078 12.4375 12.8125 12.75 11.3672 12.75C8.94531 12.75 6.25 11.3047 4.33594 8.57031C1.48438 4.54688 0.703125 1.53906 0.703125 0.914062C0.703125 0.5625 0.859375 0.25 1.48438 0.25H3.78906C4.375 0.25 4.60938 0.523438 4.84375 1.14844C5.97656 4.42969 7.85156 7.32031 8.63281 7.32031C8.94531 7.32031 9.0625 7.16406 9.0625 6.42188V3.02344C8.98438 1.46094 8.16406 1.34375 8.16406 0.796875C8.16406 0.523438 8.35938 0.25 8.75 0.25H12.3438C12.8516 0.25 13.0078 0.523438 13.0078 1.10938V5.67969C13.0078 6.14844 13.2422 6.34375 13.3594 6.34375C13.6719 6.34375 13.9062 6.14844 14.4531 5.64062C16.0938 3.76562 17.2656 0.914062 17.2656 0.914062C17.4219 0.5625 17.6953 0.25 18.2812 0.25H20.5859C21.2891 0.25 21.4062 0.640625 21.2891 1.10938Z"
-                                  fill="white"/>
-                        </svg>
-                    </a>
-                    <a class="c-common--a__SOCIALS" href="#">
-                        <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M9 5.00781C11.4609 5.00781 13.4922 7.03906 13.4922 9.5C13.4922 12 11.4609 13.9922 9 13.9922C6.5 13.9922 4.50781 12 4.50781 9.5C4.50781 7.03906 6.5 5.00781 9 5.00781ZM9 12.4297C10.6016 12.4297 11.8906 11.1406 11.8906 9.5C11.8906 7.89844 10.6016 6.60938 9 6.60938C7.35938 6.60938 6.07031 7.89844 6.07031 9.5C6.07031 11.1406 7.39844 12.4297 9 12.4297ZM14.7031 4.85156C14.7031 5.4375 14.2344 5.90625 13.6484 5.90625C13.0625 5.90625 12.5938 5.4375 12.5938 4.85156C12.5938 4.26562 13.0625 3.79688 13.6484 3.79688C14.2344 3.79688 14.7031 4.26562 14.7031 4.85156ZM17.6719 5.90625C17.75 7.35156 17.75 11.6875 17.6719 13.1328C17.5938 14.5391 17.2812 15.75 16.2656 16.8047C15.25 17.8203 14 18.1328 12.5938 18.2109C11.1484 18.2891 6.8125 18.2891 5.36719 18.2109C3.96094 18.1328 2.75 17.8203 1.69531 16.8047C0.679688 15.75 0.367188 14.5391 0.289062 13.1328C0.210938 11.6875 0.210938 7.35156 0.289062 5.90625C0.367188 4.5 0.679688 3.25 1.69531 2.23438C2.75 1.21875 3.96094 0.90625 5.36719 0.828125C6.8125 0.75 11.1484 0.75 12.5938 0.828125C14 0.90625 15.25 1.21875 16.2656 2.23438C17.2812 3.25 17.5938 4.5 17.6719 5.90625ZM15.7969 14.6562C16.2656 13.5234 16.1484 10.7891 16.1484 9.5C16.1484 8.25 16.2656 5.51562 15.7969 4.34375C15.4844 3.60156 14.8984 2.97656 14.1562 2.70312C12.9844 2.23438 10.25 2.35156 9 2.35156C7.71094 2.35156 4.97656 2.23438 3.84375 2.70312C3.0625 3.01562 2.47656 3.60156 2.16406 4.34375C1.69531 5.51562 1.8125 8.25 1.8125 9.5C1.8125 10.7891 1.69531 13.5234 2.16406 14.6562C2.47656 15.4375 3.0625 16.0234 3.84375 16.3359C4.97656 16.8047 7.71094 16.6875 9 16.6875C10.25 16.6875 12.9844 16.8047 14.1562 16.3359C14.8984 16.0234 15.5234 15.4375 15.7969 14.6562Z"
-                                  fill="white"/>
-                        </svg>
-                    </a>
-                    <a class="c-common--a__SOCIALS" href="#">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M11.625 0.375C18.0469 0.375 23.25 5.57812 23.25 12C23.25 18.4219 18.0469 23.625 11.625 23.625C5.20312 23.625 0 18.4219 0 12C0 5.57812 5.20312 0.375 11.625 0.375ZM17.2969 8.34375C17.4844 7.59375 17.0156 7.26562 16.5 7.45312L5.29688 11.7656C4.54688 12.0469 4.54688 12.5156 5.15625 12.7031L8.01562 13.5938L14.6719 9.375C15 9.1875 15.2812 9.32812 15.0469 9.51562L9.65625 14.3906L9.46875 17.3438C9.75 17.3438 9.89062 17.2031 10.0312 17.0625L11.4375 15.7031L14.3438 17.8594C14.9062 18.1406 15.2812 18 15.4219 17.3438L17.2969 8.34375Z"
-                                  fill="white"/>
-                        </svg>
-                    </a>
-                    <a class="c-common--a__SOCIALS" href="#">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g clip-path="url(#clip0_1279_1221)">
-                                <path d="M0 11.9995C0 5.37208 5.37257 -0.000488281 12 -0.000488281C18.6274 -0.000488281 24 5.37208 24 11.9995C24 18.6269 18.6274 23.9995 12 23.9995C5.37257 23.9995 0 18.6269 0 11.9995Z"
-                                      fill="white"/>
-                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                      d="M11.7572 -0.000488281C11.7005 4.9364 11.3776 7.69931 9.53871 9.53823C7.6998 11.3771 4.93689 11.7 0 11.7567V12.4731C4.93689 12.5298 7.6998 12.8526 9.53871 14.6915C11.3488 16.5016 11.69 19.2069 11.7543 23.9995H12.4765C12.5408 19.2069 12.882 16.5016 14.692 14.6915C16.5021 12.8815 19.2074 12.5403 24 12.476V11.7538C19.2074 11.6895 16.5021 11.3483 14.692 9.53823C12.8531 7.69931 12.5303 4.9364 12.4736 -0.000488281H11.7572Z"
-                                      fill="#00ABEF"/>
-                            </g>
-                            <defs>
-                                <clipPath id="clip0_1279_1221">
-                                    <rect width="24" height="24" fill="white"/>
-                                </clipPath>
-                            </defs>
-                        </svg>
-                    </a>
-                    <a class="c-common--a__SOCIALS" href="#">
-                        <svg width="24" height="17" viewBox="0 0 24 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M23.0898 3.12109C23.6055 4.92578 23.6055 8.79297 23.6055 8.79297C23.6055 8.79297 23.6055 12.6172 23.0898 14.4648C22.832 15.4961 22.0156 16.2695 21.0273 16.5273C19.1797 17 11.875 17 11.875 17C11.875 17 4.52734 17 2.67969 16.5273C1.69141 16.2695 0.875 15.4961 0.617188 14.4648C0.101562 12.6172 0.101562 8.79297 0.101562 8.79297C0.101562 8.79297 0.101562 4.92578 0.617188 3.12109C0.875 2.08984 1.69141 1.27344 2.67969 1.01562C4.52734 0.5 11.875 0.5 11.875 0.5C11.875 0.5 19.1797 0.5 21.0273 1.01562C22.0156 1.27344 22.832 2.08984 23.0898 3.12109ZM9.46875 12.2734L15.5703 8.79297L9.46875 5.3125V12.2734Z"
-                                  fill="white"/>
-                        </svg>
-                    </a>
-                    <a class="c-common--a__SOCIALS" href="#">
-                        <svg width="24" height="22" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g clip-path="url(#clip0_1279_1227)">
-                                <path d="M12.6444 13.1981H3.76549V9.6408H12.6444C13.163 9.6408 13.5236 9.73232 13.7046 9.89216C13.8856 10.052 13.9977 10.3484 13.9977 10.7815V12.0588C13.9977 12.5151 13.8856 12.8115 13.7046 12.9714C13.5236 13.1312 13.163 13.1995 12.6444 13.1995V13.1981ZM13.2535 6.28702H0V21.4999H3.76549V16.5505H10.7049L13.9977 21.4999H18.2143L14.5839 16.5273C15.9223 16.3265 16.5233 15.9112 17.019 15.2268C17.5147 14.5424 17.7632 13.4481 17.7632 11.9878V10.8471C17.7632 9.98096 17.6727 9.29653 17.5147 8.77196C17.3567 8.24737 17.0865 7.79109 16.703 7.38127C16.2978 6.99328 15.8467 6.72007 15.3051 6.537C14.7635 6.37717 14.0868 6.28564 13.2535 6.28564V6.28702Z"
-                                      fill="white"/>
-                                <path d="M21.1067 6.28571C22.7044 6.28571 23.9996 4.99053 23.9996 3.39286C23.9996 1.79518 22.7044 0.5 21.1067 0.5C19.5091 0.5 18.2139 1.79518 18.2139 3.39286C18.2139 4.99053 19.5091 6.28571 21.1067 6.28571Z"
-                                      fill="white"/>
-                            </g>
-                            <defs>
-                                <clipPath id="clip0_1279_1227">
-                                    <rect width="24" height="21" fill="white" transform="translate(0 0.5)"/>
-                                </clipPath>
-                            </defs>
-                        </svg>
-                    </a>
-                    <a class="c-common--a__SOCIALS" href="#">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                  d="M18.9852 16.9453C18.696 17.764 17.5464 18.4412 16.6296 18.6393C16.002 18.7725 15.1836 18.8779 12.426 17.7352C9.3288 16.452 5.028 11.8812 5.028 8.83945C5.028 7.29099 5.9208 5.48789 7.482 5.48789C8.2332 5.48789 8.3988 5.50254 8.646 6.09551C8.9352 6.79412 9.64081 8.51535 9.7248 8.6918C10.0716 9.41561 9.37199 9.83934 8.86439 10.4695C8.70239 10.6592 8.51881 10.8643 8.72401 11.2172C8.92801 11.5629 9.6336 12.7129 10.6704 13.6359C12.0096 14.8291 13.0956 15.21 13.4844 15.3721C13.7736 15.4921 14.1192 15.4641 14.3304 15.2385C14.598 14.9492 14.9304 14.4692 15.2688 13.9963C15.5076 13.6578 15.8112 13.6155 16.1292 13.7355C16.344 13.81 19.074 15.0778 19.1892 15.2807C19.2744 15.4283 19.2744 16.1267 18.9852 16.9453ZM12.0024 0H11.9964C5.38079 0 0 5.38242 0 12C0 14.624 0.846008 17.0584 2.28481 19.033L0.789606 23.492L5.40121 22.0184C7.29841 23.2739 9.5628 24 12.0024 24C18.618 24 24 18.6176 24 12C24 5.38242 18.618 0 12.0024 0Z"
-                                  fill="white"/>
-                        </svg>
-                    </a>
+
+
+                    <? $APPLICATION->IncludeComponent(
+                        "aspro:social.info.max",
+                        "sappo_footer_new",
+                        [
+                            "CACHE_TYPE" => "A",
+                            "CACHE_TIME" => "3600000",
+                            "CACHE_GROUPS" => "N",
+                            "COMPONENT_TEMPLATE" => "sappo_footer_new",
+                            "TITLE_BLOCK" => ""
+                        ],
+                        false
+                    ); ?>
+
                 </div>
                 <div class="c-footer--div__CONTACTS">
-                    <!-- Москва и область -->
-                    <a class="c-footer--a__PHONE" href="tel:+74993501104">
+                    <a class="c-footer--a__PHONE" href="tel:+<?= $phonePLus ?>">
                         <svg class="c-footer--svg__PHONE1" width="24" height="24" viewBox="0 0 12 12" fill="none"
                              xmlns="http://www.w3.org/2000/svg">
                             <path d="M11.3 12C9.91111 12 8.53889 11.6972 7.18333 11.0917C5.82778 10.4861 4.59444 9.62778 3.48333 8.51667C2.37222 7.40556 1.51389 6.17222 0.908333 4.81667C0.302778 3.46111 0 2.08889 0 0.7C0 0.5 0.0666667 0.333333 0.2 0.2C0.333333 0.0666667 0.5 0 0.7 0H3.4C3.55556 0 3.69444 0.0527778 3.81667 0.158333C3.93889 0.263889 4.01111 0.388889 4.03333 0.533333L4.46667 2.86667C4.48889 3.04444 4.48333 3.19444 4.45 3.31667C4.41667 3.43889 4.35556 3.54444 4.26667 3.63333L2.65 5.26667C2.87222 5.67778 3.13611 6.075 3.44167 6.45833C3.74722 6.84167 4.08333 7.21111 4.45 7.56667C4.79444 7.91111 5.15556 8.23056 5.53333 8.525C5.91111 8.81944 6.31111 9.08889 6.73333 9.33333L8.3 7.76667C8.4 7.66667 8.53056 7.59167 8.69167 7.54167C8.85278 7.49167 9.01111 7.47778 9.16667 7.5L11.4667 7.96667C11.6222 8.01111 11.75 8.09167 11.85 8.20833C11.95 8.325 12 8.45556 12 8.6V11.3C12 11.5 11.9333 11.6667 11.8 11.8C11.6667 11.9333 11.5 12 11.3 12ZM2.01667 4L3.11667 2.9L2.83333 1.33333H1.35C1.40556 1.78889 1.48333 2.23889 1.58333 2.68333C1.68333 3.12778 1.82778 3.56667 2.01667 4ZM7.98333 9.96667C8.41667 10.1556 8.85833 10.3056 9.30833 10.4167C9.75833 10.5278 10.2111 10.6 10.6667 10.6333V9.16667L9.1 8.85L7.98333 9.96667Z"
                                   fill="#fff"></path>
                         </svg>
-                        <span>8 499 350-11-04</span>
-                    </a>
-                    <!-- Остальные регионы -->
-                    <a class="c-footer--a__PHONE hid" href="tel:+78003501104">
-                        <svg class="c-footer--svg__PHONE1" width="24" height="24" viewBox="0 0 12 12" fill="none"
-                             xmlns="http://www.w3.org/2000/svg">
-                            <path d="M11.3 12C9.91111 12 8.53889 11.6972 7.18333 11.0917C5.82778 10.4861 4.59444 9.62778 3.48333 8.51667C2.37222 7.40556 1.51389 6.17222 0.908333 4.81667C0.302778 3.46111 0 2.08889 0 0.7C0 0.5 0.0666667 0.333333 0.2 0.2C0.333333 0.0666667 0.5 0 0.7 0H3.4C3.55556 0 3.69444 0.0527778 3.81667 0.158333C3.93889 0.263889 4.01111 0.388889 4.03333 0.533333L4.46667 2.86667C4.48889 3.04444 4.48333 3.19444 4.45 3.31667C4.41667 3.43889 4.35556 3.54444 4.26667 3.63333L2.65 5.26667C2.87222 5.67778 3.13611 6.075 3.44167 6.45833C3.74722 6.84167 4.08333 7.21111 4.45 7.56667C4.79444 7.91111 5.15556 8.23056 5.53333 8.525C5.91111 8.81944 6.31111 9.08889 6.73333 9.33333L8.3 7.76667C8.4 7.66667 8.53056 7.59167 8.69167 7.54167C8.85278 7.49167 9.01111 7.47778 9.16667 7.5L11.4667 7.96667C11.6222 8.01111 11.75 8.09167 11.85 8.20833C11.95 8.325 12 8.45556 12 8.6V11.3C12 11.5 11.9333 11.6667 11.8 11.8C11.6667 11.9333 11.5 12 11.3 12ZM2.01667 4L3.11667 2.9L2.83333 1.33333H1.35C1.40556 1.78889 1.48333 2.23889 1.58333 2.68333C1.68333 3.12778 1.82778 3.56667 2.01667 4ZM7.98333 9.96667C8.41667 10.1556 8.85833 10.3056 9.30833 10.4167C9.75833 10.5278 10.2111 10.6 10.6667 10.6333V9.16667L9.1 8.85L7.98333 9.96667Z"
-                                  fill="#fff"></path>
-                        </svg>
-                        <span>8 800 350-11-04</span>
+                        <span><?= $phone ?></span>
                     </a>
 
 
-                    <!-- Москва и область -->
-                    <a class="c-footer--a__MAIL" href="mailto:msk@sappo.ru">
-                        <svg class="c-footer--svg__MAIL1" width="17" height="14" viewBox="0 0 17 14" fill="none"
-                             xmlns="http://www.w3.org/2000/svg">
-                            <path d="M0.5 13.6663V0.333008L16.3333 6.99967L0.5 13.6663ZM2.16667 11.1663L12.0417 6.99967L2.16667 2.83301V5.74967L7.16667 6.99967L2.16667 8.24967V11.1663Z"
-                                  fill="white"/>
-                        </svg>
-                        <span>msk@sappo.ru</span>
-                    </a>
-                    <!-- Остальные регионы -->
-                    <a class="c-footer--a__MAIL hid" href="mailto:info@sappo.ru">
-                        <svg class="c-footer--svg__MAIL1" width="17" height="14" viewBox="0 0 17 14" fill="none"
-                             xmlns="http://www.w3.org/2000/svg">
-                            <path d="M0.5 13.6663V0.333008L16.3333 6.99967L0.5 13.6663ZM2.16667 11.1663L12.0417 6.99967L2.16667 2.83301V5.74967L7.16667 6.99967L2.16667 8.24967V11.1663Z"
-                                  fill="white"/>
-                        </svg>
-                        <span>info@sappo.ru</span>
-                    </a>
-
+                    <? if ($arRegion): ?>
+                        <? if ($arRegion['PROPERTY_EMAIL_VALUE']): ?>
+                            <? foreach ($arRegion['PROPERTY_EMAIL_VALUE'] as $value): ?>
+                                <a class="c-footer--a__MAIL" href="mailto:<?= $value ?>">
+                                    <svg class="c-footer--svg__MAIL1" width="17" height="14" viewBox="0 0 17 14"
+                                         fill="none"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M0.5 13.6663V0.333008L16.3333 6.99967L0.5 13.6663ZM2.16667 11.1663L12.0417 6.99967L2.16667 2.83301V5.74967L7.16667 6.99967L2.16667 8.24967V11.1663Z"
+                                              fill="white"/>
+                                    </svg>
+                                    <span><?= $value ?></span>
+                                </a>
+                            <? endforeach; ?>
+                        <? endif; ?>
+                    <? endif; ?>
 
                     <p class="c-footer--p__CONTACTS">
-                        C 2008 года успешно развиваем и
-                        вносим свой вклад в популяризацию детейлинг культуры России!
+                        <? $APPLICATION->IncludeFile(SITE_DIR . "include/footer/text_1.php", [], [
+                                "MODE" => "php",
+                                "NAME" => "text_1",
+                                "TEMPLATE" => "include_area.php",
+                            ]
+                        ); ?>
                     </p>
 
 
@@ -620,10 +243,21 @@ global $arTheme;
 
                 <div class="c-footer--div__BOTTOM">
                                 <span class="c-footer--span__BOTTOM">
-                                    Политика конфиденциальности
+
+                                       <? $APPLICATION->IncludeFile(SITE_DIR . "include/footer/confidentiality.php", [], [
+                                               "MODE" => "php",
+                                               "NAME" => "onfidentiality",
+                                               "TEMPLATE" => "include_area.php",
+                                           ]
+                                       ); ?>
                                 </span>
                     <span class="c-footer--span__BOTTOM">
-                                    © 2008–2025 SAPPO™ Detailing & Shop
+                                      <? $APPLICATION->IncludeFile(SITE_DIR . "include/footer/copy/copyright.php", [], [
+                                              "MODE" => "php",
+                                              "NAME" => "Copyright",
+                                              "TEMPLATE" => "include_area.php",
+                                          ]
+                                      ); ?>
                                 </span>
                 </div>
             </div>
@@ -631,638 +265,38 @@ global $arTheme;
 
 
         <div class="c-footerDesc--div__RIGHT">
-            <div class="c-footerDesc--div__RIGHT_COL">
-                <div class="c-footerDesc--div__BLOCK">
-                    <a class="c-footerDesc--a__BLOCK_TITLE" href="#">
-                                    <span>
-                                        Мойка и уход
-                                    </span>
-                        <span>
-                                        1385
-                                    </span>
-                    </a>
-                    <ul class="c-footerDesc--ul">
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Интерьер
-                                            </span>
-                                <span>
-                                                635
-                                            </span>
-                            </a>
-                        </li>
 
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Экстерьер
-                                            </span>
-                                <span>
-                                                731
-                                            </span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="c-footerDesc--div__BLOCK">
-                    <a class="c-footerDesc--a__BLOCK_TITLE" href="#">
-                                    <span>
-                                        Реставрация кожи
-                                    </span>
-                        <span>
-                                        295
-                                    </span>
-                    </a>
-                    <ul class="c-footerDesc--ul">
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Инструмент для реставрации кожи
-                                            </span>
-                                <span>
-                                                31
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Средства для ремонта
-                                            </span>
-                                <span>
-                                                40
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Краски и защитные покрытия
-                                            </span>
-                                <span>
-                                                213
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Средства для чистки
-                                            </span>
-                                <span>
-                                                11
-                                            </span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="c-footerDesc--div__BLOCK">
-                    <a class="c-footerDesc--a__BLOCK_TITLE" href="#">
-                                    <span>
-                                        Аксессуары
-                                    </span>
-                        <span>
-                                        943
-                                    </span>
-                    </a>
-                    <ul class="c-footerDesc--ul">
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Аппликаторы
-                                            </span>
-                                <span>
-                                                91
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Кисти, щетки, сгоны и скребки
-                                            </span>
-                                <span>
-                                                302
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Микрофибры, губки, салфетки
-                                            </span>
-                                <span>
-                                                326
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Триггеры, распылители, емкости и ведра
-                                            </span>
-                                <span>
-                                                222
-                                            </span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="c-footerDesc--div__BLOCK">
-                    <a class="c-footerDesc--a__BLOCK_TITLE" href="#">
-                                    <span>
-                                        Прочее
-                                    </span>
-                        <span>
-                                        373
-                                    </span>
-                    </a>
-                    <ul class="c-footerDesc--ul">
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Одежда и сувениры
-                                            </span>
-                                <span>
-                                                31
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Пленки и инструмент
-                                            </span>
-                                <span>
-                                                40
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                СИЗ и гигиена
-                                            </span>
-                                <span>
-                                                213
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Смазочные материалы
-                                            </span>
-                                <span>
-                                                11
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Щетки стеклоотчистителя
-                                            </span>
-                                <span>
-
-                                            </span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
+                <? $APPLICATION->IncludeFile(SITE_DIR . "include/footer/menu/new_bottom_1.php", [], [
+                        "MODE" => "php",
+                        "NAME" => "new_bottom_1",
+                        "TEMPLATE" => "include_area.php",
+                    ]
+                ); ?>
 
             <div class="c-footerDesc--div__RIGHT_COL">
-                <div class="c-footerDesc--div__BLOCK">
-                    <a class="c-footerDesc--a__BLOCK_TITLE" href="#">
-                                    <span>
-                                        Полировка
-                                    </span>
-                        <span>
-                                        1162
-                                    </span>
-                    </a>
-                    <ul class="c-footerDesc--ul">
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Круги и подложки
-                                            </span>
-                                <span>
-                                                31
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Малярные ленты и скотчи
-                                            </span>
-                                <span>
-                                                40
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Подготовительные материалы
-                                            </span>
-                                <span>
-                                                213
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Полировальные пасты
-                                            </span>
-                                <span>
-                                                11
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Шлифовальные материалы
-                                            </span>
-                                <span>
-                                                11
-                                            </span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="c-footerDesc--div__BLOCK">
-                    <a class="c-footerDesc--a__BLOCK_TITLE" href="#">
-                                    <span>
-                                        Оборудование
-                                    </span>
-                        <span>
-                                        472
-                                    </span>
-                    </a>
-                    <ul class="c-footerDesc--ul">
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Для химчистки
-                                            </span>
-                                <span>
-                                                31
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Инвентарь для студии и мойки
-                                            </span>
-                                <span>
-                                                40
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Инфракрасные сушки
-                                            </span>
-                                <span>
-                                                213
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Компрессоры и воздух
-                                            </span>
-                                <span>
-                                                11
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Моечное оборудование
-                                            </span>
-                                <span>
-                                                11
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Озонаторы
-                                            </span>
-                                <span>
-                                                11
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Освещение
-                                            </span>
-                                <span>
-                                                11
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Полировальные машинки
-                                            </span>
-                                <span>
-                                                11
-                                            </span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="c-footerDesc--div__BLOCK">
-                    <a class="c-footerDesc--a__BLOCK_TITLE" href="#">
-                                    <span>
-                                        Защитные покрытия
-                                    </span>
-                        <span>
-                                        472
-                                    </span>
-                    </a>
-                    <ul class="c-footerDesc--ul">
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Воски, глейзы, силанты
-                                            </span>
-                                <span>
-                                                31
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Для дисков и резины
-                                            </span>
-                                <span>
-                                                40
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Для кожи и ткани
-                                            </span>
-                                <span>
-                                                213
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Для пластика
-                                            </span>
-                                <span>
-                                                11
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Для стекол, фар и зеркал
-                                            </span>
-                                <span>
-                                                11
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Керамика и жидкое стекло
-                                            </span>
-                                <span>
-                                                11
-                                            </span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+                <? $APPLICATION->IncludeFile(SITE_DIR . "include/footer/menu/new_bottom_3_1.php", [], [
+                        "MODE" => "php",
+                        "NAME" => "new_bottom_3_1",
+                        "TEMPLATE" => "include_area.php",
+                    ]
+                ); ?>
 
 
-            <div class="c-footerDesc--div__RIGHT_COL">
-                <div class="c-footerDesc--div__BLOCK">
-                    <a class="c-footerDesc--a__BLOCK_TITLE dis">
-                                    <span>
-                                        Полезное
-                                    </span>
-                        <span>
+                <? $APPLICATION->IncludeFile(SITE_DIR . "include/footer/menu/new_bottom_3_2.php", [], [
+                        "MODE" => "php",
+                        "NAME" => "new_bottom_3_2",
+                        "TEMPLATE" => "include_area.php",
+                    ]
+                ); ?>
 
-                                    </span>
-                    </a>
-                    <ul class="c-footerDesc--ul">
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Статьи
-                                            </span>
-                                <span>
 
-                                            </span>
-                            </a>
-                        </li>
+                <? $APPLICATION->IncludeFile(SITE_DIR . "include/footer/menu/new_bottom_3_3.php", [], [
+                        "MODE" => "php",
+                        "NAME" => "new_bottom_3_3",
+                        "TEMPLATE" => "include_area.php",
+                    ]
+                ); ?>
 
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Новости
-                                            </span>
-                                <span>
-
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Обучение
-                                            </span>
-                                <span>
-
-                                            </span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="c-footerDesc--div__BLOCK">
-                    <a class="c-footerDesc--a__BLOCK_TITLE dis">
-                                    <span>
-                                        Компания
-                                    </span>
-                        <span>
-
-                                    </span>
-                    </a>
-                    <ul class="c-footerDesc--ul">
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                О нас
-                                            </span>
-                                <span>
-
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Контакты
-                                            </span>
-                                <span>
-
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Вакансии
-                                            </span>
-                                <span>
-
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Отзывы
-                                            </span>
-                                <span>
-
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Сертификаты
-                                            </span>
-                                <span>
-
-                                            </span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="c-footerDesc--div__BLOCK">
-                    <a class="c-footerDesc--a__BLOCK_TITLE dis">
-                                    <span>
-                                        Клиентам
-                                    </span>
-                        <span>
-
-                                    </span>
-                    </a>
-                    <ul class="c-footerDesc--ul">
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Оплата
-                                            </span>
-                                <span>
-
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Доставка
-                                            </span>
-                                <span>
-
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Распродажа
-                                            </span>
-                                <span>
-
-                                            </span>
-                            </a>
-                        </li>
-
-                        <li class="c-footerDesc--li">
-                            <a class="c-footerDesc--a__MENU" href="#">
-                                            <span>
-                                                Программа лояльности
-                                            </span>
-                                <span>
-
-                                            </span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
             </div>
         </div>
     </div>
