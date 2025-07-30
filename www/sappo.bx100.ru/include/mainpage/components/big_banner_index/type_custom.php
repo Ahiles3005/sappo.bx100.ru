@@ -1,7 +1,7 @@
 <?if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();?>
 <?$APPLICATION->IncludeComponent(
 	"aspro:com.banners.max", 
-	"top_big_banner_3_2",
+	"top_big_banner_3_2_new",
 	array(
 		"IBLOCK_TYPE" => "aspro_max_adv",
 		"IBLOCK_ID" => "43",
@@ -31,7 +31,7 @@
 		"CACHE_TYPE" => "A",
 		"CACHE_TIME" => "36000000",
 		"BANNER_TYPE_THEME" => "TOP",
-		"COMPONENT_TEMPLATE" => "top_big_banner_3_2",
+		"COMPONENT_TEMPLATE" => "top_big_banner_3_2_new",
 		"FILTER_NAME" => "arRegionLink",
 		"BANNER_TYPE_THEME_CHILD" => "",
 		"SECTION_ID" => "",
