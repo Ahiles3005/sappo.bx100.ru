@@ -5,7 +5,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
 <?
 $APPLICATION->IncludeComponent(
     "aspro:catalog.section.list.max",
-    "front_sections_only",
+    "front_sections_only_new",
     [
         'MOBILE_TEMPLATE' => 'normal',
         'IBLOCK_TYPE' => 'aspro_max_catalog',

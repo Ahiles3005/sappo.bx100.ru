@@ -2752,7 +2752,9 @@ checkScrollToTop = function () {
   var scrollVal = $(window).scrollTop(),
     windowHeight = $(window).height(),
     footerOffset = 0;
-  if ($("footer").length) footerOffset = $("footer .footer-inner").offset().top;
+  if ($("footer").length && $("footer .footer-inner").length){
+    footerOffset = $("footer .footer-inner").offset().top;
+  }
 
   if (arAsproOptions["THEME"] && arAsproOptions["THEME"]["SCROLLTOTOP_POSITION"] == "CONTENT") {
     warpperWidth = $("body > .wrapper > .wrapper_inner").width();

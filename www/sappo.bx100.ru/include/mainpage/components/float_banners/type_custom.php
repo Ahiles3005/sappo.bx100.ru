@@ -1,7 +1,7 @@
 <?if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();?>
 <?$APPLICATION->IncludeComponent(
 	"aspro:com.banners.max", 
-	"float_banners2", 
+	"float_banners2_new",
 	array(
 		"IBLOCK_TYPE" => "aspro_max_adv",
 		"IBLOCK_ID" => "29",

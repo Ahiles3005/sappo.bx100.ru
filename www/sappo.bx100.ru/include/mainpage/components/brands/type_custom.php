@@ -1,11 +1,11 @@
 <?if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();?>
 <?$APPLICATION->IncludeComponent(
 	"bitrix:news.list", 
-	"front_brands_slider", 
+	"front_brands_slider_new",
 	array(
 		"IBLOCK_TYPE" => "aspro_max_content",
 		"IBLOCK_ID" => "46",
-		"NEWS_COUNT" => "10",
+		"NEWS_COUNT" => "999",
 		"SORT_BY1" => "SORT",
 		"SORT_ORDER1" => "DESC",
 		"SORT_BY2" => "SORT",
