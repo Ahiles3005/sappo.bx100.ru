@@ -491,7 +491,7 @@ body .wrapper1.basket_normal .header-v17 .logo_and_menu-row .search_wrap {
 
 
 
-body .maxwidth-theme {
+body #main .maxwidth-theme {
     padding: 0px 20px !important;
     max-width: 1920px;
 }
@@ -1081,6 +1081,20 @@ body .maxwidth-theme {
     height: 62px;
     display: flex;
     align-items: center;
+}
+
+.c-header--div__ENTER .auth_wr_inner {
+    height: 62px;
+    display: flex;
+    align-items: center;
+}
+
+
+.c-header--div__ENTER .auth_wr_inner.with_dropdown > .svg.inline {
+    position: absolute;
+    right: 0px;
+    top: 30px;
+    opacity: 1;
 }
 
 
@@ -2628,7 +2642,7 @@ body .basket-link .js-basket-block .count {
 
 
 .like_icons span {
-    background: transparent;
+    /*background: transparent;*/
     transition: background-color 0.2s;
 }
 
@@ -3632,7 +3646,7 @@ body .item-stock.js-show-stores:active .value {
 
 .hm-brands--div__SWIPER1_SLIDE {
     padding: 12px;
-    height: auto;
+    height: 87px;
     width: 132px;
     border: 1px solid #CCCCCC;
     border-radius: 32px;
@@ -3641,6 +3655,7 @@ body .item-stock.js-show-stores:active .value {
     .hm-brands--div__SWIPER1_SLIDE {
         padding: 24px;
         width: 208px;
+        height: 139px;
         border: 1px solid #CCCCCC;
     }
 }
@@ -3799,8 +3814,8 @@ body .item-stock.js-show-stores:active .value {
 
 .hm-brands--div__SWIPER2_SLIDE {
     padding: 12px;
-    height: auto;
     width: 132px;
+    height: 87px;
     border: 1px solid #CCCCCC;
     border-radius: 32px;
 }
@@ -3808,6 +3823,7 @@ body .item-stock.js-show-stores:active .value {
     .hm-brands--div__SWIPER2_SLIDE {
         padding: 24px;
         width: 208px;
+        height: 139px;
         border: 1px solid #CCCCCC;
     }
 }

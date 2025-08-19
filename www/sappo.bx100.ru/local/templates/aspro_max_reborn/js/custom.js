@@ -58,11 +58,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
-
-
-
-
     /* ---------- ********** FOOTER ********** ---------- */
 
     if (document.querySelector(".c-footer")) {
@@ -81,7 +76,14 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
 
+        const footerCity = Array.from(document.querySelectorAll(".c-footer--div__GEO a"));
 
+        footerCity.forEach((v, i, a) => {
+            a[i].addEventListener("click", () => {
+                $.cookie("current_region", footerCity[i].dataset.region, { path: "/", domain: arAsproOptions["SITE_ADDRESS"] });
+                location.reload();
+            });
+        });
 
 
 
@@ -206,17 +208,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
     /* ---------- ////////// ********** ДОМАШНЯЯ СТРАНИЦА ********** ////////// ---------- */
 
 
@@ -291,10 +282,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-
-
-
-
     /* ---------- ********** СЕКЦИЯ NEWS ********** ---------- */
 
 
@@ -328,14 +315,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-
-
-
-
-
-
     /* ---------- ********** СЕКЦИЯ INFO ********** ---------- */
-
 
     if (document.querySelector(".hm-info")) {
 
@@ -344,25 +324,26 @@ document.addEventListener("DOMContentLoaded", function () {
         const hmInfoButton = document.querySelector (".hm-info--button__ALL");
         const hmInfoMore = document.querySelector (".hm-info--div__BODY");
 
+        // hmInfoButton.addEventListener ("click", () => {
+        //     hmInfoButton.classList.add ("__hm-info--button__ALL");
+        //     setTimeout (() => {
+        //         hmInfoButton.classList.add ("__hm-info--button__ALL1");
+        //     }, 700);
+        //     hmInfoMore.classList.add ("__hm-info--div__BODY");
+        // });
 
-        hmInfoButton.addEventListener ("click", () => {
-            hmInfoButton.classList.add ("__hm-info--button__ALL");
-            setTimeout (() => {
-                hmInfoButton.classList.add ("__hm-info--button__ALL1");
-            }, 700);
-            hmInfoMore.classList.add ("__hm-info--div__BODY");
+        hmInfoButton.addEventListener("click", () => {
+            const isExpanded = hmInfoMore.classList.toggle("__hm-info--div__BODY");
+            if (isExpanded) {
+                hmInfoButton.textContent = "Свернуть";
+            } else {
+                hmInfoButton.textContent = "Смотреть далее";
+            }
         });
 
     }
 
-
-
-
-
-
-
     /* ---------- ********** СЕКЦИЯ BRANDS ********** ---------- */
-
 
     if (document.querySelector(".hm-brands")) {
 
@@ -455,24 +436,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     /* ---------- ////////// ********** СТРАНИЦА БОНУСЫ ********** ////////// ---------- */
 
-
     /* ---------- ********** СЕКЦИЯ FAQ ********** ---------- */
-
 
     if (document.querySelector(".bn-faq")) {
 

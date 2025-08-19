@@ -4,7 +4,7 @@ global $is404, $isIndex, $isForm, $isWidePage, $isBlog, $isCatalog, $isHideLeftB
 $is404 = (defined("ERROR_404") && ERROR_404 === "Y");
 $isIndex = CMax::IsMainPage();
 $isForm = CMax::IsFormPage();
-$isIndexCustom = $arTheme["INDEX_TYPE"]["VALUE"] == 'index2';
+$isIndexCustom = ($arTheme["INDEX_TYPE"]["VALUE"] == 'index2' && CSite::InDir(SITE_DIR.'index.php'));
 //$isBlog = false;//(CSite::inDir(SITE_DIR.'blog/') || $APPLICATION->GetProperty("BLOG_PAGE") == "Y");
 $isWidePage = ($APPLICATION->GetProperty("WIDE_PAGE") == "Y");
 $isHideLeftBlock = ($APPLICATION->GetProperty("HIDE_LEFT_BLOCK") == "Y");
