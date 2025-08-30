@@ -27,7 +27,10 @@
 			<?CMax::get_banners_position('FOOTER');?>
 		</div><?// .wrapper?>
 
-		<footer id="footer" class="c-footer">
+        <?php
+        $class = $isIndexCustom ? 'c-footer':'';
+        ?>
+		<footer id="footer" class="<?=$class?>">
 			<?include_once(str_replace('//', '/', $_SERVER['DOCUMENT_ROOT'].'/'.SITE_DIR.'include/footer_include/under_footer.php'));?>
 			<?include_once(str_replace('//', '/', $_SERVER['DOCUMENT_ROOT'].'/'.SITE_DIR.'include/footer_include/top_footer.php'));?>
 		</footer>
