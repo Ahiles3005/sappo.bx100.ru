@@ -1271,13 +1271,13 @@ body .basket-link .js-basket-block .count {
     width: 100%;
     max-width: 1872px !important;
     background-color: #00121A !important;
-    background: url("images/footer/c-footer_det.png") right calc(100% - 62px) / 305px no-repeat;
+    background: url("/include/footer/img/c-footer_det.png") right calc(100% - 62px) / 305px no-repeat;
     border-radius: 24px 24px 0px 0px !important;
 }
 @media (min-width: 992px) {
     .c-footer {
         padding: 64px 20px 104px !important;
-        background: url("images/footer/c-footer_det.png") right bottom / 500px no-repeat;
+        background: url("/include/footer/img/c-footer_det.png") right bottom / 500px no-repeat;
         border-radius: 48px 48px 0px 0px !important;
     }
 }

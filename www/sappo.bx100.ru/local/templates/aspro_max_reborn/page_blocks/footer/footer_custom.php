@@ -9,7 +9,7 @@ $phonePLus = ltrim(str_replace(' ', '', $phone), '8');
 
 <div class="c-common--div__MAXWIDTH maxwidth-theme">
     <div class="c-footerMob">
-        <img class="c-footer--img__LOGO" src="images/footer/c-footer_logo.svg" alt="Логотип">
+        <img class="c-footer--img__LOGO" src="/include/footer/img/c-footer_logo.svg" alt="Логотип">
 
         <div class="c-footer--div__SOCIALS">
 
@@ -124,7 +124,7 @@ $phonePLus = ltrim(str_replace(' ', '', $phone), '8');
 
 
         <a class="c-footer--a__YAND" href="#">
-            <img class="c-footer--img__YAND" src="images/footer/c-footer_yand.svg" alt="Репутация в Яндексе">
+            <img class="c-footer--img__YAND" src="/include/footer/img/c-footer_yand.svg" alt="Репутация в Яндексе">
             <p class="c-footer--p__YAND">
                 безупречная репутация
             </p>
@@ -156,7 +156,7 @@ $phonePLus = ltrim(str_replace(' ', '', $phone), '8');
     <div class="c-footerDesc">
         <div class="c-footerDesc--div__LEFT">
             <div class="c-footerDesc--div__LEFT_TOP">
-                <img class="c-footer--img__LOGO" src="images/footer/c-footer_logo.svg" alt="Логотип">
+                <img class="c-footer--img__LOGO" src="/include/footer/img/c-footer_logo.svg" alt="Логотип">
                 <div class="c-footer--div__SOCIALS">
 
 
@@ -234,7 +234,7 @@ $phonePLus = ltrim(str_replace(' ', '', $phone), '8');
 
             <div class="c-footerDesc--div__LEFT_BOTTOM">
                 <a class="c-footer--a__YAND" href="#">
-                    <img class="c-footer--img__YAND" src="images/footer/c-footer_yand.svg" alt="Репутация в Яндексе">
+                    <img class="c-footer--img__YAND" src="/include/footer/img/c-footer_yand.svg" alt="Репутация в Яндексе">
                     <p class="c-footer--p__YAND">
                         безупречная репутация
                     </p>

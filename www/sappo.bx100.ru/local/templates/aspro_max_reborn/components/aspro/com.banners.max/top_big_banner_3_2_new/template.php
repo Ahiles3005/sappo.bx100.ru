@@ -32,8 +32,8 @@ $asset = \Bitrix\Main\Page\Asset::getInstance();
                      id="<?= $this->GetEditAreaId($arItem['ID']); ?>">
                     <a class="hm-banners--a__MAIN"
                        href="<?= $arItem["PROPERTIES"]["URL_STRING"]["VALUE"] ?>" <?= (strlen($target) ? 'target="' . $target . '"' : '') ?>>
-                        <img class="hm-banners--img__MAIN" src="<?= $mobile ?>" alt="">
-                        <img class="hm-banners--img__MAIN" src="<?= $pc ?>" alt="">
+                        <img class="hm-banners--img__MAIN" data-typesrc="mobile" src="<?= $mobile ?>" alt="" style="max-height:208px ">
+                        <img class="hm-banners--img__MAIN" data-typesrc="pc" src="<?= $pc ?>" alt="" style="max-height:<?=$arItem["DETAIL_PICTURE"]['HEIGHT']?>px ">
 
                     </a>
                 </div>
