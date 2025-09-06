@@ -28,7 +28,7 @@
 		</div><?// .wrapper?>
 
         <?php
-        $class = $isIndexCustom ? 'c-footer':'';
+        $class = $isNewCustomTemplate ? 'c-footer':'';
         ?>
 		<footer id="footer" class="<?=$class?>">
 			<?include_once(str_replace('//', '/', $_SERVER['DOCUMENT_ROOT'].'/'.SITE_DIR.'include/footer_include/under_footer.php'));?>

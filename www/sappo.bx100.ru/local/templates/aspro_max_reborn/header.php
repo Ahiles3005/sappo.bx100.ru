@@ -124,7 +124,7 @@ $bIncludedModule = (\Bitrix\Main\Loader::includeModule("aspro.max")); ?>
 <div class="wraps hover_<?= $arTheme["HOVER_TYPE_IMG"]["VALUE"]; ?>" id="content">
 <? include_once(str_replace('//', '/', $_SERVER['DOCUMENT_ROOT'] . '/' . SITE_DIR . 'include/header_include/top_wraps.php')); ?>
 
-<? if ($isIndexCustom): ?>
+<? if ($isNewCustomTemplate && $isIndex): ?>
     <? Bitrix\Main\Page\Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . '/js/swiper-bundle.min.js', true) ?>
     <? Bitrix\Main\Page\Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . '/css/swiper-bundle.min.css'); ?>
     <? $APPLICATION->ShowViewContent('index_blocks'); ?>
