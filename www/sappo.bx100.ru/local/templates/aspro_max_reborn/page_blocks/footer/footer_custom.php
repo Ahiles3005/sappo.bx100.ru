@@ -152,7 +152,6 @@ $phonePLus = ltrim(str_replace(' ', '', $phone), '8');
         </div>
     </div>
 
-    доделать меню для мобильной версии
     <div class="c-footerDesc">
         <div class="c-footerDesc--div__LEFT">
             <div class="c-footerDesc--div__LEFT_TOP">

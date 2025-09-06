@@ -223,6 +223,7 @@ document.addEventListener("DOMContentLoaded", function () {
             watchOverflow: true,
             slidesPerView: 1,
             speed: 1000,
+            autoHeight: true,
             autoplay: {
                 delay: 4000,
             },

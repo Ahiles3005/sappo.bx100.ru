@@ -26,14 +26,18 @@ $asset = \Bitrix\Main\Page\Asset::getInstance();
                     $pc = $this->GetFolder() . "/images/background.jpg";
                     $mobile = $pc;
                 }
+
+                if(isset($arItem["PROPERTIES"]['TABLET_IMAGE']['VALUE'])){
+                    $mobile = CFile::GetPath($arItem["PROPERTIES"]['TABLET_IMAGE']['VALUE']);
+                }
                 $target = $arItem["PROPERTIES"]["TARGETS"]["VALUE_XML_ID"];
                 ?>
                 <div class="hm-banners--div__SWIPER1_SLIDE swiper-slide"
                      id="<?= $this->GetEditAreaId($arItem['ID']); ?>">
                     <a class="hm-banners--a__MAIN"
                        href="<?= $arItem["PROPERTIES"]["URL_STRING"]["VALUE"] ?>" <?= (strlen($target) ? 'target="' . $target . '"' : '') ?>>
-                        <img class="hm-banners--img__MAIN" data-typesrc="mobile" src="<?= $mobile ?>" alt="" >
-                        <img class="hm-banners--img__MAIN" data-typesrc="pc" src="<?= $pc ?>" alt="">
+                        <img class="hm-banners--img__MAIN" src="<?= $mobile ?>" alt="">
+                        <img class="hm-banners--img__MAIN" src="<?= $pc ?>" alt="">
 
                     </a>
                 </div>

@@ -1237,7 +1237,8 @@ if($arTheme['USE_DETAIL_TABS']['VALUE'] != 'Y')
 								<div class="cur">
 							<?endif;?>
 
-								<div class="assoc-block js-load-block loader_circle" data-block="assoc" data-file="<?=$APPLICATION->GetCurPage()?>">
+								<?/*
+                                    <div class="assoc-block js-load-block loader_circle" data-block="assoc" data-file="<?=$APPLICATION->GetCurPage()?>">
 									<div class="stub"></div>
 									<?CMax::checkRestartBuffer(true, 'assoc');?>
 										<?if(CMax::checkAjaxRequest()):?>
@@ -1250,7 +1251,14 @@ if($arTheme['USE_DETAIL_TABS']['VALUE'] != 'Y')
 										<?endif;?>
 									<?CMax::checkRestartBuffer(true, 'assoc');?>
 								</div>
-
+                                */?>
+                                <div class="assoc-block" data-block="assoc" data-file="<?=$APPLICATION->GetCurPage()?>">
+                                    <?
+                                    $GLOBALS['arrProductsFilter'] = [];
+                                    $GLOBALS['arrProductsFilter'] = $templateData['ASSOCIATED'];
+                                    ?>
+                                    <?include($_SERVER['DOCUMENT_ROOT'].SITE_DIR.'/include/detail.linked_products_block.php');?>
+                                </div>
 							</div>
 						<?endif;?>
 					<?endif;?>

@@ -1,6 +1,11 @@
 <?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();?><?$this->setFrameMode(true);?>
 <?use \Bitrix\Main\Localization\Loc;?>
-
+<?
+if($arParams['USE_REDICT'] == 'Y'){
+    LocalRedirect('/product/'. $arResult['CODE'] . '/', true, '301 Moved Permanently');
+    exit;
+}
+?>
     <div class="basket_props_block" id="bx_basket_div_<?=$arResult["ID"];?>" style="display: none;">
         <?if (!empty($arResult['PRODUCT_PROPERTIES_FILL'])){
             foreach ($arResult['PRODUCT_PROPERTIES_FILL'] as $propID => $propInfo){?>

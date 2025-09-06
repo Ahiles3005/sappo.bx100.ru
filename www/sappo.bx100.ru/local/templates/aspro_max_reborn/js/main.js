@@ -4954,53 +4954,42 @@ if (!funcDefined("initAnimateLoad")) {
     });
   };
 }
-
 if (!funcDefined("showBasketShareBtn")) {
   var showBasketShareBtn = function () {
-    if (arAsproOptions["THEME"]["SHOW_SHARE_BASKET"] === "Y") {
-      if (!document.querySelector(".basket-checkout-block-btns")) {
-        var checkout = document.querySelector(".basket-checkout-section-inner");
-        if (checkout) {
-          var btns = BX.create({
-            tag: "div",
-            attrs: {
-              class: "basket-checkout-block basket-checkout-block-btns",
-            },
-            html: '<div class="basket-checkout-block-btns-wrap"></div>',
-          });
+    if (arAsproOptions["THEME"]["SHOW_SHARE_BASKET"] !== "Y") return; // Если функция отключена в настройках
 
-          BX.insertAfter(btns, BX.lastChild(checkout));
-          var btnsWrap = btns.querySelector(".basket-checkout-block-btns-wrap");
+    var shareContainer = document.getElementById("basket-checkout-block-total-share");
+    if (!shareContainer) return; // Если контейнер не найден
 
-          var btnCheckout = checkout.querySelector(".basket-checkout-block-btn");
-          if (btnCheckout) {
-            btnsWrap.appendChild(btnCheckout);
-          }
-
-          var btnFastOrder = checkout.querySelector(".fastorder");
-          if (btnFastOrder) {
-            btnsWrap.appendChild(btnFastOrder);
-          }
-
-          if ($(".basket-btn-checkout").length && !$(".basket-btn-checkout").hasClass("disabled")) {
-            var btnShareBasket = BX.create({
-              tag: "div",
-              attrs: {
-                class: "basket-checkout-block basket-checkout-block-share colored_theme_hover_bg-block",
-                title: arAsproOptions["THEME"]["EXPRESSION_FOR_SHARE_BASKET"],
-              },
-              html:
-                '<span class="animate-load" data-event="jqm" data-param-form_id="share_basket" data-name="share_basket"><i class="svg colored_theme_hover_bg-el-svg"><svg class="svg svg-share" xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16"><path data-name="Ellipse 223 copy 8" d="M1613,203a2.967,2.967,0,0,1-1.86-.661l-3.22,2.01a2.689,2.689,0,0,1,0,1.3l3.22,2.01A2.961,2.961,0,0,1,1613,207a3,3,0,1,1-3,3,3.47,3.47,0,0,1,.07-0.651l-3.21-2.01a3,3,0,1,1,0-4.678l3.21-2.01A3.472,3.472,0,0,1,1610,200,3,3,0,1,1,1613,203Zm0,8a1,1,0,1,0-1-1A1,1,0,0,0,1613,211Zm-8-7a1,1,0,1,0,1,1A1,1,0,0,0,1605,204Zm8-5a1,1,0,1,0,1,1A1,1,0,0,0,1613,199Z" transform="translate(-1602 -197)" fill="#B8B8B8"></path></svg></i><span class="title">' +
-                arAsproOptions["THEME"]["EXPRESSION_FOR_SHARE_BASKET"] +
-                "</span></span>",
-            });
-
-            btnsWrap.appendChild(btnShareBasket);
-            initAnimateLoad();
-          }
-        }
-      }
+    // Проверяем, не добавлена ли уже кнопка
+    if (shareContainer.querySelector(".basket-checkout-block-share")) {
+      return; // Если кнопка уже есть - выходим
     }
+
+    // Проверяем, доступна ли корзина для оформления
+    if (!$(".basket-btn-checkout").length || $(".basket-btn-checkout").hasClass("disabled")) {
+      return; // Если кнопка оформления недоступна - не добавляем
+    }
+
+    // Создаём кнопку "Поделиться корзиной"
+    var btnShareBasket = BX.create({
+      tag: "div",
+      attrs: {
+        class: "basket-checkout-block-share colored_theme_hover_bg-block",
+        title: arAsproOptions["THEME"]["EXPRESSION_FOR_SHARE_BASKET"],
+      },
+      html:
+          '<span class="animate-load" data-event="jqm" data-param-form_id="share_basket" data-name="share_basket">' +
+          '<i class="svg colored_theme_hover_bg-el-svg">' +
+          '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="20" viewBox="0 0 19 20" fill="none">' +
+          '<path d="M6.08301 4L9.08301 1M9.08301 1L12.083 4M9.08301 1V11M4.08324 8C3.15136 8 2.68541 8 2.31787 8.15224C1.82781 8.35523 1.43824 8.74481 1.23525 9.23486C1.08301 9.60241 1.08301 10.0681 1.08301 11V15.8C1.08301 16.9201 1.08301 17.4798 1.30099 17.9076C1.49274 18.2839 1.79848 18.5905 2.1748 18.7822C2.60221 19 3.162 19 4.27992 19H13.8866C15.0045 19 15.5635 19 15.9909 18.7822C16.3672 18.5905 16.6735 18.2839 16.8652 17.9076C17.083 17.4802 17.083 16.921 17.083 15.8031V11C17.083 10.0681 17.0829 9.6024 16.9307 9.23486C16.7277 8.74481 16.3384 8.35523 15.8484 8.15224C15.4808 8 15.0149 8 14.083 8" stroke="#CDD1D4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+          '</svg>' +
+          '</i>' +
+          '</span>'
+    });
+
+    shareContainer.appendChild(btnShareBasket);
+    initAnimateLoad(); // Инициализация анимации, если требуется
   };
 }
 
@@ -8126,40 +8115,40 @@ $(document).ready(function () {
           // remove /bitrix/js/main/core/core_window.js if it was loaded already
           if (item.content.indexOf("/bitrix/js/main/core/core_window.") !== -1 && BX.WindowManager) {
             item.content = item.content.replace(
-              /<script src="\/bitrix\/js\/main\/core\/core_window\.[^>]*><\/script>/gm,
-              ""
+                /<script src="\/bitrix\/js\/main\/core\/core_window\.[^>]*><\/script>/gm,
+                ""
             );
           }
 
           // remove /bitrix/js/currency/core_currency.js if it was loaded already
           if (
-            item.content.indexOf("/bitrix/js/currency/core_currency.") !== -1 &&
-            typeof BX.Currency === "object" &&
-            BX.Currency.defaultFormat
+              item.content.indexOf("/bitrix/js/currency/core_currency.") !== -1 &&
+              typeof BX.Currency === "object" &&
+              BX.Currency.defaultFormat
           ) {
             item.content = item.content.replace(
-              /<script src="\/bitrix\/js\/currency\/core_currency\.[^>]*><\/script>/gm,
-              ""
+                /<script src="\/bitrix\/js\/currency\/core_currency\.[^>]*><\/script>/gm,
+                ""
             );
           }
 
           // remove /bitrix/js/main/pageobject/pageobject.js if it was loaded already
           if (item.content.indexOf("/bitrix/js/main/pageobject/pageobject.") !== -1 && BX.PageObject) {
             item.content = item.content.replace(
-              /<script src="\/bitrix\/js\/main\/pageobject\/pageobject\.[^>]*><\/script>/gm,
-              ""
+                /<script src="\/bitrix\/js\/main\/pageobject\/pageobject\.[^>]*><\/script>/gm,
+                ""
             );
           }
 
           // remove /bitrix/js/main/polyfill/promise/js/promise.js if it not need
           if (
-            item.content.indexOf("/bitrix/js/main/polyfill/promise/js/promise.") !== -1 &&
-            typeof window.Promise !== "undefined" &&
-            window.Promise.toString().indexOf("[native code]") !== -1
+              item.content.indexOf("/bitrix/js/main/polyfill/promise/js/promise.") !== -1 &&
+              typeof window.Promise !== "undefined" &&
+              window.Promise.toString().indexOf("[native code]") !== -1
           ) {
             item.content = item.content.replace(
-              /<script src="\/bitrix\/js\/main\/polyfill\/promise\/js\/promise\.[^>]*><\/script>/gm,
-              ""
+                /<script src="\/bitrix\/js\/main\/polyfill\/promise\/js\/promise\.[^>]*><\/script>/gm,
+                ""
             );
           }
 
@@ -8170,17 +8159,26 @@ $(document).ready(function () {
 
           item.block.removeAttr("data-file").removeClass("loader_circle");
 
-          if (item.block.data("appendTo")) {
-            item.block.find(item.block.data("appendTo"))[0].innerHTML = ob.HTML;
-          } else {
-            if (item.block.find('> div[id*="bx_incl_"]').length) {
-              item.block.find('> div[id*="bx_incl_"]')[0].innerHTML = ob.HTML;
-            } else {
-              item.block[0].innerHTML = ob.HTML;
-            }
-          }
+          // Проверяем классы элемента перед заменой контента
+          var blockClasses = item.block[0].className.split(' ');
+          var skipClasses = ['CATALOG_SECTIONS'];
+          var shouldSkip = skipClasses.some(function(className) {
+            return blockClasses.indexOf(className) !== -1;
+          });
 
-          BX.ajax.processScripts(ob.SCRIPT);
+          if (!shouldSkip) {
+            if (item.block.data("appendTo")) {
+              item.block.find(item.block.data("appendTo"))[0].innerHTML = ob.HTML;
+            } else {
+              if (item.block.find('> div[id*="bx_incl_"]').length) {
+                item.block.find('> div[id*="bx_incl_"]')[0].innerHTML = ob.HTML;
+              } else {
+                item.block[0].innerHTML = ob.HTML;
+              }
+            }
+
+            BX.ajax.processScripts(ob.SCRIPT);
+          }
 
           var eventdata = { action: "jsLoadBlock" };
           BX.onCustomEvent("onCompleteAction", [eventdata, item.block]);
@@ -8196,7 +8194,6 @@ $(document).ready(function () {
         }
       }
     };
-
     $(".js-load-block").appear(
       function () {
         var $this = $(this);
@@ -9421,7 +9418,8 @@ if (!funcDefined("orderActions")) {
           if ($(".bx-soa-cart-total-line-total").length && (asproShowLicence || asproShowOffer)) {
             if (typeof e === "undefined") {
               BX.Sale.OrderAjaxComponent.state_licence =
-                arAsproOptions["THEME"]["LICENCE_CHECKED"] == "Y" ? "checked" : "";
+                //arAsproOptions["THEME"]["LICENCE_CHECKED"] == "Y" ? "checked" : "";
+                arAsproOptions["THEME"]["LICENCE_CHECKED"] == "Y" ? "checked" : "checked";
               BX.Sale.OrderAjaxComponent.state_offer = arAsproOptions["THEME"]["OFFER_CHECKED"] == "Y" ? "checked" : "";
             }
 
@@ -9720,15 +9718,17 @@ if (!funcDefined("basketActions")) {
       );
       if ($(".basket-items-list-header-filter").length) {
         $(".basket-items-list-header-filter").append(
-          '<div class="top_control basket_action"><span style="opacity:1;" class="delete_all colored_theme_hover_text remove_all_basket">' +
-            svg_cross +
-            BX.message("BASKET_CLEAR_ALL_BUTTON") +
+            '<div class="top_control basket_action"><span class="delete_all colored_theme_hover_text remove_all_basket">' +
+            '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="20" viewBox="0 0 19 20" fill="none">' +
+            '<path fill="none" d="M11.2812 8V15M7.28125 8V15M3.28125 4V15.8C3.28125 16.9201 3.28125 17.4798 3.49924 17.9076C3.69098 18.2839 3.99672 18.5905 4.37305 18.7822C4.80045 19 5.36024 19 6.47816 19H12.0843C13.2023 19 13.7612 19 14.1886 18.7822C14.565 18.5905 14.8717 18.2839 15.0635 17.9076C15.2812 17.4802 15.2812 16.921 15.2812 15.8031V4M3.28125 4H5.28125M3.28125 4H1.28125M5.28125 4H13.2812M5.28125 4C5.28125 3.06812 5.28125 2.60241 5.43349 2.23486C5.63648 1.74481 6.02557 1.35523 6.51562 1.15224C6.88317 1 7.34937 1 8.28125 1H10.2812C11.2131 1 11.6791 1 12.0466 1.15224C12.5367 1.35523 12.9259 1.74481 13.1289 2.23486C13.2811 2.6024 13.2812 3.06812 13.2812 4M13.2812 4H15.2812M15.2812 4H17.2812" stroke="#CDD1D4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+            '</svg>' +
             "</span></div>"
         );
         $(".topic__inner").append(
-          '<div class="top_control basket_action"><span style="opacity:1;" class="delete_all colored_theme_hover_text remove_all_basket">' +
-            svg_cross +
-            BX.message("BASKET_CLEAR_ALL_BUTTON") +
+            '<div class="top_control basket_action"><span style="opacity:1;" class="delete_all colored_theme_hover_text remove_all_basket">' +
+            '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="20" viewBox="0 0 19 20" fill="none">' +
+            '<path fill="none" d="M11.2812 8V15M7.28125 8V15M3.28125 4V15.8C3.28125 16.9201 3.28125 17.4798 3.49924 17.9076C3.69098 18.2839 3.99672 18.5905 4.37305 18.7822C4.80045 19 5.36024 19 6.47816 19H12.0843C13.2023 19 13.7612 19 14.1886 18.7822C14.565 18.5905 14.8717 18.2839 15.0635 17.9076C15.2812 17.4802 15.2812 16.921 15.2812 15.8031V4M3.28125 4H5.28125M3.28125 4H1.28125M5.28125 4H13.2812M5.28125 4C5.28125 3.06812 5.28125 2.60241 5.43349 2.23486C5.63648 1.74481 6.02557 1.35523 6.51562 1.15224C6.88317 1 7.34937 1 8.28125 1H10.2812C11.2131 1 11.6791 1 12.0466 1.15224C12.5367 1.35523 12.9259 1.74481 13.1289 2.23486C13.2811 2.6024 13.2812 3.06812 13.2812 4M13.2812 4H15.2812M15.2812 4H17.2812" stroke="#CDD1D4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+            '</svg>'+
             "</span></div>"
         );
 

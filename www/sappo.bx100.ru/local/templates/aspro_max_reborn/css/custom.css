@@ -2010,7 +2010,7 @@ body .basket-link .js-basket-block .count {
 
 .middle > .hm-banners--div__WRAPPER {
     margin: 0 auto 40px !important;
-    padding: 16px !important;
+    padding: 16px 16px 32px !important;
     max-width: 1680px !important;
     background-color: #E5F8FF !important;
     border-radius: 0px 0px 32px 32px !important;
@@ -2018,7 +2018,7 @@ body .basket-link .js-basket-block .count {
 @media (min-width: 992px) {
     .middle > .hm-banners--div__WRAPPER {
         margin: 0 auto 64px !important;
-        padding: 40px 20px !important;
+        padding: 32px 20px !important;
         border-radius: 48px !important;
     }
 }
@@ -2033,7 +2033,7 @@ body .basket-link .js-basket-block .count {
     max-width: 1368px !important;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 0px;
     background-color: #E5F8FF !important;
     overflow: hidden;
     border-radius: 24px 24px 0px 0px;
@@ -2136,6 +2136,7 @@ body .basket-link .js-basket-block .count {
     width: 100%;
     overflow: hidden;
     border-radius: 24px;
+    margin-bottom: 16px;
 }
 @media (min-width: 992px) {
     .hm-banners--div__SWIPER1 {

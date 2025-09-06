@@ -464,6 +464,67 @@ $arParamsCE_CMP['TYPE_SKU'] = 'N';
 
                                             <? ob_start(); ?>
                                             <div class="footer_button <?= ($arItem["OFFERS"] && $arItem['OFFERS_PROP'] ? 'has_offer_prop' : ''); ?> inner_content js_offers__<?= $arItem['ID']; ?>_<?= $arParams["FILTER_HIT_PROP"] ?><?= ($arParams["TYPE_VIEW_BASKET_BTN"] == "TYPE_2" ? ' n-btn' : '') ?>">
+
+                                                <div class="counter_wrapp clearfix offer_buy_block<?= (($arAddToBasketData["ACTION"] == "NOTHING") ? ' n-btn' : ''); ?> ce_cmp_visible">
+                                                    <div class="button_block">
+                                                        <? if ($totalCountCMP): ?>
+                                                            <? if ($bUseSkuProps) {
+                                                                if (!$arItem["OFFERS"]) {
+                                                                    $arAddToBasketData = CMax::GetAddToBasketArray($arItem, $totalCountCMP, $arParams["DEFAULT_COUNT"], $arParams["BASKET_URL"], false, $arItemIDs["ALL_ITEM_IDS"], 'btn-exlg', $arParams);
+                                                                } elseif ($arItem["OFFERS"]) {
+                                                                    $arAddToBasketData = CMax::GetAddToBasketArray($arItem["OFFERS"][$arItem["OFFERS_SELECTED"]], $totalCountCMP, $arParams["DEFAULT_COUNT"], $arParams["BASKET_URL"], false, $arItemIDs["ALL_ITEM_IDS"], 'btn-exlg', $arParams);
+
+                                                                }
+                                                            }
+                                                            ?>
+                                                        <? endif; ?>
+                                                        <!--noindex-->
+                                                        <?= $arAddToBasketData["HTML"] ?>
+                                                        <!--/noindex-->
+                                                    </div>
+                                                    <? if ($arAddToBasketData["OPTIONS"]["USE_PRODUCT_QUANTITY_LIST"] && !count($arItem["OFFERS"]) && $arAddToBasketData["ACTION"] == "ADD" && $arAddToBasketData["CAN_BUY"]): ?>
+                                                        <? $bWrap = true ?>
+                                                        <? if (is_array($arParams) && $arParams): ?>
+                                                            <? ob_start(); ?>
+                                                            <? if (($arAddToBasketData["OPTIONS"]["USE_PRODUCT_QUANTITY_LIST"] && $arAddToBasketData["ACTION"] == "ADD") && $arAddToBasketData["CAN_BUY"]): ?>
+                                                                <? if ($bWrap): ?>
+                                                                    <div class="counter_block_inner">
+                                                                <? endif; ?>
+                                                                <div class="counter_block <?= $class; ?>" data-item="<?= $arItem["ID"]; ?>">
+                                                                    <? $cntBasketItems = CSaleBasket::GetList(
+                                                                        array("NAME" => "ASC", "ID" => "ASC"),
+                                                                        array("PRODUCT_ID" => $arItem["ID"], "FUSER_ID" => CSaleBasket::GetBasketUserID(), "LID" => SITE_ID, "ORDER_ID" => "NULL"),
+                                                                        false,
+                                                                        false,
+                                                                        array("QUANTITY")
+                                                                    )->Fetch();
+                                                                    ?>
+                                                                    <span class="minus dark-color"
+                                                                          id="<? echo $arItemIDs["ALL_ITEM_IDS"]['QUANTITY_DOWN']; ?>"><?= \CMax::showIconSvg("wish ncolor colored1", SITE_TEMPLATE_PATH . "/images/svg/minus" . $svgSize . ".svg"); ?></span>
+                                                                    <input type="text" class="text"
+                                                                           id="<? echo $arItemIDs["ALL_ITEM_IDS"]['QUANTITY']; ?>"
+                                                                           name="<?= $arParams["PRODUCT_QUANTITY_VARIABLE"]; ?>"
+                                                                           value="<?= floatval($cntBasketItems['QUANTITY']) ? floatval($cntBasketItems['QUANTITY']) : $arAddToBasketData["MIN_QUANTITY_BUY"] ?>"/>
+                                                                    <span class="plus dark-color"
+                                                                          id="<? echo $arItemIDs["ALL_ITEM_IDS"]['QUANTITY_UP']; ?>" <?= ($arAddToBasketData["MAX_QUANTITY_BUY"] ? "data-max='" . $arAddToBasketData["MAX_QUANTITY_BUY"] . "'" : "") ?>><?= \CMax::showIconSvg("wish ncolor colored1", SITE_TEMPLATE_PATH . "/images/svg/plus" . $svgSize . ".svg"); ?></span>
+                                                                </div>
+                                                                <? if ($bWrap): ?>
+                                                                    </div>
+                                                                <? endif; ?>
+                                                            <? endif; ?>
+                                                            <? $html = ob_get_contents();
+                                                            ob_end_clean();
+
+                                                            foreach (GetModuleEvents(\CMax::moduleID, 'OnAsproShowItemCounter', true) as $arEvent) // event for manipulation item delay and compare buttons
+                                                                ExecuteModuleEventEx($arEvent, array($arAddToBasketData, $arItem, $arItemIDs, $arParams, &$html));
+
+                                                            echo $html; ?>
+                                                        <? endif; ?>
+                                                    <? endif; ?>
+                                                </div>
+
+
+
                                                 <div class="sku_props ce_cmp_hidden">
                                                     <? if ($arItem["OFFERS"]) {
                                                         if (!empty($arItem['OFFERS_PROP'])) {
@@ -691,410 +752,6 @@ $arParamsCE_CMP['TYPE_SKU'] = 'N';
 
 
                                                 </div>
-                                                <? /*
-                                                <div class="catalog_item_wrapp catalog_item item_wrap main_item_wrapper  product_image "
-                                                     id="bx_3966226736_346416_SALE">
-                                                    <div class="inner_wrap TYPE_2">
-                                                        <div class="image_wrapper_block js-notice-block__image ">
-
-                                                            <div class="stickers custom-font">
-
-                                                                <div>
-                                                                    <div class="sticker_aktsiya font_sxs rounded2">Акция
-                                                                    </div>
-                                                                </div>
-
-                                                            </div>
-                                                            <div class="like_icons block" data-size="3">
-                                                                <div class="wish_item_button">
-                                                                <span title="Отложить" data-quantity="1"
-                                                                      class="wish_item to rounded3 colored_theme_hover_bg"
-                                                                      data-item="346416" data-iblock="42"><i
-                                                                            class="svg inline  svg-inline-wish ncolor colored"
-                                                                            aria-hidden="true"><svg
-                                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                                width="16" height="13"
-                                                                                viewBox="0 0 16 13"><defs><style>.clsw-1 {
-                                                                                        fill: #fff;
-                                                                                        fill-rule: evenodd;
-                                                                                    }</style></defs><path class="clsw-1"
-                                                                                                          d="M506.755,141.6l0,0.019s-4.185,3.734-5.556,4.973a0.376,0.376,0,0,1-.076.056,1.838,1.838,0,0,1-1.126.357,1.794,1.794,0,0,1-1.166-.4,0.473,0.473,0,0,1-.1-0.076c-1.427-1.287-5.459-4.878-5.459-4.878l0-.019A4.494,4.494,0,1,1,500,135.7,4.492,4.492,0,1,1,506.755,141.6Zm-3.251-5.61A2.565,2.565,0,0,0,501,138h0a1,1,0,1,1-2,0h0a2.565,2.565,0,0,0-2.506-2,2.5,2.5,0,0,0-1.777,4.264l-0.013.019L500,145.1l5.179-4.749c0.042-.039.086-0.075,0.126-0.117l0.052-.047-0.006-.008A2.494,2.494,0,0,0,503.5,135.993Z"
-                                                                                                          transform="translate(-492 -134)"></path></svg></i></span>
-                                                                    <span title="В отложенных" data-quantity="1"
-                                                                          class="wish_item in added rounded3 colored_theme_bg"
-                                                                          style="display: none;" data-item="346416"
-                                                                          data-iblock="42"><i
-                                                                                class="svg inline  svg-inline-wish ncolor colored"
-                                                                                aria-hidden="true"><svg
-                                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                                    width="16" height="13"
-                                                                                    viewBox="0 0 16 13"><defs><style>.clsw-1 {
-                                                                                            fill: #fff;
-                                                                                            fill-rule: evenodd;
-                                                                                        }</style></defs><path
-                                                                                        class="clsw-1"
-                                                                                        d="M506.755,141.6l0,0.019s-4.185,3.734-5.556,4.973a0.376,0.376,0,0,1-.076.056,1.838,1.838,0,0,1-1.126.357,1.794,1.794,0,0,1-1.166-.4,0.473,0.473,0,0,1-.1-0.076c-1.427-1.287-5.459-4.878-5.459-4.878l0-.019A4.494,4.494,0,1,1,500,135.7,4.492,4.492,0,1,1,506.755,141.6Zm-3.251-5.61A2.565,2.565,0,0,0,501,138h0a1,1,0,1,1-2,0h0a2.565,2.565,0,0,0-2.506-2,2.5,2.5,0,0,0-1.777,4.264l-0.013.019L500,145.1l5.179-4.749c0.042-.039.086-0.075,0.126-0.117l0.052-.047-0.006-.008A2.494,2.494,0,0,0,503.5,135.993Z"
-                                                                                        transform="translate(-492 -134)"></path></svg></i></span>
-                                                                </div>
-                                                                <div class="compare_item_button">
-                                                                <span title="Сравнить"
-                                                                      class="compare_item to rounded3 colored_theme_hover_bg"
-                                                                      data-iblock="42" data-item="346416"><i
-                                                                            class="svg inline  svg-inline-compare ncolor colored"
-                                                                            aria-hidden="true"><svg
-                                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                                width="14" height="13"
-                                                                                viewBox="0 0 14 13"><path
-                                                                                    data-name="Rounded Rectangle 913 copy"
-                                                                                    class="cls-1"
-                                                                                    d="M595,137a1,1,0,0,1,1,1v8a1,1,0,1,1-2,0v-8A1,1,0,0,1,595,137Zm-4,3a1,1,0,0,1,1,1v5a1,1,0,1,1-2,0v-5A1,1,0,0,1,591,140Zm8-6a1,1,0,0,1,1,1v11a1,1,0,1,1-2,0V135A1,1,0,0,1,599,134Zm4,6h0a1,1,0,0,1,1,1v5a1,1,0,0,1-1,1h0a1,1,0,0,1-1-1v-5A1,1,0,0,1,603,140Z"
-                                                                                    transform="translate(-590 -134)"></path></svg></i></span>
-                                                                    <span title="В сравнении"
-                                                                          class="compare_item in added rounded3 colored_theme_bg"
-                                                                          style="display: none;" data-iblock="42"
-                                                                          data-item="346416"><i
-                                                                                class="svg inline  svg-inline-compare ncolor colored"
-                                                                                aria-hidden="true"><svg
-                                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                                    width="14" height="13"
-                                                                                    viewBox="0 0 14 13"><path
-                                                                                        data-name="Rounded Rectangle 913 copy"
-                                                                                        class="cls-1"
-                                                                                        d="M595,137a1,1,0,0,1,1,1v8a1,1,0,1,1-2,0v-8A1,1,0,0,1,595,137Zm-4,3a1,1,0,0,1,1,1v5a1,1,0,1,1-2,0v-5A1,1,0,0,1,591,140Zm8-6a1,1,0,0,1,1,1v11a1,1,0,1,1-2,0V135A1,1,0,0,1,599,134Zm4,6h0a1,1,0,0,1,1,1v5a1,1,0,0,1-1,1h0a1,1,0,0,1-1-1v-5A1,1,0,0,1,603,140Z"
-                                                                                        transform="translate(-590 -134)"></path></svg></i></span>
-                                                                </div>
-                                                                <div class="wrapp_one_click">
-                                                                                            <span class="rounded3 colored_theme_hover_bg one_click"
-                                                                                                  data-item="346416"
-                                                                                                  data-iblockid="42"
-                                                                                                  data-quantity="1"
-                                                                                                  onclick="oneClickBuy(&#39;346416&#39;, &#39;42&#39;, this)"
-                                                                                                  title="Купить в 1 клик">
-                                                                                        <i class="svg inline  svg-inline-fw ncolor colored"
-                                                                                           aria-hidden="true"><svg
-                                                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                                                    width="18"
-                                                                                                    height="16"
-                                                                                                    viewBox="0 0 18 16"><path
-                                                                                                        data-name="Rounded Rectangle 941 copy 2"
-                                                                                                        class="cls-1"
-                                                                                                        d="M653,148H643a2,2,0,0,1-2-2v-3h2v3h10v-7h-1v2a1,1,0,1,1-2,0v-2H638a1,1,0,1,1,0-2h6v-1a4,4,0,0,1,8,0v1h1a2,2,0,0,1,2,2v7A2,2,0,0,1,653,148Zm-3-12a2,2,0,0,0-4,0v1h4v-1Zm-10,4h5a1,1,0,0,1,0,2h-5A1,1,0,0,1,640,140Z"
-                                                                                                        transform="translate(-637 -132)"></path></svg></i>										</span>
-                                                                </div>
-                                                                <div class="fast_view_button">
-                                                                <span title="Быстрый просмотр"
-                                                                      class="rounded3 colored_theme_hover_bg"
-                                                                      data-event="jqm" data-param-form_id="fast_view"
-                                                                      data-param-iblock_id="42" data-param-id="346416"
-                                                                      data-param-item_href="%2Fproduct%2Fpolirovalnyy_krug_dlya_abrazivnykh_past_voskov_serii_p1_p2_150_kh_25_mm_koch_chemie%2F"
-                                                                      data-name="fast_view"><i
-                                                                            class="svg inline  svg-inline-fw ncolor colored"
-                                                                            aria-hidden="true"><svg
-                                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                                width="16" height="12"
-                                                                                viewBox="0 0 16 12"><path
-                                                                                    data-name="Ellipse 302 copy 3"
-                                                                                    class="cls-1"
-                                                                                    d="M549,146a8.546,8.546,0,0,1-8.008-6,8.344,8.344,0,0,1,16.016,0A8.547,8.547,0,0,1,549,146Zm0-2a6.591,6.591,0,0,0,5.967-4,7.022,7.022,0,0,0-1.141-1.76,4.977,4.977,0,0,1-9.652,0,7.053,7.053,0,0,0-1.142,1.76A6.591,6.591,0,0,0,549,144Zm-2.958-7.246c-0.007.084-.042,0.159-0.042,0.246a3,3,0,1,0,6,0c0-.087-0.035-0.162-0.042-0.246A6.179,6.179,0,0,0,546.042,136.753Z"
-                                                                                    transform="translate(-541 -134)"></path></svg></i></span>
-                                                                </div>
-                                                            </div>
-                                                            <a href="https://sappo.ru/product/polirovalnyy_krug_dlya_abrazivnykh_past_voskov_serii_p1_p2_150_kh_25_mm_koch_chemie/"
-                                                               class="thumb shine">
-                                                                                        <span class="section-gallery-wrapper flexbox">
-                                                                                                            <span class="section-gallery-wrapper__item _active">
-                                            <span class="section-gallery-wrapper__item-nav section-gallery-wrapper__item_hidden "></span>
-                                                                                        <img class="img-responsive lazyloaded"
-                                                                                             src="./home_files/bkesc3hwhe456ya28u7q749my2hdjit1.jpg"
-                                                                                             data-src="/upload/iblock/56b/bkesc3hwhe456ya28u7q749my2hdjit1.jpg"
-                                                                                             alt="Полировальный круг для абразивных паст восков серии P1, P2 Ø 150 х 25 мм, Koch Chemie"
-                                                                                             title="Полировальный круг для абразивных паст восков серии P1, P2 Ø 150 х 25 мм, Koch Chemie">
-                                                                                        </span>
-                                                                                        </span>
-                                                            </a>
-                                                        </div>
-
-                                                        <div class="item_info">
-                                                            <div class="rating">
-                                                                <!--'start_frame_cache_dv_346416'-->
-                                                                <div class="votes_block nstar">
-                                                                    <div class="ratings">
-                                                                        <div class="inner_rating">
-                                                                            <div class="item-rating" title="1"><i
-                                                                                        class="svg inline  svg-inline-star"
-                                                                                        aria-hidden="true">
-                                                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                         width="15" height="13"
-                                                                                         viewBox="0 0 15 13">
-                                                                                        <rect class="sscls-1" width="15"
-                                                                                              height="13"></rect>
-                                                                                        <path data-name="Shape 921 copy 15"
-                                                                                              class="sscls-2"
-                                                                                              d="M1333.37,457.5l-4.21,2.408,0.11,0.346,2.07,4.745h-0.72l-4.12-3-4.09,3h-0.75l2.04-4.707,0.12-.395-4.19-2.4V457h5.12l1.53-5h0.38l1.57,5h5.14v0.5Z"
-                                                                                              transform="translate(-1319 -452)"></path>
-                                                                                    </svg>
-                                                                                </i></div>
-                                                                            <div class="item-rating" title="2"><i
-                                                                                        class="svg inline  svg-inline-star"
-                                                                                        aria-hidden="true">
-                                                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                         width="15" height="13"
-                                                                                         viewBox="0 0 15 13">
-                                                                                        <rect class="sscls-1" width="15"
-                                                                                              height="13"></rect>
-                                                                                        <path data-name="Shape 921 copy 15"
-                                                                                              class="sscls-2"
-                                                                                              d="M1333.37,457.5l-4.21,2.408,0.11,0.346,2.07,4.745h-0.72l-4.12-3-4.09,3h-0.75l2.04-4.707,0.12-.395-4.19-2.4V457h5.12l1.53-5h0.38l1.57,5h5.14v0.5Z"
-                                                                                              transform="translate(-1319 -452)"></path>
-                                                                                    </svg>
-                                                                                </i></div>
-                                                                            <div class="item-rating" title="3"><i
-                                                                                        class="svg inline  svg-inline-star"
-                                                                                        aria-hidden="true">
-                                                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                         width="15" height="13"
-                                                                                         viewBox="0 0 15 13">
-                                                                                        <rect class="sscls-1" width="15"
-                                                                                              height="13"></rect>
-                                                                                        <path data-name="Shape 921 copy 15"
-                                                                                              class="sscls-2"
-                                                                                              d="M1333.37,457.5l-4.21,2.408,0.11,0.346,2.07,4.745h-0.72l-4.12-3-4.09,3h-0.75l2.04-4.707,0.12-.395-4.19-2.4V457h5.12l1.53-5h0.38l1.57,5h5.14v0.5Z"
-                                                                                              transform="translate(-1319 -452)"></path>
-                                                                                    </svg>
-                                                                                </i></div>
-                                                                            <div class="item-rating" title="4"><i
-                                                                                        class="svg inline  svg-inline-star"
-                                                                                        aria-hidden="true">
-                                                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                         width="15" height="13"
-                                                                                         viewBox="0 0 15 13">
-                                                                                        <rect class="sscls-1" width="15"
-                                                                                              height="13"></rect>
-                                                                                        <path data-name="Shape 921 copy 15"
-                                                                                              class="sscls-2"
-                                                                                              d="M1333.37,457.5l-4.21,2.408,0.11,0.346,2.07,4.745h-0.72l-4.12-3-4.09,3h-0.75l2.04-4.707,0.12-.395-4.19-2.4V457h5.12l1.53-5h0.38l1.57,5h5.14v0.5Z"
-                                                                                              transform="translate(-1319 -452)"></path>
-                                                                                    </svg>
-                                                                                </i></div>
-                                                                            <div class="item-rating" title="5"><i
-                                                                                        class="svg inline  svg-inline-star"
-                                                                                        aria-hidden="true">
-                                                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                         width="15" height="13"
-                                                                                         viewBox="0 0 15 13">
-                                                                                        <rect class="sscls-1" width="15"
-                                                                                              height="13"></rect>
-                                                                                        <path data-name="Shape 921 copy 15"
-                                                                                              class="sscls-2"
-                                                                                              d="M1333.37,457.5l-4.21,2.408,0.11,0.346,2.07,4.745h-0.72l-4.12-3-4.09,3h-0.75l2.04-4.707,0.12-.395-4.19-2.4V457h5.12l1.53-5h0.38l1.57,5h5.14v0.5Z"
-                                                                                              transform="translate(-1319 -452)"></path>
-                                                                                    </svg>
-                                                                                </i></div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <!--'end_frame_cache_dv_346416'-->
-                                                            </div>
-                                                            <div class="item-title" style="height: 100px;">
-                                                                <a href="https://sappo.ru/product/polirovalnyy_krug_dlya_abrazivnykh_past_voskov_serii_p1_p2_150_kh_25_mm_koch_chemie/"
-                                                                   class="dark_link js-notice-block__title option-font-bold font_sm"><span>Полировальный круг для абразивных паст восков серии P1, P2 Ø 150 х 25 мм, Koch Chemie</span></a>
-                                                            </div>
-                                                            <div class="sa_block"
-                                                                 data-fields="[&quot;&quot;,&quot;&quot;]"
-                                                                 data-stores="[&quot;5&quot;]"
-                                                                 data-user-fields="[&quot;&quot;,&quot;&quot;]"
-                                                                 style="height: 24px;">
-                                                                <div class="item-stock js-show-stores js-show-info-block "
-                                                                     data-id="346416"><span
-                                                                            class="icon stock"></span><span
-                                                                            class="value font_sxs">В наличии</span>
-                                                                </div>
-                                                                <div class="article_block" data-name="Арт."
-                                                                     data-value="9998338">
-                                                                    <div class="muted font_sxs">Арт. : 9998338</div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="cost prices clearfix 123qwe">
-                                                                <div class="icons-basket-wrapper offer_buy_block ce_cmp_hidden">
-                                                                    <div class="button_block">
-                                                                        <!--noindex-->
-                                                                        <span data-value="1156" data-currency="RUB"
-                                                                              class="btn-exlg to-cart btn btn-default transition_bg animate-load"
-                                                                              data-item="346416" data-float_ratio=""
-                                                                              data-ratio="1"
-                                                                              data-bakset_div="bx_basket_div_346416"
-                                                                              data-props="" data-part_props="N"
-                                                                              data-add_props="Y" data-empty_props="Y"
-                                                                              data-offers="" data-iblockid="42"
-                                                                              data-quantity="1"><i
-                                                                                    class="svg inline  svg-inline-fw ncolor colored"
-                                                                                    aria-hidden="true"
-                                                                                    title="В корзину"><svg
-                                                                                        class="" width="19" height="16"
-                                                                                        viewBox="0 0 19 16"><path
-                                                                                            data-name="Ellipse 2 copy 9"
-                                                                                            class="cls-1"
-                                                                                            d="M956.047,952.005l-0.939,1.009-11.394-.008-0.952-1-0.953-6h-2.857a0.862,0.862,0,0,1-.952-1,1.025,1.025,0,0,1,1.164-1h2.327c0.3,0,.6.006,0.6,0.006a1.208,1.208,0,0,1,1.336.918L943.817,947h12.23L957,948v1Zm-11.916-3,0.349,2h10.007l0.593-2Zm1.863,5a3,3,0,1,1-3,3A3,3,0,0,1,945.994,954.005ZM946,958a1,1,0,1,0-1-1A1,1,0,0,0,946,958Zm7.011-4a3,3,0,1,1-3,3A3,3,0,0,1,953.011,954.005ZM953,958a1,1,0,1,0-1-1A1,1,0,0,0,953,958Z"
-                                                                                            transform="translate(-938 -944)"></path></svg></i><span>В корзину</span></span><a
-                                                                                rel="nofollow"
-                                                                                href="https://sappo.ru/basket/"
-                                                                                class="btn-exlg in-cart btn btn-default transition_bg"
-                                                                                data-item="346416"
-                                                                                style="display:none;"><i
-                                                                                    class="svg inline  svg-inline-fw ncolor colored"
-                                                                                    aria-hidden="true"
-                                                                                    title="В корзине">
-                                                                                <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                     width="19" height="18"
-                                                                                     viewBox="0 0 19 18">
-                                                                                    <path data-name="Rounded Rectangle 906 copy 3"
-                                                                                          class="cls-1"
-                                                                                          d="M1005.97,4556.22l-1.01,4.02a0.031,0.031,0,0,0-.01.02,0.87,0.87,0,0,1-.14.29,0.423,0.423,0,0,1-.05.07,0.7,0.7,0,0,1-.2.18,0.359,0.359,0,0,1-.1.07,0.656,0.656,0,0,1-.21.08,1.127,1.127,0,0,1-.18.03,0.185,0.185,0,0,1-.07.02H993c-0.03,0-.056-0.02-0.086-0.02a1.137,1.137,0,0,1-.184-0.04,0.779,0.779,0,0,1-.207-0.08c-0.031-.02-0.059-0.04-0.088-0.06a0.879,0.879,0,0,1-.223-0.22s-0.007-.01-0.011-0.01a1,1,0,0,1-.172-0.43l-1.541-6.14H988a1,1,0,1,1,0-2h3.188a0.3,0.3,0,0,1,.092.02,0.964,0.964,0,0,1,.923.76l1.561,6.22h9.447l0.82-3.25a1,1,0,0,1,1.21-.73A0.982,0.982,0,0,1,1005.97,4556.22Zm-7.267.47c0,0.01,0,.01,0,0.01a1,1,0,0,1-1.414,0l-2.016-2.03a0.982,0.982,0,0,1,0-1.4,1,1,0,0,1,1.414,0l1.305,1.31,4.3-4.3a1,1,0,0,1,1.41,0,1.008,1.008,0,0,1,0,1.42ZM995,4562a3,3,0,1,1-3,3A3,3,0,0,1,995,4562Zm0,4a1,1,0,1,0-1-1A1,1,0,0,0,995,4566Zm7-4a3,3,0,1,1-3,3A3,3,0,0,1,1002,4562Zm0,4a1,1,0,1,0-1-1A1,1,0,0,0,1002,4566Z"
-                                                                                          transform="translate(-987 -4550)"></path>
-                                                                                </svg>
-                                                                            </i><span>В корзине</span></a>
-                                                                        <!--/noindex-->
-                                                                    </div>
-                                                                    <div class="counter_block_inner">
-                                                                        <div class="counter_block" data-item="346416">
-                                                                        <span class="minus dark-color"
-                                                                              id="bx_3966226736_346416_SALE_quant_down"><i
-                                                                                    class="svg inline  svg-inline-wish ncolor colored1"
-                                                                                    aria-hidden="true"><svg x="0px"
-                                                                                                            y="0px"
-                                                                                                            width="14px"
-                                                                                                            height="2px"
-                                                                                                            viewBox="0 0 14 2"
-                                                                                                            style="enable-background:new 0 0 14 2;"
-                                                                                                            xml:space="preserve"><path
-                                                                                            d="M1.9,0.1h10.2C12.6,0.1,13,0.5,13,1l0,0c0,0.5-0.4,0.9-0.9,0.9H1.9C1.4,1.9,1,1.5,1,1l0,0C1,0.5,1.4,0.1,1.9,0.1z"></path></svg></i></span>
-                                                                            <input type="text" class="text"
-                                                                                   id="bx_3966226736_346416_SALE_quantity"
-                                                                                   name="quantity" value="1">
-                                                                            <span class="plus dark-color"
-                                                                                  id="bx_3966226736_346416_SALE_quant_up"
-                                                                                  data-max="5"><i
-                                                                                        class="svg inline  svg-inline-wish ncolor colored1"
-                                                                                        aria-hidden="true"><svg x="0px"
-                                                                                                                y="0px"
-                                                                                                                width="14px"
-                                                                                                                height="14px"
-                                                                                                                viewBox="0 0 14 14"><path
-                                                                                                d="M7.9,6.1V1.9C7.9,1.4,7.5,1,7,1C6.5,1,6.1,1.4,6.1,1.9v4.3H1.9C1.4,6.1,1,6.5,1,7c0,0.5,0.4,0.9,0.9,0.9c0,0,0,0,0,0h4.3
-        v4.3C6.1,12.6,6.5,13,7,13c0.5,0,0.9-0.4,0.9-0.9V7.9h4.3C12.6,7.9,13,7.5,13,7s-0.4-0.9-0.9-0.9C12.1,6.1,7.9,6.1,7.9,6.1z"></path></svg></i></span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="price_group min">
-                                                                    <div class="price_matrix_wrapper">
-                                                                        <div class="prices-wrapper">
-                                                                            <div class="price font-bold font_mlg font_mxs"
-                                                                                 data-currency="" data-value="">
-                                                                                                        <span class="values_wrapper">
-                                                        <span class="price_value">1156</span>
-                                                                                                        <span class="price_currency"> ₽</span>
-                                                                                                        </span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="sale_block">
-                                                                            <div class="sale_wrapper font_xxs">
-                                                                                <div class="sale-number rounded2">
-                                                                                    <div class="value">-<span>15</span>%
-                                                                                    </div>
-                                                                                    <div class="inner-sale rounded1">
-                                                                                        <div class="text">Экономия <span
-                                                                                                    class="values_wrapper"><span
-                                                                                                        class="price_value">204</span><span
-                                                                                                        class="price_currency"> ₽</span></span>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="price discount" data-currency=""
-                                                                                 data-value="">
-                                                                                <span class="values_wrapper font_xs muted">1360 ₽</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="footer_button  inner_content js_offers__346416_SALE n-btn">
-                                                            <div class="counter_wrapp clearfix offer_buy_block ce_cmp_visible">
-                                                                <div class="button_block">
-                                                                    <!--noindex-->
-                                                                    <span data-value="1156" data-currency="RUB"
-                                                                          class="btn-exlg to-cart btn btn-default transition_bg animate-load"
-                                                                          data-item="346416" data-float_ratio=""
-                                                                          data-ratio="1"
-                                                                          data-bakset_div="bx_basket_div_346416"
-                                                                          data-props="" data-part_props="N"
-                                                                          data-add_props="Y" data-empty_props="Y"
-                                                                          data-offers="" data-iblockid="42"
-                                                                          data-quantity="1"><i
-                                                                                class="svg inline  svg-inline-fw ncolor colored"
-                                                                                aria-hidden="true" title="В корзину"><svg
-                                                                                    class="" width="19" height="16"
-                                                                                    viewBox="0 0 19 16"><path
-                                                                                        data-name="Ellipse 2 copy 9"
-                                                                                        class="cls-1"
-                                                                                        d="M956.047,952.005l-0.939,1.009-11.394-.008-0.952-1-0.953-6h-2.857a0.862,0.862,0,0,1-.952-1,1.025,1.025,0,0,1,1.164-1h2.327c0.3,0,.6.006,0.6,0.006a1.208,1.208,0,0,1,1.336.918L943.817,947h12.23L957,948v1Zm-11.916-3,0.349,2h10.007l0.593-2Zm1.863,5a3,3,0,1,1-3,3A3,3,0,0,1,945.994,954.005ZM946,958a1,1,0,1,0-1-1A1,1,0,0,0,946,958Zm7.011-4a3,3,0,1,1-3,3A3,3,0,0,1,953.011,954.005ZM953,958a1,1,0,1,0-1-1A1,1,0,0,0,953,958Z"
-                                                                                        transform="translate(-938 -944)"></path></svg></i><span>В корзину</span></span><a
-                                                                            rel="nofollow"
-                                                                            href="https://sappo.ru/basket/"
-                                                                            class="btn-exlg in-cart btn btn-default transition_bg"
-                                                                            data-item="346416" style="display:none;"><i
-                                                                                class="svg inline  svg-inline-fw ncolor colored"
-                                                                                aria-hidden="true" title="В корзине">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                 width="19" height="18"
-                                                                                 viewBox="0 0 19 18">
-                                                                                <path data-name="Rounded Rectangle 906 copy 3"
-                                                                                      class="cls-1"
-                                                                                      d="M1005.97,4556.22l-1.01,4.02a0.031,0.031,0,0,0-.01.02,0.87,0.87,0,0,1-.14.29,0.423,0.423,0,0,1-.05.07,0.7,0.7,0,0,1-.2.18,0.359,0.359,0,0,1-.1.07,0.656,0.656,0,0,1-.21.08,1.127,1.127,0,0,1-.18.03,0.185,0.185,0,0,1-.07.02H993c-0.03,0-.056-0.02-0.086-0.02a1.137,1.137,0,0,1-.184-0.04,0.779,0.779,0,0,1-.207-0.08c-0.031-.02-0.059-0.04-0.088-0.06a0.879,0.879,0,0,1-.223-0.22s-0.007-.01-0.011-0.01a1,1,0,0,1-.172-0.43l-1.541-6.14H988a1,1,0,1,1,0-2h3.188a0.3,0.3,0,0,1,.092.02,0.964,0.964,0,0,1,.923.76l1.561,6.22h9.447l0.82-3.25a1,1,0,0,1,1.21-.73A0.982,0.982,0,0,1,1005.97,4556.22Zm-7.267.47c0,0.01,0,.01,0,0.01a1,1,0,0,1-1.414,0l-2.016-2.03a0.982,0.982,0,0,1,0-1.4,1,1,0,0,1,1.414,0l1.305,1.31,4.3-4.3a1,1,0,0,1,1.41,0,1.008,1.008,0,0,1,0,1.42ZM995,4562a3,3,0,1,1-3,3A3,3,0,0,1,995,4562Zm0,4a1,1,0,1,0-1-1A1,1,0,0,0,995,4566Zm7-4a3,3,0,1,1-3,3A3,3,0,0,1,1002,4562Zm0,4a1,1,0,1,0-1-1A1,1,0,0,0,1002,4566Z"
-                                                                                      transform="translate(-987 -4550)"></path>
-                                                                            </svg>
-                                                                        </i><span>В корзине</span></a>
-                                                                    <!--/noindex-->
-                                                                </div>
-                                                                <div class="counter_block_inner">
-                                                                    <div class="counter_block " data-item="346416">
-                                                                    <span class="minus dark-color"
-                                                                          id="bx_3966226736_346416_SALE_quant_down"><i
-                                                                                class="svg inline  svg-inline-wish ncolor colored1"
-                                                                                aria-hidden="true"><svg x="0px" y="0px"
-                                                                                                        width="14px"
-                                                                                                        height="2px"
-                                                                                                        viewBox="0 0 14 2"
-                                                                                                        style="enable-background:new 0 0 14 2;"
-                                                                                                        xml:space="preserve"><path
-                                                                                        d="M1.9,0.1h10.2C12.6,0.1,13,0.5,13,1l0,0c0,0.5-0.4,0.9-0.9,0.9H1.9C1.4,1.9,1,1.5,1,1l0,0C1,0.5,1.4,0.1,1.9,0.1z"></path></svg></i></span>
-                                                                        <input type="text" class="text"
-                                                                               id="bx_3966226736_346416_SALE_quantity"
-                                                                               name="quantity" value="1">
-                                                                        <span class="plus dark-color"
-                                                                              id="bx_3966226736_346416_SALE_quant_up"
-                                                                              data-max="5"><i
-                                                                                    class="svg inline  svg-inline-wish ncolor colored1"
-                                                                                    aria-hidden="true"><svg x="0px"
-                                                                                                            y="0px"
-                                                                                                            width="14px"
-                                                                                                            height="14px"
-                                                                                                            viewBox="0 0 14 14"><path
-                                                                                            d="M7.9,6.1V1.9C7.9,1.4,7.5,1,7,1C6.5,1,6.1,1.4,6.1,1.9v4.3H1.9C1.4,6.1,1,6.5,1,7c0,0.5,0.4,0.9,0.9,0.9c0,0,0,0,0,0h4.3
-        v4.3C6.1,12.6,6.5,13,7,13c0.5,0,0.9-0.4,0.9-0.9V7.9h4.3C12.6,7.9,13,7.5,13,7s-0.4-0.9-0.9-0.9C12.1,6.1,7.9,6.1,7.9,6.1z"></path></svg></i></span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="sku_props ce_cmp_hidden">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                            */ ?>
 
                                             </div>
 

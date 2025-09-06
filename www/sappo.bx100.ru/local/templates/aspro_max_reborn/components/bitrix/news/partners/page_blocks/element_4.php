@@ -512,26 +512,31 @@ if(isset($arFilter)){
                                     <div class=" <?=$display;?> js_wrapper_items" data-params='<?=str_replace('\'', '"', CUtil::PhpToJSObject($arTransferParams, false))?>'>
 
                                         <?
-                                        if(CModule::IncludeModule("iblock")){
-                                            $idRegion = $_COOKIE["current_region"];
-                                            if ($idRegion == ""){
-                                                $idRegion = 2242;
-                                            }
-                                            $db_props = CIBlockElement::GetProperty(20, $idRegion, "sort", "asc", array());
+                                        if($sort == "SHOWS" || $sort == "CATALOG_AVAILABLE") {
+                                            if(CModule::IncludeModule("iblock")){
+                                                $idRegion = $_COOKIE["current_region"];
+                                                if ($idRegion == ""){
+                                                    $idRegion = 2242;
+                                                }
+                                                $db_props = CIBlockElement::GetProperty(20, $idRegion, "sort", "asc", array());
 
-                                            while($rs_props = $db_props->Fetch()){
-                                                $ar_props[$rs_props["CODE"]] = $rs_props;
-                                            }
-                                            $idWarehouse = $ar_props["STORES_LINK"]["VALUE"];
-                                            $sortForRegion = "";
+                                                while($rs_props = $db_props->Fetch()){
+                                                    $ar_props[$rs_props["CODE"]] = $rs_props;
+                                                }
+                                                $idWarehouse = $ar_props["STORES_LINK"]["VALUE"];
+                                                $sortForRegion = "";
 
-                                            if ($idWarehouse == "5") {
-                                                $sortForRegion ="AVAILABLE_SPB";
-                                            }elseif($idWarehouse == "3"){
-                                                $sortForRegion = "AVAILABLE_MSK";
+                                                if ($idWarehouse == "5") {
+                                                    $sortForRegion = "PROPERTY_AVAILABLE_SPB";
+                                                } elseif($idWarehouse == "3") {
+                                                    $sortForRegion = "PROPERTY_AVAILABLE_MSK";
+                                                }
+
+                                                if($sortForRegion) {
+                                                    $sort = $sortForRegion;
+                                                    $sort_order = "desc";
+                                                }
                                             }
-                                            $sort = "property_". $sortForRegion;
-                                            $sort_order = "desc";
                                         }
                                         ?>
                                         <?$APPLICATION->IncludeComponent(
