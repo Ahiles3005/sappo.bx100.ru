@@ -465,12 +465,12 @@ body .top-block-item .phone a, body .top-block-item .phone i {
 
 body .wrapper1.basket_normal .header-v17 .logo_and_menu-row .search_wrap {
     width: 100% !important;
-    max-width: calc(100% - 255px - 174px - 137px - 229px - 40px);
+    max-width: calc(100% - 255px - 174px - 137px - 229px - 60px);
     padding-right: 0; }
 
 @media screen and (max-width: 1400px) {
     body .wrapper1.basket_normal .header-v17 .logo_and_menu-row .search_wrap {
-        max-width: calc(100% - 255px - 174px - 138px - 190px - 30px); } }
+        max-width: calc(100% - 255px - 174px - 138px - 190px - 60px); } }
 
 @media screen and (max-width: 1100px) {
     body .wrapper1.basket_normal .header-v17 .logo_and_menu-row .search_wrap {
@@ -1081,6 +1081,13 @@ body #main .maxwidth-theme {
     height: 62px;
     display: flex;
     align-items: center;
+    position: relative;
+}
+
+
+.c-header--div__ENTER .sbonus-badge__popup {
+    left: calc(-50% + 53px);
+    top: 48px;
 }
 
 .c-header--div__ENTER .auth_wr_inner {
