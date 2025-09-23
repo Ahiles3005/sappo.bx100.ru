@@ -6,7 +6,7 @@
       <paths name="dev.sappo">
         <serverdata>
           <mappings>
-            <mapping deploy="" local="$PROJECT_DIR$/www/sappo.bx100.ru" web="/" />
+            <mapping deploy="/" local="$PROJECT_DIR$/www/sappo.bx100.ru" web="/" />
           </mappings>
         </serverdata>
       </paths>
@@ -18,6 +18,13 @@
         </serverdata>
       </paths>
       <paths name="sppo2">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="sss">
         <serverdata>
           <mappings>
             <mapping deploy="/" local="$PROJECT_DIR$" web="/" />

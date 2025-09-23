@@ -4,7 +4,7 @@ global $arTheme;
 global $arRegion;
 $arBackParametrs = CMax::GetBackParametrsValues(SITE_ID);
 $phone = ($arRegion ? $arRegion['PHONES'][0]['PHONE'] : $arBackParametrs['HEADER_PHONES_array_PHONE_VALUE_0']);
-$phonePLus = ltrim(str_replace(' ', '', $phone), '8');
+$phonePLus = str_replace(array(' ', ',', '-', '(', ')'), '', $phone);
 ?>
 
 <div class="c-common--div__MAXWIDTH maxwidth-theme">
@@ -123,12 +123,12 @@ $phonePLus = ltrim(str_replace(' ', '', $phone), '8');
         </div>
 
 
-        <a class="c-footer--a__YAND" href="#">
-            <img class="c-footer--img__YAND" src="/include/footer/img/c-footer_yand.svg" alt="Репутация в Яндексе">
-            <p class="c-footer--p__YAND">
-                безупречная репутация
-            </p>
-        </a>
+        <? $APPLICATION->IncludeFile(SITE_DIR . "include/footer/five_stars.php", [], [
+                "MODE" => "php",
+                "NAME" => "five_stars",
+                "TEMPLATE" => "include_area.php",
+            ]
+        ); ?>
 
 
         <div class="c-footer--div__BOTTOM">
@@ -232,12 +232,15 @@ $phonePLus = ltrim(str_replace(' ', '', $phone), '8');
             </div>
 
             <div class="c-footerDesc--div__LEFT_BOTTOM">
-                <a class="c-footer--a__YAND" href="#">
-                    <img class="c-footer--img__YAND" src="/include/footer/img/c-footer_yand.svg" alt="Репутация в Яндексе">
-                    <p class="c-footer--p__YAND">
-                        безупречная репутация
-                    </p>
-                </a>
+
+                <? $APPLICATION->IncludeFile(SITE_DIR . "include/footer/five_stars.php", [], [
+                        "MODE" => "php",
+                        "NAME" => "five_stars",
+                        "TEMPLATE" => "include_area.php",
+                    ]
+                ); ?>
+
+
 
 
                 <div class="c-footer--div__BOTTOM">
