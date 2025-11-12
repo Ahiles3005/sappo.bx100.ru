@@ -581,48 +581,54 @@ function updateHitProducts()
                 break;
             }
         }
-
+        if (empty($hitValues)) {
+            $hitValues = false;
+        }
         CIBlockElement::SetPropertyValuesEx($product['ID'], $iblockId, ['HIT' => $hitValues]);
     }
 
 
-    $query = \Bitrix\Main\Application::getConnection()->query("
-    SELECT
-        B.PRODUCT_ID,
-        SUM(B.QUANTITY) as TOTAL_SOLD
-    FROM
-        b_sale_basket B
-    INNER JOIN
-        b_iblock_element E ON E.ID = B.PRODUCT_ID
-    WHERE
-        E.IBLOCK_ID = {$iblockId} AND B.ORDER_ID > 0
-    GROUP BY
-        B.PRODUCT_ID
-    ORDER BY
-        TOTAL_SOLD DESC
-    LIMIT 100
-");
+    $dateThreshold = new \Bitrix\Main\Type\DateTime();
+    $dateThreshold->add("-30 days");
 
-    while ($row = $query->fetch()) {
-        $oldProducts = CIBlockElement::GetList(
-            [],
-            [
-                'IBLOCK_ID' => $iblockId,
-                'ID' => $row['PRODUCT_ID']
-            ],
-            false,
-            false,
-            ['*']
-        );
+    $dbOrders = \Bitrix\Sale\Order::getList([
+        'select' => ['ID'],
+        'filter' => [
+            '>=DATE_INSERT' => $dateThreshold,
+            'STATUS_ID' => 'F'
+        ]
+    ]);
 
-        while ($productData = $oldProducts->GetNextElement()) {
-            $product = $productData->GetFields();
-            $productPrp = $productData->GetProperties();
-            $hitValues = $productPrp['HIT']['VALUE_ENUM_ID'] ?? [];
-            $hitValues[] = $propValueId;
-            CIBlockElement::SetPropertyValuesEx($product['ID'], $iblockId, ['HIT' => $hitValues]);
+    $productIds = [];
+    while ($order = $dbOrders->fetch()) {
+        $dbBasket = \Bitrix\Sale\Basket::getList([
+            'select' => ['PRODUCT_ID'],
+            'filter' => ['ORDER_ID' => $order['ID']]
+        ]);
+        while ($item = $dbBasket->fetch()) {
+            $productIds[] = $item['PRODUCT_ID'];
         }
     }
+
+    $products = CIBlockElement::GetList(
+        [],
+        [
+            'IBLOCK_ID' => $iblockId,
+            'ID' => $productIds
+        ],
+        false,
+        false,
+        ['*']
+    );
+
+    while ($productData = $products->GetNextElement()) {
+        $product = $productData->GetFields();
+        $productPrp = $productData->GetProperties();
+        $hitValues = $productPrp['HIT']['VALUE_ENUM_ID'] ?? [];
+        $hitValues[] = $propValueId;
+        CIBlockElement::SetPropertyValuesEx($product['ID'], $iblockId, ['HIT' => $hitValues]);
+    }
+
 
     return "updateHitProducts();";
 }
