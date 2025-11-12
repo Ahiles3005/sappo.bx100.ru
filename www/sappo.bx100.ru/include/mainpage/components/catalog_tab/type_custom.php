@@ -11,8 +11,6 @@ $commonComponentParams = [
     'SECTION_CODE' => '',
     'TABS_CODE' => 'HIT',
     'SECTION_USER_FIELDS' => ['', ''],
-    'ELEMENT_SORT_FIELD' => 'sort',
-    'ELEMENT_SORT_ORDER' => 'asc',
     'ELEMENT_SORT_FIELD2' => 'id',
     'ELEMENT_SORT_ORDER2' => 'desc',
     'INCLUDE_SUBSECTIONS' => 'Y',
@@ -155,6 +153,8 @@ $tabs = [
         'class' => 'hm-newprod',
         'order'=>3,
         'section_name'=>'Новинки',
+        'sort_field'=>'created',
+        'sort_order'=>'desc',
     ],
     'HIT' => [
         'filter_name' => 'arrFilterPropHit',
@@ -198,7 +198,9 @@ foreach ($tabs as $tabCode => $tabParams) :?>
             'FILTER_NAME' => $tabParams['filter_name'],
             'FILTER_HIT_PROP' => $tabParams['filter_hit_prop'],
             'BUTTON_URL' => $tabParams['button_url'],
-            'SECTION_NAME' => $tabParams['section_name']
+            'SECTION_NAME' => $tabParams['section_name'],
+            'ELEMENT_SORT_FIELD' => $tabParams['sort_field'] ?? 'sort',
+            'ELEMENT_SORT_ORDER' => $tabParams['sort_order'] ?? 'asc',
         ]);
 
         $APPLICATION->IncludeComponent(

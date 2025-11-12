@@ -104,14 +104,14 @@ class aspro_import
             "\n----------------------------------------------------------------------------------------------------------------------",
             "ImportFrom1C"
         );*/
-        echo nl2br(date("H:i:s") . " " . $msg . "\n");                    // оставьте эту строчку если хотите увидеть это в ответе для 1С
+     //   echo nl2br(date("H:i:s") . " " . $msg . "\n");                    // оставьте эту строчку если хотите увидеть это в ответе для 1С
 
         $startImportCatalogTimer = microtime(true);                // начало измерения импорта каталога
         $ret = CAEDucemUpdateAfterExchange();   //скрипт обработки каталога
         $stopImportCatalogTimer = microtime(true);                    // конец измерения импорта каталога
 
         $msg = "После загрузки всех XML пакетов. Стоп";
-        echo nl2br(date("H:i:s") . " " . $msg . "\n");                    // оставьте эту строчку если хотите увидеть это в ответе для 1С
+      //  echo nl2br(date("H:i:s") . " " . $msg . "\n");                    // оставьте эту строчку если хотите увидеть это в ответе для 1С
         /*cl_print_w("-On- CompleteCatalogImport1C : ".$msg.
             "\nЗатрачено время: ".($stopImportCatalogTimer - $startImportCatalogTimer)." сек.".
             "\n----------------------------------------------------------------------------------------------------------------------",
@@ -489,12 +489,15 @@ function updateNewsProducts()
 
     $iblockId = 42;
     $propValueId = 7404; //new
+    $dateThreshold = new \Bitrix\Main\Type\DateTime();
+    $dateThreshold->add("-30 days");
 
     $oldProducts = CIBlockElement::GetList(
         [],
         [
             'IBLOCK_ID' => $iblockId,
-            'PROPERTY_HIT' => $propValueId
+            'PROPERTY_HIT' => $propValueId,
+            '<DATE_CREATE' => $dateThreshold
         ],
         false,
         false,
@@ -502,21 +505,25 @@ function updateNewsProducts()
     );
 
     while ($productData = $oldProducts->GetNextElement()) {
+
         $product = $productData->GetFields();
+
         $productPrp = $productData->GetProperties();
-            $hitValues = $productPrp['HIT']['VALUE_ENUM_ID'] ?? [];
-            foreach ($hitValues as $k => $hitValue) {
-                if ($hitValue == $propValueId) {
-                    unset($hitValues[$k]);
-                    break;
-                }
+        $hitValues = $productPrp['HIT']['VALUE_ENUM_ID'] ?? [];
+        foreach ($hitValues as $k => $hitValue) {
+            if ($hitValue == $propValueId) {
+                unset($hitValues[$k]);
+                break;
             }
-            CIBlockElement::SetPropertyValuesEx($product['ID'], $iblockId, ['HIT' => $hitValues]);
+        }
+
+        if (empty($hitValues)) {
+            $hitValues = false;
+        }
+
+        $result = CIBlockElement::SetPropertyValuesEx($product['ID'], $iblockId, ['HIT' => $hitValues]);
     }
 
-
-    $dateThreshold = new \Bitrix\Main\Type\DateTime();
-    $dateThreshold->add("-30 days");
 
     $newProducts = CIBlockElement::GetList(
         [],
@@ -574,6 +581,7 @@ function updateHitProducts()
                 break;
             }
         }
+
         CIBlockElement::SetPropertyValuesEx($product['ID'], $iblockId, ['HIT' => $hitValues]);
     }
 
