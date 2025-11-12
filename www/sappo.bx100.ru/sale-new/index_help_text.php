@@ -1,0 +1,1 @@
+Бесплатная доставка от 7&nbsp;000 ₽ в ПВЗ Яндекс Маркет.&nbsp;<a href="https://sappo.ru/help/delivery/">Подробнее</a><br>
