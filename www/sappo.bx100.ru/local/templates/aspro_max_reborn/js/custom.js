@@ -37,25 +37,25 @@ document.addEventListener("DOMContentLoaded", function () {
     /* ---------- ********** HEADER ********** ---------- */
 
     if (document.querySelector(".c-header--div__TOP")) {
+		const headerTop = document.querySelector(".c-header--div__TOP");
+		const headerMiddle = document.querySelector(".c-header--div__FIXED");
 
-        // ФИКСАЦИЯ СРЕДНЕЙ ЧАСТИ ШАПКИ
-
-        const headerMiddle = document.querySelector(".c-header--div__FIXED");
-
-        if (window.scrollY > 50) {
-            headerMiddle.classList.add("__c-header--div__FIXED");
+    function checkScroll() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+		const bxPanel = document.querySelector("#bx-panel");
+		const offsetElements = (bxPanel?.offsetHeight || 0) + headerTop.offsetHeight + headerTop.offsetHeight + 20;
+        
+        if (scrollTop > offsetElements) {
+            headerMiddle.classList.add("__c-header--div__FIXED","fixed");
         } else {
-            headerMiddle.classList.remove("__c-header--div__FIXED");
+            headerMiddle.classList.remove("__c-header--div__FIXED","fixed");
         }
-        window.addEventListener("scroll", () => {
-            if (window.scrollY > 50) {
-                headerMiddle.classList.add("__c-header--div__FIXED");
-            } else {
-                headerMiddle.classList.remove("__c-header--div__FIXED");
-            }
-        });
-
     }
+
+    checkScroll();
+
+    window.addEventListener("scroll", checkScroll);
+}
 
 
     /* ---------- ********** FOOTER ********** ---------- */

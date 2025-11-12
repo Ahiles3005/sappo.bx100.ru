@@ -56,6 +56,7 @@
         <?endif;?>
 
         <?php
+        global $isNewCustomTemplate;
         $class = $isNewCustomTemplate ? 'c-footer':'';
         ?>
 		<footer id="footer" class="<?=$class?>">

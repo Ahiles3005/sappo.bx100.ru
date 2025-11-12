@@ -222,7 +222,7 @@ use Bitrix\Main\Loader,
 		}
 		?>
 
-		<div class="product-container catalog_detail detail<?=($isWideBlock == "Y" ? " fixed_wrapper" : "");?> <?=$sViewElementTemplate;?> clearfix" itemscope itemtype="http://schema.org/Product">
+		<div class="product-container catalog_detail detail<?=($isWideBlock == "Y" ? " fixed_wrapper" : "");?> <?=$sViewElementTemplate;?> catalog_element clearfix" itemscope itemtype="http://schema.org/Product" id="<?$APPLICATION->ShowViewContent('PRODUCT_ELEMENT_ID');?>">
 			<?@include_once('page_blocks/'.$sViewElementTemplate.'.php');?>
 		</div>
 

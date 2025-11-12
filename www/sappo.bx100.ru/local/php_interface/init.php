@@ -6,10 +6,14 @@ use Bitrix\Sale\Location\LocationTable;
 use Bitrix\Sale\Order;
 use Bitrix\Sale;
 use Yandex\Market;
+use Bitrix\Main\Loader;
+use Bitrix\Main\Event;
 
 CModule::IncludeModule("iblock");
 
 require_once(dirname(dirname(__DIR__)).'/vue/vendor/autoload.php');
+
+require_once(__DIR__ . '/yandex_delivery_log.php');
 
 EventManager::getInstance()->addEventHandler("main", "OnProlog", function (){
     $GLOBALS["VUE_ROUTER"] = new App\router();
@@ -34,7 +38,7 @@ EventManager::getInstance()->addEventHandler("main", "OnProlog", function (){
 //                         'NAME' => $arItem['PROPERTY_BREND_VALUE'],
 //                         'IBLOCK_ID' => 46,
 //                         'CODE' => Cutil::translit( $arItem['PROPERTY_BREND_VALUE'], "ru", $arParams )
-//                     ) );                 
+//                     ) );
 //                     if( $id ){
 //                         CIBlockElement::SetPropertyValuesEx( $arFields['ID'], false, array( 'BRAND' => $id ) );
 //                     }else{
@@ -206,7 +210,7 @@ if (!function_exists("CAEDucemUpdateAfterExchange")) {
             $result = CIBlockElement::SetPropertyValuesEx($product["ID"], false, $PROP);
             $result2 = $el->Update($product["ID"], array('TIMESTAMP_X' => true));
         }
-      
+
       return "CAEDucemUpdateAfterExchange();";
     }
 }
@@ -305,7 +309,7 @@ function ChangeUrlProduct(&$content)
         }
         $arResult["CUR_URL"] = $arCurURL;
         $arResult["NEW_URL"] = $arNewURL;
-        
+
         $cache->endDataCache($arResult);
     }
 
@@ -398,22 +402,22 @@ function ReplaceBreadcrumbLink(&$content)
 $eventManager->addEventHandler("yandex.market", "onExportOfferWriteData", function (Main\Event $event) {
     $tagResultList = $event->getParameter("TAG_RESULT_LIST");
     $context = $event->getParameter('CONTEXT');
-    
+
     foreach ($tagResultList as $elementId => $tagResult) {
         if ($tagResult->isSuccess()) {
             $tagNode = $tagResult->getXmlElement();
-            $children = $tagNode->children();              
-            
+            $children = $tagNode->children();
+
                 foreach ($children as $child_name => $child_val) {
                     if($child_name == 'url'){
                         if($context["SETUP_ID"] == 3) {
-                            $child_val[0] = $child_val[0].'?city=msk';    
-                        }      
+                            $child_val[0] = $child_val[0].'?city=msk';
+                        }
                         if($context["SETUP_ID"] == 4) {
-                            $child_val[0] = $child_val[0].'?city=spb';    
-                        }                                          
+                            $child_val[0] = $child_val[0].'?city=spb';
+                        }
                     }
-                }       
+                }
 
             $tagResult->invalidateXmlContents();
         }
@@ -422,13 +426,13 @@ $eventManager->addEventHandler("yandex.market", "onExportOfferWriteData", functi
 
 if(isset($_GET['city'])) {
     global $_COOKIE;
-    
+
     if ( $_GET['city'] == 'msk' ) {
-        $_COOKIE['current_region'] = 2243;    
-    }   
+        $_COOKIE['current_region'] = 2243;
+    }
     elseif ( $_GET['city'] == 'spb' ) {
-        $_COOKIE['current_region'] = 2242;    
-    } 
+        $_COOKIE['current_region'] = 2242;
+    }
 }
 
 
@@ -686,4 +690,698 @@ if (\Bitrix\Main\Loader::includeModule('iblock'))
     }
 }
 
+/* Сертификаты отправка */
+Main\EventManager::getInstance()->addEventHandler(
+    'sale',
+    'OnSaleStatusOrderChange',
+    'checkOrderForCertificatesOnPayment'
+);
+
+
+// Функция для записи логов SMS в файл
+function writeSmsLog($message) {
+    $logFile = $_SERVER['DOCUMENT_ROOT'] . '/upload/sms_log.txt';
+    $timestamp = date('Y-m-d H:i:s');
+    $logMessage = "[{$timestamp}] {$message}" . PHP_EOL;
+    file_put_contents($logFile, $logMessage, FILE_APPEND | LOCK_EX);
+}
+
+function checkOrderForCertificatesOnPayment(Main\Event $event)
+{
+    // Настройка переменных окружения для Green SMS
+    if (!getenv('GREENSMS_USER')) {
+        putenv('GREENSMS_USER=sappogreensms');
+        $_ENV['GREENSMS_USER'] = 'sappogreensms';
+    }
+    if (!getenv('GREENSMS_PASS')) {
+        putenv('GREENSMS_PASS=HdF189sD');
+        $_ENV['GREENSMS_PASS'] = 'HdF189sD';
+    }
+
+    // Правильно получаем объект заказа из события
+    $order = $event->getParameter("ENTITY");
+
+    // Проверяем, что модули загружены
+    if (!\Bitrix\Main\Loader::includeModule('sale') || !\Bitrix\Main\Loader::includeModule('iblock')) {
+        return;
+    }
+
+    // Проверяем, что заказ перешёл в статус "Оплачен"
+    if ($order->getField('STATUS_ID') !== 'P') {
+        return;
+    }
+
+    // Телефон покупателя по умолчанию (fallback)
+    $fallbackPhone = '';
+    $propertyCollection = $order->getPropertyCollection();
+    $phoneProp = $propertyCollection->getItemByOrderPropertyCode('PHONE');
+    if ($phoneProp && $phoneProp->getValue()) {
+        $fallbackPhone = preg_replace("/[^0-9]/", '', $phoneProp->getValue());
+    }
+    if (!$fallbackPhone && class_exists('\\Bitrix\\Main\\UserPhoneAuthTable')) {
+        $userId = (int)$order->getUserId();
+        if ($userId > 0) {
+            $row = \Bitrix\Main\UserPhoneAuthTable::getRowById($userId);
+            if ($row && !empty($row['PHONE_NUMBER'])) {
+                $fallbackPhone = preg_replace("/[^0-9]/", '', $row['PHONE_NUMBER']);
+            }
+        }
+    }
+
+    // Проходимся по товарам заказа и ищем связанные предложения в ИБ 80
+    $basket = $order->getBasket();
+
+    if (!$basket) {
+        return;
+    }
+
+    foreach ($basket as $basketItem) {
+		$productId = (int)$basketItem->getProductId();
+		if ($productId <= 0) {
+			continue;
+		}
+
+		$name = (string)$basketItem->getField('NAME');
+		if ($name === '' || mb_stripos($name, 'сертификат') === false) {
+			continue;
+		}
+
+		$offers = CIBlockElement::GetList(
+            [],
+            [
+                'IBLOCK_ID' => 80,
+                'ACTIVE' => 'Y',
+                'ID' => $productId,
+            ],
+            false,
+            ['nTopCount' => 1],
+			['ID', 'NAME', 'PROPERTY_CML2_BAR_CODE']
+        );
+
+		while ($offer = $offers->Fetch()) {
+			$targetPhone = '';
+			// Пробуем взять телефон из свойства заказа GIFT_PHONE, затем fallback PHONE
+			$giftPhoneProp = $propertyCollection->getItemByOrderPropertyCode('GIFT_PHONE');
+			if ($giftPhoneProp && $giftPhoneProp->getValue()) {
+				$targetPhone = preg_replace("/[^0-9]/", '', (string)$giftPhoneProp->getValue());
+			}
+			if (!$targetPhone) {
+				$targetPhone = $fallbackPhone;
+			}
+
+			if (!$targetPhone) {
+				continue;
+			}
+
+			$barcode = isset($offer['PROPERTY_CML2_BAR_CODE_VALUE']) ? trim((string)$offer['PROPERTY_CML2_BAR_CODE_VALUE']) : '';
+			$hash = $barcode !== '' ? md5('sappo' . $barcode) : '';
+			$link = $barcode !== '' ? ('https://sappo.ru/gift/?code=' . urlencode($barcode) . '&hash=' . $hash) : '';
+
+			$fromName = '';
+			$giftFromProp = $propertyCollection->getItemByOrderPropertyCode('GIFT_FROM');
+			if ($giftFromProp && $giftFromProp->getValue()) {
+				$fromName = trim((string)$giftFromProp->getValue());
+			}
+			$text = ($fromName ? ('Вам подарили сертификат в SAPPO.RU от ' . $fromName . '. ') : 'Ваш подарочный сертификат оформлен. ')
+				. ($link ? ('Ссылка на сертификат: ' . $link) : '');
+
+            try {
+                if (class_exists('App\\Services\\SmsService')) {
+                    $smsService = new \App\Services\SmsService();
+                    $result = $smsService->sendSms($targetPhone, $text, 'Sappo.ru');
+
+                    if ($result !== true) {
+                        writeSmsLog("SMS отправка не удалась для номера {$targetPhone}: " . $result);
+                    } else {
+                        writeSmsLog("SMS успешно отправлена на номер {$targetPhone}");
+                    }
+                } else {
+                    writeSmsLog("SmsService класс не найден");
+                }
+            } catch (Exception $e) {
+                writeSmsLog("Ошибка при отправке SMS: " . $e->getMessage());
+            }
+        }
+    }
+}
+
+AddEventHandler("main", "OnEndBufferContent", "AddGiftCardForm", 1000); // Приоритет 1000 для выполнения после других обработчиков
+
+function AddGiftCardForm(&$content)
+{
+    global $APPLICATION;
+
+    if (strpos($APPLICATION->GetCurPage(), '/order/') === false) {
+
+        return;
+    }
+
+    $sessionGiftCardCode = isset($_SESSION['KILBIL_GIFTCARD']['code']) ? htmlspecialchars($_SESSION['KILBIL_GIFTCARD']['code']) : '';
+    $sessionGiftCardBalance = isset($_SESSION['KILBIL_GIFTCARD']['balance']) ? floatval($_SESSION['KILBIL_GIFTCARD']['balance']) : 0;
+
+    $giftcardJs = <<<EOD
+<script>
+console.log("Gift card script loaded on /order/ page");
+
+function insertGiftCardForm() {
+    var couponBlock = document.querySelector(".bx-soa-coupon");
+    if (!couponBlock || document.querySelector(".kilbil-giftcard-container")) {
+        console.log("Coupon block not found or gift card form already exists");
+        return;
+    }
+
+    console.log("Coupon block found, inserting gift card form");
+    var giftcardForm = document.createElement("div");
+    giftcardForm.innerHTML = `
+        <div class="bx-soa-coupon kilbil-giftcard-container" style="margin-top: 15px;">
+            <div class="bx-soa-coupon-label">
+                <label>Применить подарочный сертификат:</label>
+            </div>
+            <div class="bx-soa-coupon-block">
+                <div class="bx-soa-coupon-input" id="kilbil-giftcard-input-container">
+                    <input class="form-control bx-ios-fix" type="text" id="kilbil-giftcard-input" value="{$sessionGiftCardCode}">
+                </div>
+                <span class="bx-soa-coupon-item" id="kilbil-giftcard-item">
+                    <span class="bx-soa-coupon-item-apply" id="kilbil-giftcard-apply"></span>
+                </span>
+            </div>
+            <div id="kilbil-giftcard-result" style="margin-top: 10px; display: none;">
+                <div id="kilbil-giftcard-balance" style="color: green;"></div>
+            </div>
+        </div>`;
+    couponBlock.insertAdjacentElement("afterend", giftcardForm);
+
+    var giftcardInput = document.getElementById("kilbil-giftcard-input");
+    var giftcardResult = document.getElementById("kilbil-giftcard-result");
+    var giftcardBalance = document.getElementById("kilbil-giftcard-balance");
+    var giftcardContainer = document.querySelector(".kilbil-giftcard-container");
+    var giftcardApply = document.getElementById("kilbil-giftcard-apply");
+
+    if (!giftcardContainer) {
+        console.error("Gift card container not found");
+        return;
+    }
+
+    function extractPriceFromText(text) {
+        if (!text) return 0;
+        var matches = text.match(/([0-9\s]+[.,]?[0-9]*)/);
+        if (!matches) return 0;
+        return parseFloat(matches[1].replace(/\s/g, "").replace(",", "."));
+    }
+
+    function getDeliveryPrice() {
+        try {
+            var deliveryRows = document.querySelectorAll(".bx-soa-cart-total-line");
+            for (var i = 0; i < deliveryRows.length; i++) {
+                var titleElement = deliveryRows[i].querySelector(".bx-soa-cart-t");
+                if (titleElement && titleElement.textContent.toLowerCase().includes("доставк")) {
+                    var priceElement = deliveryRows[i].querySelector(".bx-soa-cart-d");
+                    if (priceElement) {
+                        var price = extractPriceFromText(priceElement.textContent);
+                        console.log("Delivery price from DOM:", price);
+                        return price;
+                    }
+                }
+            }
+            console.log("Delivery price not found, assuming 0 (self-pickup)");
+            return 0;
+        } catch (e) {
+            console.error("Error getting delivery price:", e);
+            return 0;
+        }
+    }
+
+    function getProductsPrice() {
+        try {
+            var productRows = document.querySelectorAll(".bx-soa-cart-total-line");
+            for (var i = 0; i < productRows.length; i++) {
+                var titleElement = productRows[i].querySelector(".bx-soa-cart-t");
+                if (titleElement && titleElement.textContent.toLowerCase().includes("товар")) {
+                    var priceElement = productRows[i].querySelector(".bx-soa-cart-d");
+                    if (priceElement) {
+                        var price = extractPriceFromText(priceElement.textContent);
+                        console.log("Products price from DOM:", price);
+                        return price;
+                    }
+                }
+            }
+            if (typeof BX !== "undefined" && BX.Sale && BX.Sale.OrderAjaxComponent) {
+                if (BX.Sale.OrderAjaxComponent.result && BX.Sale.OrderAjaxComponent.result.TOTAL) {
+                    var productsPrice = parseFloat(BX.Sale.OrderAjaxComponent.result.TOTAL.PRICE_WITHOUT_DISCOUNT || 0);
+                    console.log("Products price from API:", productsPrice);
+                    if (productsPrice > 0) return productsPrice;
+                }
+            }
+            return 0;
+        } catch (e) {
+            console.error("Error getting products price:", e);
+            return 0;
+        }
+    }
+
+    function addGiftCardLine(appliedAmount) {
+        try {
+            // Удаляем существующие строки с сертификатом, если они есть
+            var existingGiftCardLines = document.querySelectorAll("#kilbil-giftcard-line");
+            existingGiftCardLines.forEach(function(line) {
+                line.remove();
+            });
+
+            // Форматируем сумму
+            var formattedAmount = Math.round(appliedAmount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+            console.log("Formatting amount:", appliedAmount, "to", formattedAmount);
+
+            // Добавляем строку с сертификатом в основной блок
+            var mainTotalBlock = document.querySelector(".bx-soa-cart-total:not(.bx-soa-cart-total-fixed)");
+            if (mainTotalBlock) {
+                var totalLine = mainTotalBlock.querySelector(".bx-soa-cart-total-line-total");
+                if (totalLine) {
+                    var giftCardLine = document.createElement("div");
+                    giftCardLine.id = "kilbil-giftcard-line";
+                    giftCardLine.className = "bx-soa-cart-total-line";
+                    giftCardLine.innerHTML =
+                        '<span class="bx-soa-cart-t" style="color: green;">Подарочный сертификат:</span>' +
+                        '<span class="bx-soa-cart-d" style="color: green;">-' + formattedAmount + ' руб.</span>';
+
+                    totalLine.parentNode.insertBefore(giftCardLine, totalLine);
+                    console.log("Added gift card line to main total block showing:", formattedAmount, "rubles");
+                }
+            }
+
+            // Добавляем строку с сертификатом в фиксированный боковой блок
+            var fixedTotalBlock = document.querySelector(".bx-soa-cart-total-fixed");
+            if (fixedTotalBlock) {
+                var fixedTotalLine = fixedTotalBlock.querySelector(".bx-soa-cart-total-line-total");
+                if (fixedTotalLine) {
+                    var fixedGiftCardLine = document.createElement("div");
+                    fixedGiftCardLine.id = "kilbil-giftcard-line";
+                    fixedGiftCardLine.className = "bx-soa-cart-total-line";
+                    fixedGiftCardLine.innerHTML =
+                        '<span class="bx-soa-cart-t" style="color: green;">Подарочный сертификат:</span>' +
+                        '<span class="bx-soa-cart-d" style="color: green;">-' + formattedAmount + ' руб.</span>';
+
+                    fixedTotalLine.parentNode.insertBefore(fixedGiftCardLine, fixedTotalLine);
+                    console.log("Added gift card line to fixed block showing:", formattedAmount, "rubles");
+                }
+            }
+
+            return true;
+        } catch (e) {
+            console.error("Error adding gift card line:", e);
+            console.error(e.stack); // Выводим стек ошибки для отладки
+            return false;
+        }
+    }
+
+    function updateTotalPrice() {
+        try {
+            var totalElements = document.querySelectorAll(".bx-soa-cart-total-line-total .bx-soa-cart-d");
+            if (totalElements.length === 0) {
+                console.error("Total price elements not found");
+                return;
+            }
+
+            var deliveryPrice = getDeliveryPrice();
+            var productsPrice = getProductsPrice();
+            var giftcardBalance = window.KILBIL_GIFTCARD && window.KILBIL_GIFTCARD.balance ? parseFloat(window.KILBIL_GIFTCARD.balance) : 0;
+
+            var appliedAmount = Math.min(giftcardBalance, productsPrice);
+            var discountedProductsPrice = Math.max(0, productsPrice - appliedAmount);
+            var newTotalPrice = discountedProductsPrice + deliveryPrice;
+
+            console.log("Delivery price:", deliveryPrice);
+            console.log("Products price:", productsPrice);
+            console.log("Giftcard balance:", giftcardBalance);
+            console.log("Applied discount:", appliedAmount);
+            console.log("Discounted products price:", discountedProductsPrice);
+            console.log("New total price:", newTotalPrice);
+
+            if (appliedAmount > 0) {
+                addGiftCardLine(appliedAmount);
+
+                // Сохраняем значение скидки в глобальную переменную для восстановления
+                window.KILBIL_APPLIED_AMOUNT = appliedAmount;
+            } else {
+                var existingGiftCardLines = document.querySelectorAll("#kilbil-giftcard-line");
+                existingGiftCardLines.forEach(function(line) {
+                    line.remove();
+                });
+                window.KILBIL_APPLIED_AMOUNT = 0;
+            }
+
+            totalElements.forEach(function(totalElement) {
+                var currencySymbol = "руб.";
+                var priceText = totalElement.textContent;
+                var currencyMatch = priceText.match(/[^0-9\s.,]+/);
+                if (currencyMatch) {
+                    currencySymbol = currencyMatch[0];
+                }
+
+                var formattedPrice = Math.round(newTotalPrice).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                totalElement.textContent = formattedPrice + " " + currencySymbol;
+                console.log("Total price updated to:", formattedPrice, currencySymbol);
+            });
+
+            window.GIFTCARD_PRICE_UPDATED = {
+                productsPrice: productsPrice,
+                deliveryPrice: deliveryPrice,
+                appliedAmount: appliedAmount,
+                discountedProductsPrice: discountedProductsPrice,
+                newTotalPrice: newTotalPrice
+            };
+        } catch (e) {
+            console.error("Error updating total price:", e);
+        }
+    }
+
+    // Функция для проверки и восстановления строки с сертификатом
+    function checkAndRestoreGiftCardLine() {
+        if (window.KILBIL_GIFTCARD && window.KILBIL_GIFTCARD.balance && window.KILBIL_APPLIED_AMOUNT > 0) {
+            var existingLines = document.querySelectorAll("#kilbil-giftcard-line");
+            if (existingLines.length === 0) {
+                console.log("Restoring gift card line after DOM changes");
+                addGiftCardLine(window.KILBIL_APPLIED_AMOUNT);
+
+                // Также обновляем итоговую цену
+                var totalElements = document.querySelectorAll(".bx-soa-cart-total-line-total .bx-soa-cart-d");
+                if (totalElements.length > 0 && window.GIFTCARD_PRICE_UPDATED) {
+                    totalElements.forEach(function(totalElement) {
+                        var currencySymbol = "руб.";
+                        var priceText = totalElement.textContent;
+                        var currencyMatch = priceText.match(/[^0-9\s.,]+/);
+                        if (currencyMatch) {
+                            currencySymbol = currencyMatch[0];
+                        }
+
+                        var formattedPrice = Math.round(window.GIFTCARD_PRICE_UPDATED.newTotalPrice)
+                            .toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                        totalElement.textContent = formattedPrice + " " + currencySymbol;
+                    });
+                }
+            }
+        }
+    }
+
+    function checkGiftCard() {
+        var giftcardCode = giftcardInput.value.trim();
+        console.log("Gift card code: " + giftcardCode);
+
+        if (giftcardCode) {
+            console.log("Starting AJAX request to", "/local/ajax/check_giftcard.php");
+            BX.ajax({
+                url: "/local/ajax/check_giftcard.php",
+                method: "POST",
+                dataType: "json",
+                data: { giftcard_code: giftcardCode },
+                timeout: 10000,
+                onsuccess: function(data) {
+                    console.log("AJAX response: ", data);
+                    giftcardResult.style.display = "block";
+                    if (data.success) {
+                        giftcardBalance.style.color = "green";
+                        giftcardBalance.innerHTML = "Сертификат применен. Баланс: " + data.balance + " руб.";
+                        window.KILBIL_GIFTCARD = {
+                            code: giftcardCode,
+                            balance: data.balance
+                        };
+                        updateTotalPrice();
+                    } else {
+                        giftcardBalance.innerHTML = data.error || "Ошибка при проверке сертификата";
+                        giftcardBalance.style.color = "red";
+                        window.KILBIL_GIFTCARD = null;
+                        window.KILBIL_APPLIED_AMOUNT = 0;
+                        updateTotalPrice();
+                    }
+                },
+                onfailure: function(xhr, status, error) {
+                    console.log("AJAX request failed with status:", status, "Error:", error);
+                    giftcardResult.style.display = "block";
+                    giftcardBalance.innerHTML = "Ошибка соединения с сервером. Попробуйте позже.";
+                    giftcardBalance.style.color = "red";
+                    window.KILBIL_GIFTCARD = null;
+                    window.KILBIL_APPLIED_AMOUNT = 0;
+                    updateTotalPrice();
+                }
+            });
+        } else {
+            giftcardResult.style.display = "block";
+            giftcardBalance.innerHTML = "Введите код сертификата";
+            giftcardBalance.style.color = "red";
+            window.KILBIL_GIFTCARD = null;
+            window.KILBIL_APPLIED_AMOUNT = 0;
+            updateTotalPrice();
+        }
+    }
+
+    giftcardApply.addEventListener("click", checkGiftCard);
+    giftcardInput.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            checkGiftCard();
+        }
+    });
+
+    var inputContainer = giftcardContainer.querySelector(".bx-soa-coupon-input");
+    if (inputContainer) {
+        inputContainer.style.cursor = "pointer";
+        inputContainer.addEventListener("click", function(e) {
+            var rect = this.getBoundingClientRect();
+            if (e.clientX > rect.right - 45) {
+                console.log("Click detected on giftcard arrow area");
+                checkGiftCard();
+            }
+        });
+    }
+
+    if (window.KILBIL_GIFTCARD && window.KILBIL_GIFTCARD.balance) {
+        updateTotalPrice();
+    }
+
+    // Обработчики событий Битрикса для отслеживания изменений
+    if (typeof BX !== "undefined" && BX.Sale && BX.Sale.OrderAjaxComponent) {
+        BX.addCustomEvent("onAjaxSuccess", function() {
+            setTimeout(checkAndRestoreGiftCardLine, 100);
+        });
+
+        // Также следим за изменениями блоков
+        var totalBlocks = document.querySelectorAll(".bx-soa-cart-total");
+        totalBlocks.forEach(function(block) {
+            var blockObserver = new MutationObserver(function() {
+                setTimeout(checkAndRestoreGiftCardLine, 100);
+            });
+            blockObserver.observe(block, { childList: true, subtree: true });
+        });
+
+        // Наблюдаем за блоком доставки
+        var deliveryBlock = document.getElementById("bx-soa-delivery");
+        if (deliveryBlock) {
+            var deliveryObserver = new MutationObserver(function() {
+                setTimeout(checkAndRestoreGiftCardLine, 100);
+            });
+            deliveryObserver.observe(deliveryBlock, { childList: true, subtree: true });
+        }
+    }
+
+    // Периодически проверяем наличие строки сертификата
+    setInterval(checkAndRestoreGiftCardLine, 2000);
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    console.log("DOM loaded, trying to insert gift card form");
+    insertGiftCardForm();
+});
+
+var observer = new MutationObserver(function(mutations) {
+    insertGiftCardForm();
+
+    // Также проверяем, не нужно ли восстановить строку с сертификатом
+    if (window.KILBIL_GIFTCARD && window.KILBIL_GIFTCARD.balance && window.KILBIL_APPLIED_AMOUNT > 0) {
+        setTimeout(function() {
+            var existingLines = document.querySelectorAll("#kilbil-giftcard-line");
+            if (existingLines.length === 0) {
+                console.log("Restoring gift card line after DOM mutation");
+
+                // Получаем все блоки итогов
+                var totalBlocks = document.querySelectorAll(".bx-soa-cart-total");
+                if (totalBlocks.length > 0) {
+                    var foundMutation = false;
+
+                    // Проверяем, затронули ли мутации блоки итогов
+                    mutations.forEach(function(mutation) {
+                        if (totalBlocks.some(function(block) {
+                            return block.contains(mutation.target) || mutation.target.contains(block);
+                        })) {
+                            foundMutation = true;
+                        }
+                    });
+
+                    if (foundMutation) {
+                        // Восстанавливаем строку с сертификатом и обновляем цену
+                        var totalElements = document.querySelectorAll(".bx-soa-cart-total-line-total .bx-soa-cart-d");
+                        if (totalElements.length > 0 && window.GIFTCARD_PRICE_UPDATED) {
+                            // Добавляем строку
+                            if (window.addGiftCardLine) {
+                                window.addGiftCardLine(window.KILBIL_APPLIED_AMOUNT);
+                            }
+                        }
+                    }
+                }
+            }
+        }, 100);
+    }
+});
+
+// Делаем addGiftCardLine глобальной для доступа из наблюдателя
+window.addGiftCardLine = function(appliedAmount) {
+    try {
+        // Удаляем существующие строки с сертификатом, если они есть
+        var existingGiftCardLines = document.querySelectorAll("#kilbil-giftcard-line");
+        existingGiftCardLines.forEach(function(line) {
+            line.remove();
+        });
+
+        // Форматируем сумму
+        var formattedAmount = Math.round(appliedAmount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+        console.log("Global addGiftCardLine formatting amount:", appliedAmount, "to", formattedAmount);
+
+        // Добавляем строку с сертификатом в основной блок
+        var mainTotalBlock = document.querySelector(".bx-soa-cart-total:not(.bx-soa-cart-total-fixed)");
+        if (mainTotalBlock) {
+            var totalLine = mainTotalBlock.querySelector(".bx-soa-cart-total-line-total");
+            if (totalLine) {
+                var giftCardLine = document.createElement("div");
+                giftCardLine.id = "kilbil-giftcard-line";
+                giftCardLine.className = "bx-soa-cart-total-line";
+                giftCardLine.innerHTML =
+                    '<span class="bx-soa-cart-t" style="color: green;">Подарочный сертификат:</span>' +
+                    '<span class="bx-soa-cart-d" style="color: green;">-' + formattedAmount + ' руб.</span>';
+
+                totalLine.parentNode.insertBefore(giftCardLine, totalLine);
+                console.log("Global: Added gift card line to main total block showing:", formattedAmount, "rubles");
+            }
+        }
+
+        // Добавляем строку с сертификатом в фиксированный боковой блок
+        var fixedTotalBlock = document.querySelector(".bx-soa-cart-total-fixed");
+        if (fixedTotalBlock) {
+            var fixedTotalLine = fixedTotalBlock.querySelector(".bx-soa-cart-total-line-total");
+            if (fixedTotalLine) {
+                var fixedGiftCardLine = document.createElement("div");
+                fixedGiftCardLine.id = "kilbil-giftcard-line";
+                fixedGiftCardLine.className = "bx-soa-cart-total-line";
+                fixedGiftCardLine.innerHTML =
+                    '<span class="bx-soa-cart-t" style="color: green;">Подарочный сертификат:</span>' +
+                    '<span class="bx-soa-cart-d" style="color: green;">-' + formattedAmount + ' руб.</span>';
+
+                fixedTotalLine.parentNode.insertBefore(fixedGiftCardLine, fixedTotalLine);
+                console.log("Global: Added gift card line to fixed block showing:", formattedAmount, "rubles");
+            }
+        }
+
+        return true;
+    } catch (e) {
+        console.error("Error in global addGiftCardLine:", e);
+        console.error(e.stack);
+        return false;
+    }
+};
+
+observer.observe(document.body, { childList: true, subtree: true });
+</script>
+
+EOD;
+
+    $content .= $giftcardJs;
+}
+
+$eventManager->addEventHandler('main', 'OnBeforeProlog', ['initEvents', 'OnBeforeProlog']);
+
+$eventManager->addEventHandler('sale', 'OnSaleOrderBeforeSaved', ['initEvents', 'saleOrderBeforeSaved']);
+
+
+class initEvents
+{
+
+    const UTMS = [
+        'utm_source',
+        'utm_medium',
+        'utm_campaign',
+        'utm_content',
+        'utm_term',
+    ];
+
+    public static function OnBeforeProlog()
+    {
+        //$domain = parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST);
+        $domain = $_SERVER['HTTP_HOST'];
+        $context = \Bitrix\Main\Application::getInstance()->getContext();
+        $request = $context->getRequest();
+        $isAdminSection = $request->isAdminSection();
+
+        if (!$isAdminSection)
+        {
+            $server = \Bitrix\Main\Context::getCurrent()->getServer();
+
+            // Обработка UTM-параметров и HTTP_REFERER
+            foreach (self::UTMS as $key)
+            {
+                $value = null;
+
+                // Для http_referer берем значение из $_SERVER
+                if ($key === 'http_referer')
+                {
+                    $value = $server->get('HTTP_REFERER');
+                    $expire = time() + 60 * 60 * 24 * 365 * 10; // Долгий срок для HTTP_REFERER
+                }
+                // Для UTM-параметров берем значение из $_GET
+                else if (isset($_GET[$key]) && strlen($_GET[$key]) > 0)
+                {
+                    $value = $_GET[$key];
+                    $expire = time() + 60 * 60 * 24 * 30; // 30 дней для UTM
+                }
+
+                // Если значение есть, создаем cookie
+                if ($value)
+                {
+                    $cookie = new \Bitrix\Main\Web\Cookie($key, $value);
+                    $cookie->setDomain($domain);
+                    \Bitrix\Main\Application::getInstance()->getContext()->getResponse()->addCookie($cookie);
+                    setcookie($key, $value, $expire, '/', $cookie->getDomain());
+                }
+            }
+        }
+    }
+
+    public static function saleOrderBeforeSaved(Event $event)
+    {
+        try {
+            /** @var Sale\Order $order */
+            $order = $event->getParameter("ENTITY");
+
+            /** @var Sale\PropertyValueCollection $propertyCollection */
+            $propertyCollection = $order->getPropertyCollection();
+
+            /** @var Sale\PropertyValue $propertyItem */
+            foreach ($propertyCollection as $propertyItem) {
+                $propCode = $propertyItem->getField("CODE");
+
+                if (in_array($propCode, self::UTMS) && !empty($_COOKIE[$propCode])) {
+                    // Санитизация значения cookie
+                    $cookieValue = filter_var($_COOKIE[$propCode], FILTER_SANITIZE_STRING);
+                    if ($cookieValue !== false) {
+                        $propertyItem->setValue($cookieValue);
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            // Логирование ошибки
+            Main\Diag\Debug::writeToFile(
+                "Ошибка в saleOrderBeforeSaved: " . $e->getMessage(),
+                "error",
+                "/local/logs/sale_order_errors.log"
+            );
+            throw new Main\SystemException("Ошибка при обработке свойств заказа");
+        }
+    }
+}
 ?>

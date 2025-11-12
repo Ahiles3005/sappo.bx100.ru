@@ -5,6 +5,10 @@ if($arParams['USE_REDICT'] == 'Y'){
     LocalRedirect('/product/'. $arResult['CODE'] . '/', true, '301 Moved Permanently');
     exit;
 }
+
+$this->SetViewTarget('PRODUCT_ELEMENT_ID');
+echo $arResult['ID'];
+$this->EndViewTarget();
 ?>
     <div class="basket_props_block" id="bx_basket_div_<?=$arResult["ID"];?>" style="display: none;">
         <?if (!empty($arResult['PRODUCT_PROPERTIES_FILL'])){
@@ -769,11 +773,11 @@ $iCountProps = count($arResult['DISPLAY_PROPERTIES']);?>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <script>
                                 $('.catalog_detail .text-form-info span').on('click', function (e) {
                                     e.preventDefault();
-                                    
+
                                     var popup = $("#warm_delivery").contents();
                                     $('#warm_delivery .popup').css({'z-index':'3000', 'opacity':'1'});
                                     $('#popup_warm_delivery_wrapper').append(popup).css({'z-index':'3000', 'display':'flex'});

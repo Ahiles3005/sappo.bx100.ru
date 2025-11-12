@@ -42,7 +42,7 @@
                                                 <? if ($sUrl):
                                                 $title = $arItem['PREVIEW_PICTURE']['TITLE'] ? $arItem['PREVIEW_PICTURE']['TITLE'] : $arItem['~NAME'];
                                                 $title = str_replace(['<br>', '<br/>', '<br />'], ' ', $title); ?>
-                                                <a href="<?= $sUrl; ?>" title="<?= $title ?>">
+                                                <a target="_blank" href="<?= $sUrl; ?>" title="<?= $title ?>">
                                                     <? endif;
                                                     ?>
                                                     <span class="lazy<?= $position; ?><?= ($bType2 ? ' bg-fon-img darken-bg-animate' : ''); ?>"
@@ -62,8 +62,7 @@
                                                 <? if ($sUrl):
                                                     $title = $arItem['PREVIEW_PICTURE']['TITLE'] ? $arItem['PREVIEW_PICTURE']['TITLE'] : $arItem['~NAME'];
                                                     $title = str_replace(['<br>', '<br/>', '<br />'], ' ', $title); ?>
-                                                    <a class="class="
-                                                       hm-resources--a__TEXT"" href="<?= $sUrl; ?>" title="<?= $title; ?>">
+                                                    <a target="_blank" class="hm-resources--a__TEXT" href="<?= $sUrl; ?>" title="<?= $title; ?>">
                                                 <? endif; ?>
                                                 <?= $arItem['~NAME']; ?>
                                                 <? if ($sUrl):?>

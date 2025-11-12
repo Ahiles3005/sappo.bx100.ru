@@ -1,5 +1,5 @@
 <?
-global $is404, $isIndex, $isForm, $isWidePage, $isBlog, $isCatalog, $isHideLeftBlock, $bActiveTheme, $bShowCallBackBlock, $bShowQuestionBlock, $bShowReviewBlock, $isBasketPage, $bHideLeftBlockByHeader;
+global $is404, $isIndex, $isForm, $isWidePage, $isBlog, $isCatalog, $isHideLeftBlock, $bActiveTheme, $bShowCallBackBlock, $bShowQuestionBlock, $bShowReviewBlock, $isBasketPage, $bHideLeftBlockByHeader, $isNewCustomTemplate;
 
 $is404 = (defined("ERROR_404") && ERROR_404 === "Y");
 $isIndex = CMax::IsMainPage();

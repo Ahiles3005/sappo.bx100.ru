@@ -1,4 +1,3 @@
-
 <?//$bHideLeftBlock = ($arTheme['LEFT_BLOCK_CATALOG_SECTIONS']['VALUE'] == 'N' || ($arTheme['HEADER_TYPE']['VALUE'] == 28 || $arTheme['HEADER_TYPE']['VALUE'] == 29));?>
 <?global $needLEftBlock;?>
 
@@ -512,6 +511,7 @@ if(isset($arFilter)){
                                     <div class=" <?=$display;?> js_wrapper_items" data-params='<?=str_replace('\'', '"', CUtil::PhpToJSObject($arTransferParams, false))?>'>
 
                                         <?
+$sort = 'CATALOG_AVAILABLE';
                                         if($sort == "SHOWS" || $sort == "CATALOG_AVAILABLE") {
                                             if(CModule::IncludeModule("iblock")){
                                                 $idRegion = $_COOKIE["current_region"];

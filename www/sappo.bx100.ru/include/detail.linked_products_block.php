@@ -21,11 +21,12 @@ if($arRegion)
 		}
 	}
 }
-
 $sklad = false;
 if (is_array($arParams["STORES"]) && !empty($arParams["STORES"])) {
 	$stories = array_values($arParams["STORES"]);
 	$sklad = 'CATALOG_STORE_AMOUNT_' . $stories[0];
+	/*Убираем из элементов не доступные товары*/
+	//$GLOBALS['arrProductsFilter']['>CATALOG_STORE_AMOUNT_' . $stories[0]] = 0;
 }
 ?>
 <?$APPLICATION->IncludeComponent(
@@ -114,6 +115,7 @@ if (is_array($arParams["STORES"]) && !empty($arParams["STORES"])) {
 		"ELEMENT_SORT_ORDER" => 'DESC',
 		"SEF_MODE" => "N",
 		"SHOW_MEASURE" => $arParams["SHOW_MEASURE"],
+		"SHOW_NG_SECTION" => $arParams["SHOW_NG_SECTION"],
 		"ADD_PROPERTIES_TO_BASKET" => "Y",
 		"PARTIAL_PRODUCT_PROPERTIES" => "N",
 		"OFFERS_CART_PROPERTIES" => array(

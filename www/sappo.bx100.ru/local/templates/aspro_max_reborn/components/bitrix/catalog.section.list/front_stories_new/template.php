@@ -10,19 +10,13 @@
                 if ($arParams["COUNT_ELEMENTS"] && !$arSection['ELEMENT_CNT']) {
                     continue;
                 }
-                
-                foreach ($arSections as $key => $arSectionElement):
-                    if ($arSectionElement["ID"] == $arSection['ID']) {
-                        $arSection["URL"] = $arSectionElement["CHILDS"][0]["PROPERTY_BTN_LINK_VALUE"];
-                        unset($arSections[$key]);
-                    }
-                endforeach;
 
                 $this->AddEditAction($arSection['ID'], $arSection['EDIT_LINK'], CIBlock::GetArrayByID($arSection["IBLOCK_ID"], "SECTION_EDIT"));
                 $this->AddDeleteAction($arSection['ID'], $arSection['DELETE_LINK'], CIBlock::GetArrayByID($arSection["IBLOCK_ID"], "SECTION_DELETE"), ["CONFIRM" => GetMessage('CT_BNL_SECTION_DELETE_CONFIRM')]); ?>
                 <div class="hm-banners--div__SWIPER2_SLIDE swiper-slide"
                      id="<?= $this->GetEditAreaId($arSection['ID']); ?>">
-                    <a class="hm-banners--a__2" href="<?= $arSection["URL"] ?>">
+
+                    <a class="hm-banners--a__2" href="<?= $arSection['CHILDS'][0] ?>">
                         <img class="hm-banners--img__2" src="<?= $arSection["PICTURE"]["SRC"] ?>"
                              alt="<?= $arSection['NAME']; ?>">
                     </a>

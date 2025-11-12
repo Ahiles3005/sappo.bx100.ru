@@ -120,6 +120,14 @@ $arUrlRewrite=array (
     'PATH' => '/bitrix/services/stssync/contacts_extranet_emp/index.php',
     'SORT' => 100,
   ),
+  98 => 
+  array (
+    'CONDITION' => '#^/recommend/filter/(.+?)/apply/#',
+    'RULE' => 'SMART_FILTER_PATH=$1',
+    'ID' => '',
+    'PATH' => '/recommend/index.php',
+    'SORT' => 100,
+  ),
   95 => 
   array (
     'CONDITION' => '#^/sale-new/filter/(.+?)/apply/#',
@@ -128,30 +136,6 @@ $arUrlRewrite=array (
     'PATH' => '/sale-new/index.php',
     'SORT' => 100,
   ),
-    96 =>
-        array (
-            'CONDITION' => '#^/new/filter/(.+?)/apply/#',
-            'RULE' => 'SMART_FILTER_PATH=$1',
-            'ID' => '',
-            'PATH' => '/new/index.php',
-            'SORT' => 100,
-        ),
-    97 =>
-        array (
-            'CONDITION' => '#^/hit/filter/(.+?)/apply/#',
-            'RULE' => 'SMART_FILTER_PATH=$1',
-            'ID' => '',
-            'PATH' => '/hit/index.php',
-            'SORT' => 100,
-        ),
-    98 =>
-        array (
-            'CONDITION' => '#^/recommend/filter/(.+?)/apply/#',
-            'RULE' => 'SMART_FILTER_PATH=$1',
-            'ID' => '',
-            'PATH' => '/recommend/index.php',
-            'SORT' => 100,
-        ),
   18 => 
   array (
     'CONDITION' => '#^\\/?\\/mobile/jn/(.*)\\/(.*)\\/.*#',
@@ -222,6 +206,22 @@ $arUrlRewrite=array (
     'RULE' => '',
     'ID' => '',
     'PATH' => '/marketing/master-yandex.php',
+    'SORT' => 100,
+  ),
+  96 => 
+  array (
+    'CONDITION' => '#^/new/filter/(.+?)/apply/#',
+    'RULE' => 'SMART_FILTER_PATH=$1',
+    'ID' => '',
+    'PATH' => '/new/index.php',
+    'SORT' => 100,
+  ),
+  97 => 
+  array (
+    'CONDITION' => '#^/hit/filter/(.+?)/apply/#',
+    'RULE' => 'SMART_FILTER_PATH=$1',
+    'ID' => '',
+    'PATH' => '/hit/index.php',
     'SORT' => 100,
   ),
   9 => 

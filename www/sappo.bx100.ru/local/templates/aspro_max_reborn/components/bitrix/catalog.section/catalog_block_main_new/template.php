@@ -573,7 +573,7 @@ $arParamsCE_CMP['TYPE_SKU'] = 'N';
                                             <? \Aspro\Functions\CAsproMax::showDiscountCounter($totalCount, $arDiscount, $arQuantityData, $arItem, $strMeasure, 'v2 grey', $item_id, true); ?>
                                             <? $itemDiscountTime = ob_get_clean(); ?>
 
-                                            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 col-xxs-12 item item-parent js-notice-block item_block ">
+                                            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 col-xxs-12 item item-parent js-notice-block item_block catalog_element" id="<?= $arItem["ID"]; ?>">
 
                                                 <div class="sbonus-product v2">
                                                     <span>+<?= round($bonusesSum[$arItem['ID']]); ?></span></div>

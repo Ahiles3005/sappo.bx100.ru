@@ -4351,15 +4351,14 @@ CheckHeaderFixed = function(){
 									headerSimpleHeight = header_simple.actual('outerHeight');
 									header_simple.closest('.header_wrap').css({'margin-top': headerSimpleHeight});
 								}
-								if(bx_panel.length) {
+								/*if(bx_panel.length) {
 									var bxPanelHeight = bx_panel.outerHeight();
 									if (scrollTop > bxPanelHeight) {
-										header.css('top', '0px');
 										header.addClass('fixed');
 									}
 								} else {
 									header.addClass('fixed');
-								}
+								}*/
 
 								$('nav.mega-menu.sliced.initied').removeClass('initied');
 								CheckTopMenuDotted();
