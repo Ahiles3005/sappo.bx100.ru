@@ -1,0 +1,295 @@
+.sale-personal-section-index-block{
+	/*opacity: .8;*/
+	padding: 0;
+	margin: 15px 0;
+	/*text-align: center;*/
+	text-transform: uppercase;
+	-webkit-transition: all 0.3s;
+	   -moz-transition: all 0.3s;
+		-ms-transition: all 0.3s;
+		 -o-transition: all 0.3s;
+			transition: all 0.3s;
+	color: #fff;
+	background-size: cover;
+	/*border-radius: 3px;*/
+	/*height: 87%;*/
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	justify-content: space-around;
+}
+
+.sale-personal-section-index-block {
+	padding: 0 0 24px !important;
+}
+
+@media (max-width: 992px)
+{
+	.sale-personal-section-index-block {
+		height: auto;
+		margin: 8px 0;
+	}
+}
+
+.sale-personal-section-index-block.bx-theme-green{
+	background: url(images/wt_green.png) center top;
+}
+.sale-personal-section-index-block.bx-theme-blue{
+	background: url(images/wt_blue.png) center top;
+}
+.sale-personal-section-index-block.bx-theme-red{
+	background: url(images/wt_red.png) center top;
+}
+.sale-personal-section-index-block.bx-theme-yellow{
+	background: url(images/wt_yellow.png) center top;
+}
+.sale-personal-section-index-block.bx-theme-black{
+	background: url(images/wt_black.png) center top;
+}
+.sale-personal-section-index-block:hover{
+	/*opacity: 1;*/
+}
+
+.sale-personal-section-index-block-link {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	min-height: 100%;
+	height: 100%;
+	padding: 32px 32px;
+	border-radius: 24px;
+	min-height: 280px;
+}
+
+.sale-personal-section-index-block-link,
+.sale-personal-section-index-block-link:hover,
+.sale-personal-section-index-block-link:active,
+.sale-personal-section-index-block-link:focus,
+.sale-personal-section-index-block-link:visited{
+	text-decoration: none;
+	color: #fff;
+	/*background-color:#fbfbfb;*/
+	/*border:1px solid #f2f2f2;*/
+	background-color: rgba(229, 248, 255, 1);
+}
+.sale-personal-section-index-block-link{color: #fff;}
+.sale-personal-section-index-block-ico {font-size: 64px;}
+.sale-personal-section-index-block-name{font-size: 16px;}
+.sale-personal-section-account-sub-header{
+	margin-top:40px;
+}
+
+.sale-personal-section-row-flex {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	flex-flow: row wrap;
+}
+
+.sale-personal-section-index-block-ico {
+	display: block !important;
+	width: 96px !important;
+	height: 96px !important;;
+	border-radius: 32px;
+	padding: 32px;
+	background-color: rgba(0, 171, 239, 1);
+	margin: 0 !important;
+}
+
+.sale-personal-section-index-block-ico .svg.colored * {
+	width: 32px;
+	height: 32px;
+	fill: #fff;
+}
+
+a.sale-personal-section-index-block-link:hover .svg.inline path {
+	fill: #fff;
+}
+
+.sale-personal-section-index-block-name {
+	font-family: Montserrat;
+	font-weight: 700;
+	font-style: bold;
+	font-size: 20px !important;
+	leading-trim: NONE;
+	line-height: 30px !important;
+	letter-spacing: 0%;
+	vertical-align: middle;
+	margin: 0 !important;
+}
+
+@media (max-width: 450px)
+{
+	.sale-personal-section-index-block-link {
+		min-height: unset;
+	}
+
+	.sale-personal-section-index-block-name {
+		padding-top: 20px;
+	}
+}
+
+.promo-block {
+	background: rgba(229, 248, 255, 1);
+	padding: 45px 45px 45px 24px;
+	border-radius: 24px;
+	text-align: center;
+	margin: 0 auto;
+	font-family: Arial, sans-serif;
+	margin-bottom: 24px;
+	display: flex;
+	gap: 45px;
+	align-items: flex-start;
+	color: rgba(0, 0, 0, 1);
+}
+
+.coins {
+	display: flex;
+	flex-direction: column;
+	gap: -20px; /* Для наложения монет друг на друга, как на изображении */
+	position: relative;
+	z-index: 1;
+	margin-top: -100px; /* Чтобы монеты немного вылезали вверх */
+}
+
+.coin {
+	/*width: 80px;*/
+	/*height: 80px;*/
+	position: relative;
+}
+
+.coin img {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+
+.promo-content {
+	flex: 1;
+	text-align: left;
+}
+
+.promo-content h1 {
+	font-family: Montserrat;
+	font-weight: 700;
+	font-style: bold;
+	font-size: 30px;
+	leading-trim: none;
+	line-height: 44px;
+	letter-spacing: 0%;
+	vertical-align: middle;
+	margin-bottom: 15px;
+}
+
+.promo-content .promo-content-text {
+	font-family: Montserrat;
+	font-weight: 400;
+	font-style: normal;
+	font-size: 14px;
+	leading-trim: none;
+	line-height: 20px;
+	letter-spacing: 0%;
+	vertical-align: middle;
+	margin-bottom: 15px;
+}
+
+.promo-code {
+	display: flex;
+	align-items: center;
+	margin-bottom: 25px;
+	border-radius: 24px !important;
+	background-color: #fff;
+}
+
+.promo-code input {
+	flex: 1;
+	border: none !important;
+	border-radius: 24px !important;
+	padding: 24px !important;
+	outline: none;
+	background-color: #fff;
+
+	font-family: Montserrat;
+	font-weight: 300;
+	font-style: normal;
+	font-size: 30px !important;
+	leading-trim: NONE;
+	line-height: 44px !important;
+	letter-spacing: 12%;
+	vertical-align: middle;
+	text-transform: uppercase;
+
+}
+
+.copy-btn {
+	border-radius: 24px !important;
+	padding: 24px !important;
+	background-color: #fff;
+	border: none;
+	cursor: pointer;
+}
+
+.copy-btn:hover {
+	background-color: #fff;
+}
+
+.social-links {
+	font-family: Montserrat;
+	font-weight: 600;
+	font-style: normal;
+	font-size: 14px;
+	leading-trim: none;
+	line-height: 18px;
+	letter-spacing: 0%;
+	margin-bottom: 20px;
+}
+
+.info {
+	font-family: Montserrat;
+	font-weight: 400;
+	font-style: normal;
+	font-size: 12px;
+	leading-trim: none;
+	line-height: 16px;
+	letter-spacing: 0%;
+	vertical-align: middle;
+	padding-left: 40px;
+	background-image: url(/local/templates/aspro_max_reborn/images/info.png);
+	background-repeat: no-repeat;
+	background-position: 0% 50%;
+	margin: 0;
+}
+
+@media (max-width: 1199px) {
+	.promo-block {
+		display: block;
+		padding: 45px 45px 45px 45px;
+	}
+	.coins {
+		display: none;
+	}
+}
+
+@media (max-width: 767px) {
+	.promo-block {
+		padding: 24px 20px;
+	}
+	.promo-code {
+		padding: 0px !important;
+		border-radius: 10px !important;
+		position: relative;
+	}
+	.promo-code input {
+		display: block;
+		font-size: 20px !important;
+		line-height: 30px !important;
+		padding: 10px !important;
+		border-radius: 10px !important;
+	}
+	.copy-btn {
+		padding: 9px !important;
+		border-radius: 10px !important;
+		position: absolute;
+		right: 0;
+	}
+}

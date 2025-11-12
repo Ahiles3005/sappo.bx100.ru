@@ -1,0 +1,61 @@
+/.idea/
+/bitrix
+/upload
+/crm
+/images
+/webp-copy
+/workgroups
+/telephony
+/desktop_app
+/var
+
+# исключаем все текстовые и подобные ресурсы
+*.xml
+*.html
+*.txt
+*.log
+*.css.map
+
+# архивы, включая многотомные
+*.zip
+*.zip*  
+*.tar
+*.tar*
+*.enc
+*.enc*
+*.gz
+*.gz*
+*.tgz
+*.tgz*
+*.sql
+*.rar
+.hg
+.ftpconfig
+*.doc
+*.docx
+*.pdf
+*.rtf
+*.xls
+*.xlsx
+*.ppt
+*.pptx
+*.psd
+*.psb
+*.sketch
+core.*
+
+# composer
+composer.phar
+/vendor/
+
+# исключаем всякое от node.js
+node_modules
+bower_components
+.grunt
+.npm
+.env
+
+# и логи xhprof напоследок
+/xhprof/logs
+
+.gitignore

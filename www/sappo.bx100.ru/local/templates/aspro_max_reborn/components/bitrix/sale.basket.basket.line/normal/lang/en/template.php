@@ -1,0 +1,26 @@
+<?php
+$MESS["ADDED_TO_BASKET"] = "В корзину добавлено";
+$MESS["BASKET"] = "Корзина";
+$MESS["BASKET_DELAY_COUNT"] = "В избранном товаров на #PRICE#";
+$MESS["BASKET_DELAY_LIST"] = "Список отложенных товаров";
+$MESS["BASKET_EMPTY_DESCRIPTION"] = "Исправить это недоразумение очень просто:<br />выберите в каталоге интересующий товар и нажмите кнопку &laquo;В корзину&raquo;.";
+$MESS["BASKET_EMPTY_SUBTITLE"] = "К сожалению, ваша корзина пуста.";
+$MESS["BASKET_EMPTY_TITLE"] = "Ваша корзина пуста";
+$MESS["BASKET_LIST"] = "Список товаров в корзине";
+$MESS["CHECKOUT"] = "Оформить заказ";
+$MESS["CLOSE"] = "Продолжить покупки";
+$MESS["CML2_BASE_UNIT"] = "шт";
+$MESS["DELAY"] = "Отложено";
+$MESS["EMPTY_BASKET"] = "пуста";
+$MESS["GO_TO_BASKET"] = "Перейти в корзину";
+$MESS["GO_TO_CATALOG"] = "Перейти в каталог";
+$MESS["GO_TO_DELAY"] = "Перейти в отложенные";
+$MESS["IN_BASKET"] = "Товаров:";
+$MESS["IN_BASKET_SMALL"] = "в корзине";
+$MESS["NA"] = "на";
+$MESS["PRODUCTS_FIVE"] = "товаров";
+$MESS["PRODUCTS_ONE"] = "товар";
+$MESS["PRODUCTS_TWO"] = "товара";
+$MESS["SALE_DELETE_PRD"] = "Удалить";
+$MESS["STILL"] = "Еще";
+$MESS["TOTAL_SUMM_TITLE"] = "Общая сумма";
