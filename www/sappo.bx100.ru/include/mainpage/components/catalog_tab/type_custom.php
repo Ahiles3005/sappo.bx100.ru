@@ -163,7 +163,7 @@ $tabs = [
         'class' => 'hm-hits',
         'order'=>4,
         'section_name'=>'Хиты продаж',
-        'sort_field'=>'shows',
+        'sort_field'=>'property_QUANTITY_SOLD',
         'sort_order'=>'desc',
     ],
 

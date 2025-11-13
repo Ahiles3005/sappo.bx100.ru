@@ -233,8 +233,8 @@ $APPLICATION->SetTitle("Хиты продаж");
         ),
         "LIST_OFFERS_LIMIT" => "10",
         "SORT_BUTTONS" => array(
-            0 => "POPULARITY",
-            /*1 => "NAME",*/
+            0 => "QUANTITY_SOLD",
+            1 => "POPULARITY",
             2 => "PRICE",
         ),
         "SORT_PRICES" => "Цена",

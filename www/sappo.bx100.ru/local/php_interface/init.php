@@ -600,13 +600,20 @@ function updateHitProducts()
     ]);
 
     $productIds = [];
+    $quantitySoldByProductId = [];
     while ($order = $dbOrders->fetch()) {
         $dbBasket = \Bitrix\Sale\Basket::getList([
             'select' => ['PRODUCT_ID'],
             'filter' => ['ORDER_ID' => $order['ID']]
         ]);
         while ($item = $dbBasket->fetch()) {
-            $productIds[] = $item['PRODUCT_ID'];
+            $productId = intval($item['PRODUCT_ID']);
+            $productIds[] = $productId;
+            if (isset($quantitySoldByProductId[$productId])) {
+                $quantitySoldByProductId[$productId] += 1;
+            } else {
+                $quantitySoldByProductId[$productId] = 1;
+            }
         }
     }
 
@@ -626,7 +633,10 @@ function updateHitProducts()
         $productPrp = $productData->GetProperties();
         $hitValues = $productPrp['HIT']['VALUE_ENUM_ID'] ?? [];
         $hitValues[] = $propValueId;
-        CIBlockElement::SetPropertyValuesEx($product['ID'], $iblockId, ['HIT' => $hitValues]);
+
+        $productId = intval($product['ID']);
+        $quantitySold = $quantitySoldByProductId[$productId];
+        CIBlockElement::SetPropertyValuesEx($product['ID'], $iblockId, ['HIT' => $hitValues,'QUANTITY_SOLD'=>$quantitySold]);
     }
 
 

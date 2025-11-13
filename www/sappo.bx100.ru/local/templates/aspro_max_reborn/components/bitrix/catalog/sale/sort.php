@@ -96,14 +96,22 @@ $bShowSortInFilter = ($arParams['SHOW_SORT_IN_FILTER'] != 'N');
                 $propsInSort[] = $sort_prop;
             }
         }
+
         if (is_array($propsInSort) && count($propsInSort) > 0) {
             foreach ($propsInSort as $propSortCode) {
-                $dbRes = CIBlockProperty::GetList(array(), array('ACTIVE' => 'Y', 'IBLOCK_ID' => $arParams['IBLOCK_ID'], 'CODE' => $propSortCode));
-                while ($arPropperty = $dbRes->Fetch()) {
-                    $propsInSortName['PROPERTY_' . $arPropperty['CODE']] = $arPropperty['NAME'];
+                if ($propSortCode == 'QUANTITY_SOLD') {
+                    $propsInSortName['PROPERTY_' . $propSortCode] = 'По продажам';
+                } else {
+                    $dbRes = CIBlockProperty::GetList([], [
+                            'ACTIVE' => 'Y',
+                            'IBLOCK_ID' => $arParams['IBLOCK_ID'],
+                            'CODE' => $propSortCode
+                    ]);
+                    while ($arPropperty = $dbRes->Fetch()) {
+                        $propsInSortName['PROPERTY_' . $arPropperty['CODE']] = $arPropperty['NAME'];
+                    }
                 }
             }
-
         }
 
         $sortElementField = ToUpper($arParams["ELEMENT_SORT_FIELD"]);
