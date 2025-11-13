@@ -1,0 +1,1 @@
+Бесплатная доставка от 5000 ₽ в ПВЗ.&nbsp;<a href="https://sappo.ru/help/delivery/">Подробнее</a><br>
