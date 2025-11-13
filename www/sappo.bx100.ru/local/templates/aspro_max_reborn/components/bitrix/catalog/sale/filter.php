@@ -100,7 +100,8 @@
 
 			//ключевые места 1
 			"SEF_RULE" => $arParams["SEF_FOLDER"].'filter/#SMART_FILTER_PATH#/apply/',
-			"SMART_FILTER_PATH" => $_REQUEST["SMART_FILTER_PATH"],
+//			"SMART_FILTER_PATH" => $_REQUEST["SMART_FILTER_PATH"],
+            "SMART_FILTER_PATH" => $arResult["VARIABLES"]['SMART_FILTER_PATH'],
 			'SHOW_ALL_WO_SECTION'=>'Y',
 		),
 		$component,
