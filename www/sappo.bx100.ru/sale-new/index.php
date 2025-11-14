@@ -231,9 +231,8 @@ $APPLICATION->SetTitle("Распродажа");
         ),
         "LIST_OFFERS_LIMIT" => "10",
         "SORT_BUTTONS" => array(
-            0 => "POPULARITY",
-            /*1 => "NAME",*/
-            2 => "PRICE",
+            0 => "CREATED",
+            1 => "PRICE",
         ),
         "SORT_PRICES" => "Цена",
         "DEFAULT_LIST_TEMPLATE" => "block_sale",

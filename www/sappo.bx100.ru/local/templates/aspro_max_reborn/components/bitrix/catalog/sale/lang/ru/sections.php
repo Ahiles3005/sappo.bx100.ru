@@ -8,11 +8,11 @@ $MESS["CATALOG_DROP_TO"] = "выводить по";
 $MESS["CATALOG_IN_CART"] = "В корзине";
 $MESS["VIEWED_TITLE"] = "Ранее вы смотрели";
 $MESS["BEST_TITLE"] = "Лучшие предложения";
-
 $MESS["SECT_ORDER_desc"] = " (убывание)";
 $MESS["SECT_ORDER_asc"] = " (возрастание)";
 $MESS["SECT_SORT_SORT"] = "По индексу сортировки";
 $MESS["SECT_SORT_SHOWS"] = "По популярности";
+$MESS["SECT_SORT_CREATED"] = "По популярности";
 $MESS["SECT_SORT_NAME"] = "По алфавиту";
 $MESS["SECT_SORT_PRICE"] = "По цене";
 $MESS["SECT_SORT_QUANTITY"] = "По наличию";

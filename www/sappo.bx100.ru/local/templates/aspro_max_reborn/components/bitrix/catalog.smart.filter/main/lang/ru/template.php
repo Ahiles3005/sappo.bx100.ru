@@ -14,4 +14,5 @@ $MESS ['PRICE'] = 'Цена';
 $MESS ['FILTER_TITLE'] = 'Фильтр по параметрам';
 $MESS['FILTER_EXPAND_VALUES'] = 'Показать все';
 $MESS['FILTER_HIDE_VALUES'] = 'Свернуть';
+$MESS['SECT_SORT_PROPERTY_QUANTITY_SOLD'] = 'По популярности';
 ?>

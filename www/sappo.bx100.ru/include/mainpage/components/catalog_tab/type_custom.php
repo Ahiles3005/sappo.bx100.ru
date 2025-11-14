@@ -145,6 +145,8 @@ $tabs = [
         'class' => 'hm-sales',
         'order'=>2,
         'section_name'=>'Акции',
+        'sort_field'=>'created',
+        'sort_order'=>'desc',
     ],
     'NEW' => [
         'filter_name' => 'arrFilterPropNew',

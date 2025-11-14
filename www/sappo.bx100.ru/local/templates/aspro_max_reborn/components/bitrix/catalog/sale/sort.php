@@ -87,7 +87,11 @@ $bShowSortInFilter = ($arParams['SHOW_SORT_IN_FILTER'] != 'N');
             $arAvailableSort["CATALOG_AVAILABLE"] = array("QUANTITY", "desc");
         }
 
-        $defaulSortButtons = array("SORT", "POPULARITY", "NAME", "PRICE", "QUANTITY", "CUSTOM");
+        if (in_array("CREATED", $arSorts)) {
+            $arAvailableSort["CREATED"] = array("CREATED", "desc");
+        }
+
+        $defaulSortButtons = array("SORT", "POPULARITY", "NAME", "PRICE", "QUANTITY", "CUSTOM","CREATED");
         $propsInSort = array();
         $propsInSortName = array();
         foreach ($arSorts as $sort_prop) {
@@ -100,7 +104,7 @@ $bShowSortInFilter = ($arParams['SHOW_SORT_IN_FILTER'] != 'N');
         if (is_array($propsInSort) && count($propsInSort) > 0) {
             foreach ($propsInSort as $propSortCode) {
                 if ($propSortCode == 'QUANTITY_SOLD') {
-                    $propsInSortName['PROPERTY_' . $propSortCode] = 'По продажам';
+                    $propsInSortName['PROPERTY_' . $propSortCode] = 'По популярности';
                 } else {
                     $dbRes = CIBlockProperty::GetList([], [
                             'ACTIVE' => 'Y',
@@ -119,7 +123,12 @@ $bShowSortInFilter = ($arParams['SHOW_SORT_IN_FILTER'] != 'N');
             $arAvailableSort[$sortElementField] = array("CUSTOM", ToLower($arParams["ELEMENT_SORT_ORDER"]));
         }
 
-        $sort = "SHOWS";
+//        $sort = "SHOWS";
+        $sort = $arSorts[0];
+        if(isset($propsInSortName['PROPERTY_' . $sort])){
+            $sort = 'PROPERTY_' . $sort;
+        }
+
         $customSort = false;
         if ((array_key_exists("sort", $_REQUEST) && array_key_exists(ToUpper($_REQUEST["sort"]), $arAvailableSort)) || (array_key_exists("sort", $_SESSION) && array_key_exists(ToUpper($_SESSION["sort"]), $arAvailableSort)) || $arParams["ELEMENT_SORT_FIELD"]) {
             if ($_REQUEST["sort"]) {
@@ -152,93 +161,53 @@ $bShowSortInFilter = ($arParams['SHOW_SORT_IN_FILTER'] != 'N');
         }
         $arDelUrlParams = array('sort', 'order', 'control_ajax', 'ajax_get_filter', 'linerow', 'display');
         ?>
-        <? if ($arAvailableSort): ?>
+        <?if($arAvailableSort):?>
             <div class="dropdown-select">
                 <div class="dropdown-select__title font_xs darken">
 						<span>
-							<? if ($sort_order && $sort): ?>
-                                <?php if ($sort == 'SHOWS'): ?>
-                                    <? if (in_array($sort, array_keys($propsInSortName))): ?>
-                                        <?= \Bitrix\Main\Localization\Loc::getMessage('SORT_TITLE_PROPETY', array('#CODE#' => $propsInSortName[$sort])) ?>
-                                    <? else: ?>
-                                        <?= \Bitrix\Main\Localization\Loc::getMessage('SECT_SORT_' . ($customSort ? 'CUSTOM' : $sort)) ?>
-                                    <? endif; ?>
-                                <?php else: ?>
-                                    <? if (in_array($sort, array_keys($propsInSortName))): ?>
-                                        <?= \Bitrix\Main\Localization\Loc::getMessage('SORT_TITLE_PROPETY', array('#CODE#' => $propsInSortName[$sort])) . \Bitrix\Main\Localization\Loc::getMessage('SECT_ORDER_' . $sort_order) ?>
-                                    <? else: ?>
-                                        <?= \Bitrix\Main\Localization\Loc::getMessage('SECT_SORT_' . ($customSort ? 'CUSTOM' : $sort)) . \Bitrix\Main\Localization\Loc::getMessage('SECT_ORDER_' . $sort_order) ?>
-                                    <? endif; ?>
-                                <?php endif; ?>
-
-                            <? else: ?>
-                                <?= \Bitrix\Main\Localization\Loc::getMessage('NOTHING_SELECTED'); ?>
-                            <? endif; ?>
+							<?if($sort_order && $sort):?>
+                                <?if( in_array($sort, array_keys($propsInSortName)) ):?>
+                                    <?=\Bitrix\Main\Localization\Loc::getMessage('SORT_TITLE_PROPETY', array('#CODE#' => $propsInSortName[$sort])).\Bitrix\Main\Localization\Loc::getMessage('SECT_ORDER_'.$sort_order)?>
+                                <?else:?>
+                                    <?=\Bitrix\Main\Localization\Loc::getMessage('SECT_SORT_'.($customSort ? 'CUSTOM' : $sort)).\Bitrix\Main\Localization\Loc::getMessage('SECT_ORDER_'.$sort_order)?>
+                                <?endif;?>
+                            <?else:?>
+                                <?=\Bitrix\Main\Localization\Loc::getMessage('NOTHING_SELECTED');?>
+                            <?endif;?>
 						</span>
-                    <?= CMax::showIconSvg("down", SITE_TEMPLATE_PATH . '/images/svg/trianglearrow_down.svg', '', '', true, false); ?>
+                    <?=CMax::showIconSvg("down", SITE_TEMPLATE_PATH.'/images/svg/trianglearrow_down.svg', '', '', true, false);?>
                 </div>
                 <div class="dropdown-select__list dropdown-menu-wrapper" role="menu">
                     <div class="dropdown-menu-inner rounded3">
-                        <? $arOrder = ['desc', 'asc'] ?>
-                        <? $use = false; ?>
-                        <? foreach ($arAvailableSort as $key => $arVals): ?>
-                            <? foreach ($arOrder as $value): ?>
-                                <?php if ($arVals[0] == 'SHOWS'): ?>
-                                    <?php if (!$use): ?>
-                                        <div class="dropdown-select__list-item font_xs">
-                                            <? $newSort = $sort_order == 'asc';
-                                            $use = true;
-                                            $current_url = $APPLICATION->GetCurPageParam('sort=' . $key . '&order=' . $value, $arDelUrlParams);
-                                            $url = str_replace('+', '%2B', $current_url); ?>
-                                            <? if ($bCurrentLink = ($sort == $key && $sort_order == $value)): ?>
-                                            <span class="dropdown-select__list-link dropdown-select__list-link--current">
-                                            <? else: ?>
-                                                <a href="<?= $url; ?>"
-                                                   class="dropdown-select__list-link <?= $value ?> <?= $key ?> darken <?= ($arParams['AJAX_CONTROLS'] == 'Y' ? ' js-load-link' : ''); ?>"
-                                                   data-url="<?= $url; ?>" rel="nofollow">
-                                            <? endif; ?>
-                                                    <? if (in_array($key, array_keys($propsInSortName))): ?>
-                                                        <span><?= \Bitrix\Main\Localization\Loc::getMessage('SORT_TITLE_PROPETY', array('#CODE#' => $propsInSortName[$key])) ?></span>
-                                                    <? else: ?>
-                                                        <span><?= \Bitrix\Main\Localization\Loc::getMessage('SECT_SORT_' . ($arAvailableSort[$key][0] === 'CUSTOM' ? 'CUSTOM' : $key)) ?></span>
-                                                    <? endif; ?>
-                                                    <? if ($bCurrentLink): ?>
-                                                </span>
-                                        <? else: ?>
-                                            </a>
-                                        <? endif; ?>
-                                        </div>
-                                    <? endif; ?>
-                                <?php else: ?>
-                                    <div class="dropdown-select__list-item font_xs">
-                                        <? $newSort = $sort_order == 'desc' ? 'asc' : 'desc';
-                                        $current_url = $APPLICATION->GetCurPageParam('sort=' . $key . '&order=' . $value, $arDelUrlParams);
-                                        $url = str_replace('+', '%2B', $current_url); ?>
-                                        <? if ($bCurrentLink = ($sort == $key && $sort_order == $value)): ?>
-                                        <span class="dropdown-select__list-link dropdown-select__list-link--current">
-                                            <? else: ?>
-                                                <a href="<?= $url; ?>"
-                                                   class="dropdown-select__list-link <?= $value ?> <?= $key ?> darken <?= ($arParams['AJAX_CONTROLS'] == 'Y' ? ' js-load-link' : ''); ?>"
-                                                   data-url="<?= $url; ?>" rel="nofollow">
-                                            <? endif; ?>
-                                                    <? if (in_array($key, array_keys($propsInSortName))): ?>
-                                                        <span><?= \Bitrix\Main\Localization\Loc::getMessage('SORT_TITLE_PROPETY', array('#CODE#' => $propsInSortName[$key])) . \Bitrix\Main\Localization\Loc::getMessage('SECT_ORDER_' . $value) ?></span>
-                                                    <? else: ?>
-                                                        <span><?= \Bitrix\Main\Localization\Loc::getMessage('SECT_SORT_' . ($arAvailableSort[$key][0] === 'CUSTOM' ? 'CUSTOM' : $key)) . \Bitrix\Main\Localization\Loc::getMessage('SECT_ORDER_' . $value) ?></span>
-                                                    <? endif; ?>
-                                                    <? if ($bCurrentLink): ?>
-                                                </span>
-                                    <? else: ?>
-                                        </a>
-                                    <? endif; ?>
-                                    </div>
-                                <?php endif; ?>
-                            <? endforeach ?>
-                        <? endforeach; ?>
+                        <?$arOrder = ['desc', 'asc']?>
+                        <?foreach($arAvailableSort as $key => $arVals):?>
+                            <?foreach($arOrder as $value):?>
+                                <div class="dropdown-select__list-item font_xs">
+                                    <?$newSort = $sort_order == 'desc' ? 'asc' : 'desc';
+                                    $current_url = $APPLICATION->GetCurPageParam('sort='.$key.'&order='.$value, $arDelUrlParams);
+                                    $url = str_replace('+', '%2B', $current_url);?>
+                                    <?if($bCurrentLink = ($sort == $key && $sort_order == $value)):?>
+                                    <span class="dropdown-select__list-link dropdown-select__list-link--current">
+										<?else:?>
+											<a href="<?=$url;?>" class="dropdown-select__list-link <?=$value?> <?=$key?> darken <?=($arParams['AJAX_CONTROLS'] == 'Y' ? ' js-load-link' : '');?>" data-url="<?=$url;?>" rel="nofollow">
+										<?endif;?>
+                                                <?if( in_array($key, array_keys($propsInSortName)) ):?>
+                                                    <span><?=\Bitrix\Main\Localization\Loc::getMessage('SORT_TITLE_PROPETY', array('#CODE#' => $propsInSortName[$key])).\Bitrix\Main\Localization\Loc::getMessage('SECT_ORDER_'.$value)?></span>
+                                                <?else:?>
+                                                    <span><?=\Bitrix\Main\Localization\Loc::getMessage('SECT_SORT_'.($arAvailableSort[$key][0] === 'CUSTOM' ? 'CUSTOM' : $key)).\Bitrix\Main\Localization\Loc::getMessage('SECT_ORDER_'.$value)?></span>
+                                                <?endif;?>
+                                                <?if($bCurrentLink):?>
+											</span>
+                                <?else:?>
+                                    </a>
+                                <?endif;?>
+                                </div>
+                            <?endforeach?>
+                        <?endforeach;?>
                     </div>
                 </div>
             </div>
-        <? endif; ?>
+        <?endif;?>
         <?
         if ($sort == "PRICE") {
             $sort = $arAvailableSort["PRICE"][0];
