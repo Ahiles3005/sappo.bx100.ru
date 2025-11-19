@@ -5105,3 +5105,10 @@ body .item-stock.js-show-stores:active .value {
 	object-position: center;
     transition: transform 0.5s;
 }
+
+.front_page .hm-newprod .stickers,
+.front_page .hm-hits .stickers,
+.front_page .hm-recom .stickers{
+    display: none;
+}
+
