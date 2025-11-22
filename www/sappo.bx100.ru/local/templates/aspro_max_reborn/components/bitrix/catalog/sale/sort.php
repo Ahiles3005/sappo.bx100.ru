@@ -105,7 +105,10 @@ $bShowSortInFilter = ($arParams['SHOW_SORT_IN_FILTER'] != 'N');
             foreach ($propsInSort as $propSortCode) {
                 if ($propSortCode == 'QUANTITY_SOLD') {
                     $propsInSortName['PROPERTY_' . $propSortCode] = 'По продажам';
-                } else {
+                }elseif ($propSortCode == 'DISCOUNT'){
+                    $propsInSortName['PROPERTY_' . $propSortCode] = 'По скидке';
+                }
+                else {
                     $dbRes = CIBlockProperty::GetList([], [
                             'ACTIVE' => 'Y',
                             'IBLOCK_ID' => $arParams['IBLOCK_ID'],

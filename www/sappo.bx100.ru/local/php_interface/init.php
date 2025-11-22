@@ -8,6 +8,7 @@ use Bitrix\Sale;
 use Yandex\Market;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Event;
+use GreenSMS\GreenSMS;
 
 CModule::IncludeModule("iblock");
 
@@ -175,9 +176,14 @@ if (!function_exists("CAEDucemUpdateAfterExchange")) {
         file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/log_sync.txt', $log . PHP_EOL, FILE_APPEND);
         foreach ($listProduct as $product) {
             $PROP = [];
+            $PROP["DISCOUNT"] = 0;
             if (round($product["CATALOG_PRICE_2"]) < round($product["CATALOG_PRICE_14"])) {
-                if (is_array($product["VALUE_ENUM_ID"])) $PROP["HIT"] = array_merge($product["VALUE_ENUM_ID"], [0 => $idPropListValue]);
-                else $PROP["HIT"] = [0 => $idPropListValue];
+                if (is_array($product["VALUE_ENUM_ID"])) {
+                    $PROP["HIT"] = array_merge($product["VALUE_ENUM_ID"], [0 => $idPropListValue]);
+                } else {
+                    $PROP["HIT"] = [0 => $idPropListValue];
+                }
+                $PROP["DISCOUNT"] = round($product["CATALOG_PRICE_14"]) - round($product["CATALOG_PRICE_2"]);
             } else {
                 if (is_array($product["VALUE_ENUM_ID"])) {
                     if (in_array($idPropListValue, $product["VALUE_ENUM_ID"]) && (round($product["CATALOG_PRICE_2"]) == round($product["CATALOG_PRICE_14"]))) {
@@ -268,6 +274,42 @@ function OnSaleComponentOrderResultPrepared(&$order, &$arUserResult, $request, &
     $arResult['JS_DATA']['BONUS_OUT'] = $bonusOut;
     $arResult['JS_DATA']['BONUS_MAX_OUT'] = $maxOut;
     $arResult['JS_DATA']['IS_BONUS_ACTIVE'] = $isBonusActive ? 'Y' : 'N';
+/*
+    // Для компонента sale.order.ajax
+    // Иначе при смене любой опции, что вызывает
+    // обновление через AJAX, оно улетает в undefined.
+    // На саму корзину оно, вроде как, не влияет, плюс-минус тестил.
+    // ## Здесь считаются бонусы для каждого товара
+    $catalog = new \Kilbil\Bonus\Ecommerce\Catalog\Catalog();
+    $basketRows = $arResult['JS_DATA']['GRID']['ROWS'];
+    foreach ($basketRows as &$basketRow) {
+        $bonusesSum = $catalog->calculateBonus([
+            [
+                'ID' => $basketRow['data']['PRODUCT_ID'],
+                'PRICE' => $basketRow['data']['PRICE'],
+                'QUANTITY' => $basketRow['data']['QUANTITY']
+            ]
+        ], true, false);
+        $basketRow['data']['BONUSES'] = $bonusesSum[$basketRow['data']['PRODUCT_ID']];
+    }
+    unset($basketRow);
+    $arResult['JS_DATA']['GRID']['ROWS'] = $basketRows;
+
+    // ## Здесь добавляется заголовок данных бонусов для товара
+    $headers = $arResult['JS_DATA']['GRID']['HEADERS'];
+    $newHeader = [
+        'id' => 'BONUSES',
+        'name' => 'Бонусы'
+    ];
+    $insertBefore = 'DISCOUNT_PRICE_PERCENT_FORMATED'; // the one at index [3]
+    $position = array_search($insertBefore, array_column($headers, 'id'));
+    if ($position !== false) {
+        array_splice($headers, $position, 0, [$newHeader]); // insert before it
+    } else {
+        $headers[] = $newHeader; // fallback to end
+    }
+    $arResult['JS_DATA']['GRID']['HEADERS'] = $headers;
+*/
 
     if($bonusOut > 0) {
         $totalPrice = $arResult['JS_DATA']['TOTAL']['ORDER_TOTAL_PRICE'];
@@ -780,17 +822,17 @@ function checkOrderForCertificatesOnPayment(Main\Event $event)
     }
 
     foreach ($basket as $basketItem) {
-		$productId = (int)$basketItem->getProductId();
-		if ($productId <= 0) {
-			continue;
-		}
+        $productId = (int)$basketItem->getProductId();
+        if ($productId <= 0) {
+            continue;
+        }
 
-		$name = (string)$basketItem->getField('NAME');
-		if ($name === '' || mb_stripos($name, 'сертификат') === false) {
-			continue;
-		}
+        $name = (string)$basketItem->getField('NAME');
+        if ($name === '' || mb_stripos($name, 'сертификат') === false) {
+            continue;
+        }
 
-		$offers = CIBlockElement::GetList(
+        $offers = CIBlockElement::GetList(
             [],
             [
                 'IBLOCK_ID' => 80,
@@ -799,48 +841,53 @@ function checkOrderForCertificatesOnPayment(Main\Event $event)
             ],
             false,
             ['nTopCount' => 1],
-			['ID', 'NAME', 'PROPERTY_CML2_BAR_CODE']
+            ['ID', 'NAME', 'PROPERTY_CML2_BAR_CODE']
         );
 
-		while ($offer = $offers->Fetch()) {
-			$targetPhone = '';
-			// Пробуем взять телефон из свойства заказа GIFT_PHONE, затем fallback PHONE
-			$giftPhoneProp = $propertyCollection->getItemByOrderPropertyCode('GIFT_PHONE');
-			if ($giftPhoneProp && $giftPhoneProp->getValue()) {
-				$targetPhone = preg_replace("/[^0-9]/", '', (string)$giftPhoneProp->getValue());
-			}
-			if (!$targetPhone) {
-				$targetPhone = $fallbackPhone;
-			}
+        while ($offer = $offers->Fetch()) {
+            $targetPhone = '';
+            // Пробуем взять телефон из свойства заказа GIFT_PHONE, затем fallback PHONE
+            $giftPhoneProp = $propertyCollection->getItemByOrderPropertyCode('GIFT_PHONE');
+            if ($giftPhoneProp && $giftPhoneProp->getValue()) {
+                $targetPhone = preg_replace("/[^0-9]/", '', (string)$giftPhoneProp->getValue());
+            }
+            if (!$targetPhone) {
+                $targetPhone = $fallbackPhone;
+            }
 
-			if (!$targetPhone) {
-				continue;
-			}
+            if (!$targetPhone) {
+                continue;
+            }
 
-			$barcode = isset($offer['PROPERTY_CML2_BAR_CODE_VALUE']) ? trim((string)$offer['PROPERTY_CML2_BAR_CODE_VALUE']) : '';
-			$hash = $barcode !== '' ? md5('sappo' . $barcode) : '';
-			$link = $barcode !== '' ? ('https://sappo.ru/gift/?code=' . urlencode($barcode) . '&hash=' . $hash) : '';
+            $barcode = isset($offer['PROPERTY_CML2_BAR_CODE_VALUE']) ? trim((string)$offer['PROPERTY_CML2_BAR_CODE_VALUE']) : '';
+            $hash = $barcode !== '' ? md5('sappo' . $barcode) : '';
+            $link = $barcode !== '' ? ('https://sappo.ru/gift/?code=' . urlencode($barcode) . '&hash=' . $hash) : '';
 
-			$fromName = '';
-			$giftFromProp = $propertyCollection->getItemByOrderPropertyCode('GIFT_FROM');
-			if ($giftFromProp && $giftFromProp->getValue()) {
-				$fromName = trim((string)$giftFromProp->getValue());
-			}
-			$text = ($fromName ? ('Вам подарили сертификат в SAPPO.RU от ' . $fromName . '. ') : 'Ваш подарочный сертификат оформлен. ')
-				. ($link ? ('Ссылка на сертификат: ' . $link) : '');
+            $fromName = '';
+            $giftFromProp = $propertyCollection->getItemByOrderPropertyCode('GIFT_FROM');
+            if ($giftFromProp && $giftFromProp->getValue()) {
+                $fromName = trim((string)$giftFromProp->getValue());
+            }
+            $text = ($fromName ? ('Вам подарили сертификат в SAPPO.RU от ' . $fromName . '. ') : 'Ваш подарочный сертификат оформлен. ')
+                . ($link ? ('Ссылка на сертификат: ' . $link) : '');
 
             try {
-                if (class_exists('App\\Services\\SmsService')) {
-                    $smsService = new \App\Services\SmsService();
-                    $result = $smsService->sendSms($targetPhone, $text, 'Sappo.ru');
+                $greenSmsConfig = [
+                    'user' => getenv('GREENSMS_USER') ?: 'sappogreensms',
+                    'pass' => getenv('GREENSMS_PASS') ?: 'HdF189sD',
+                ];
 
-                    if ($result !== true) {
-                        writeSmsLog("SMS отправка не удалась для номера {$targetPhone}: " . $result);
-                    } else {
-                        writeSmsLog("SMS успешно отправлена на номер {$targetPhone}");
-                    }
+                $smsService = new GreenSMS($greenSmsConfig);
+                $response = $smsService->sms->send([
+                                                       'to' => $targetPhone,
+                                                       'txt' => $text,
+                                                       'from' => 'Sappo.ru',
+                                                   ]);
+
+                if (!empty($response->request_id)) {
+                    writeSmsLog("SMS успешно отправлена на номер {$targetPhone}");
                 } else {
-                    writeSmsLog("SmsService класс не найден");
+                    writeSmsLog("SMS отправка не удалась для номера {$targetPhone}: пустой ответ от GreenSMS");
                 }
             } catch (Exception $e) {
                 writeSmsLog("Ошибка при отправке SMS: " . $e->getMessage());

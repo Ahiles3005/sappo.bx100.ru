@@ -233,6 +233,7 @@ $APPLICATION->SetTitle("Распродажа");
         "SORT_BUTTONS" => array(
             0 => "CREATED",
             1 => "PRICE",
+            2 => "DISCOUNT",
         ),
         "SORT_PRICES" => "Цена",
         "DEFAULT_LIST_TEMPLATE" => "block_sale",
