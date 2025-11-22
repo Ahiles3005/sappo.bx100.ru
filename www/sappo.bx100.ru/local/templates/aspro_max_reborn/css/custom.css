@@ -5108,6 +5108,7 @@ body .item-stock.js-show-stores:active .value {
 
 .front_page .hm-newprod .stickers,
 .front_page .hm-hits .stickers,
+.front_page .hm-sales .stickers,
 .front_page .hm-recom .stickers{
     display: none;
 }

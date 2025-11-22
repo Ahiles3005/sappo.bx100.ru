@@ -104,7 +104,7 @@ $bShowSortInFilter = ($arParams['SHOW_SORT_IN_FILTER'] != 'N');
         if (is_array($propsInSort) && count($propsInSort) > 0) {
             foreach ($propsInSort as $propSortCode) {
                 if ($propSortCode == 'QUANTITY_SOLD') {
-                    $propsInSortName['PROPERTY_' . $propSortCode] = 'По популярности';
+                    $propsInSortName['PROPERTY_' . $propSortCode] = 'По продажам';
                 } else {
                     $dbRes = CIBlockProperty::GetList([], [
                             'ACTIVE' => 'Y',
