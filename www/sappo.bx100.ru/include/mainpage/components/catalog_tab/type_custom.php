@@ -179,6 +179,10 @@ $tabs = [
     ],
 ];
 
+global $arRegion;
+
+$storeIds = $arRegion['LIST_STORES'] ?? [5];
+
 foreach ($tabs as $tabCode => $tabParams) {
     global ${$tabParams['filter_name']};
     ${$tabParams['filter_name']} = [
@@ -188,7 +192,7 @@ foreach ($tabs as $tabCode => $tabParams) {
         [
             'LOGIC' => 'OR',
             ['TYPE' => [2, 3]],
-            ['STORE_NUMBER' => [5], '>STORE_AMOUNT' => 0]
+            ['STORE_NUMBER' => $storeIds, '>STORE_AMOUNT' => 0]
         ]
     ];
 } ?>

@@ -10,21 +10,7 @@
           </mappings>
         </serverdata>
       </paths>
-      <paths name="sappobx">
-        <serverdata>
-          <mappings>
-            <mapping deploy="/data/www/sappo.ru" local="$PROJECT_DIR$/www/sappo.bx100.ru" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
       <paths name="sppo2">
-        <serverdata>
-          <mappings>
-            <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="sss">
         <serverdata>
           <mappings>
             <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
