@@ -183,7 +183,7 @@ if (!function_exists("CAEDucemUpdateAfterExchange")) {
                 } else {
                     $PROP["HIT"] = [0 => $idPropListValue];
                 }
-                $PROP["DISCOUNT"] = round($product["CATALOG_PRICE_14"]) - round($product["CATALOG_PRICE_2"]);
+                $PROP["DISCOUNT"] = round((($product["CATALOG_PRICE_14"] - $product["CATALOG_PRICE_2"]) / $product["CATALOG_PRICE_14"]) * 100, 0);
             } else {
                 if (is_array($product["VALUE_ENUM_ID"])) {
                     if (in_array($idPropListValue, $product["VALUE_ENUM_ID"]) && (round($product["CATALOG_PRICE_2"]) == round($product["CATALOG_PRICE_14"]))) {
